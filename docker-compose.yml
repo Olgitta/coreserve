@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+    coreserve-app:
+        image: coreserve
+        container_name: coreserve-app
+        ports:
+            - "5000:5000"
+        environment:
+            NODE_ENV: production
+            DEBUG: coreserve.*
+            PORT: 5000
+#        env_file:
+#            - .env
+#            - .env.production
+        depends_on:
+            - redis
+            - mongodb
+            - mysql
+
+    mongodb:
+        image: mongo:6.0
+        container_name: mongodb
+        ports:
+            - "27017:27017"
+        volumes:
+            - "mongodb_data:/data/db"
+            - "./scripts/mongodb_scripts.js:/docker-entrypoint-initdb.d/init-script.js"
+
+    #        environment:
+#            MONGO_INITDB_ROOT_USERNAME: root
+#            MONGO_INITDB_ROOT_PASSWORD: 123456
+
+    redis:
+        image: redis:7.0
+        container_name: redis
+        ports:
+            - "6379:6379"
+        command: ["redis-server", "--appendonly", "yes"]
+        volumes:
+            - redis_data:/data
+
+    mysql:
+        image: mysql:8.0
+        container_name: mysql
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_ALLOW_EMPTY_PASSWORD: yes
+#            MYSQL_ROOT_PASSWORD: 123456
+#            MYSQL_DATABASE: devel
+#            MYSQL_USER: sa
+#            MYSQL_PASSWORD: 123456
+        volumes:
+            - "mysql_data:/var/lib/mysql"
+            - "./scripts/mysql_scripts.sql:/docker-entrypoint-initdb.d/init-script.sql"
+
+volumes:
+    mongodb_data:
+    redis_data:
+    mysql_data:

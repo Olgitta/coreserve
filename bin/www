@@ -1,0 +1,12 @@
+#!/usr/bin/env node
+
+const debug = require('debug')('coreserve:start');
+const start = require('../src/server');
+
+start()
+    .then(() => {
+        debug('started')
+    })
+    .catch(error => {
+        console.error('something went wrong', error)
+    });

@@ -1,0 +1,392 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "CORESERVE",
+        "version": "1.0.0"
+    },
+    "servers": [
+      {
+        "url": "http://localhost:3000"
+      },
+      {
+        "url": "http://localhost:5000"
+      }
+    ],
+    "paths": {
+        "/health": {
+            "get": {
+                "tags": [
+                    "API"
+                ],
+                "summary": "Healthcheck",
+                "description": "Healthcheck",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "metadata": {
+                                        "traceId": "ffe7a619-56dc-4c7c-a692-49c011578869",
+                                        "message": "OK"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "metadata": {
+                                        "traceId": "e5e9211d-68b8-4bea-bf0a-d14dbbefeec3",
+                                        "message": "ERROR: getaddrinfo ENOTFOUND mongodb"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/todos": {
+            "get": {
+                "tags": [
+                    "API"
+                ],
+                "summary": "Get todos with pagination",
+                "description": "Get todos with pagination",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "2"
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "metadata": {
+                                        "traceId": "e240894b-a848-4183-9825-87c512818102"
+                                    },
+                                    "resources": [
+                                        {
+                                            "title": "Todo title ",
+                                            "completed": false,
+                                            "createdAt": "2024-12-19T16:18:05.982Z",
+                                            "updatedAt": "2024-12-19T16:18:05.982Z",
+                                            "id": "6764473d12467b2009a3cdff"
+                                        }
+                                    ],
+                                    "pagination": {
+                                        "totalPages": 4,
+                                        "prevPage": "/todos?page=1&limit=1",
+                                        "nextPage": "/todos?page=3&limit=1"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "metadata": {
+                                        "traceId": "a3deaef6-4daf-4ae6-b5eb-30e27f1aa128"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "API"
+                ],
+                "summary": "Create todo",
+                "description": "Create todo",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "example": {
+                                    "title": "todo title"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "metadata": {
+                                        "traceId": "4b0cf6a2-400f-40ce-98f7-a977a64135d8"
+                                    },
+                                    "resources": {
+                                        "title": "todo title",
+                                        "completed": false,
+                                        "createdAt": "2024-12-20T18:33:16.007Z",
+                                        "updatedAt": "2024-12-20T18:33:16.007Z",
+                                        "id": "6765b86cb7e1d374bfb59d98"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "metadata": {
+                                        "traceId": "9aa90d28-bade-4c98-9c89-47836c2d440f"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/todos/{id}": {
+            "get": {
+                "tags": [
+                    "API"
+                ],
+                "summary": "Get todo by id",
+                "description": "Get todo by id",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true,
+                        "example": "6764473d12467b2009a3cdff"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "metadata": {
+                                        "traceId": "d5810ac9-87f5-43f6-be74-d3542d205bbe"
+                                    },
+                                    "resources": {
+                                        "title": "Todo Title ",
+                                        "completed": false,
+                                        "createdAt": "2024-12-19T16:18:05.982Z",
+                                        "updatedAt": "2024-12-19T16:18:05.982Z",
+                                        "id": "6764473d12467b2009a3cdff"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "metadata": {
+                                        "traceId": "b1121a96-2211-42ee-b6b6-15773d8bd563"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "metadata": {
+                                        "traceId": "a3deaef6-4daf-4ae6-b5eb-30e27f1aa128"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "API"
+                ],
+                "summary": "Update todo",
+                "description": "Update todo",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "example": {
+                                    "name": "todo title",
+                                    "completed": true
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true,
+                        "example": "6764474412467b2009a3ce01"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "metadata": {
+                                        "traceId": "eb204a27-b8a5-4ca1-aaa2-85cbf2f8d78c"
+                                    },
+                                    "resources": {
+                                        "title": "todo title",
+                                        "completed": true,
+                                        "createdAt": "2024-12-20T18:33:16.007Z",
+                                        "updatedAt": "2024-12-20T18:35:17.193Z",
+                                        "id": "6765b86cb7e1d374bfb59d98"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "metadata": {
+                                        "traceId": "023b2407-980e-40f0-abff-6d4c915e980b"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "API"
+                ],
+                "summary": "Delete todo",
+                "description": "Delete todo",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true,
+                        "example": "6764474412467b2009a3ce01"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "metadata": {
+                                        "traceId": "6dc71c56-a94f-4f65-b77b-26e65ae6bf98"
+                                    },
+                                    "resources": {
+                                        "title": "Todo Title ",
+                                        "completed": false,
+                                        "createdAt": "2024-12-19T16:18:12.137Z",
+                                        "updatedAt": "2024-12-19T16:18:12.137Z",
+                                        "id": "6764474412467b2009a3ce01"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "metadata": {
+                                        "traceId": "add1da98-6f9e-43c1-ab02-1a595018ab7a"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
