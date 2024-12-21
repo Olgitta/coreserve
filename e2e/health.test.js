@@ -1,11 +1,11 @@
 const request = require('supertest');
-const {BASE_URL, test200andTraceId, } = require('./helpers');
+const {BASE_URL, testStatusAndTraceId, } = require('./helpers');
 
 describe('API Endpoints', () => {
     test('GET /healthcheck - should return status 200', async () => {
         const response = await request(BASE_URL).get('/health');
         const actual = response.body;
-        test200andTraceId(response.status, actual.metadata.traceId);
+        testStatusAndTraceId(response.status, actual.metadata.traceId, 200);
         expect(actual).toHaveProperty('metadata.message', 'OK');
     });
 });
