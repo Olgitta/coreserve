@@ -1,13 +1,13 @@
 'use strict';
 
 const { AsyncLocalStorage } = require('node:async_hooks');
-const { v4: uuidv4 } = require('uuid');
+const {getGuid} = require('../utils/guidUtil');
 const debug = require('debug')('coreserve:context');
 
 const asyncLocalStorage = new AsyncLocalStorage();
 
 module.exports.createCtx = (payload, cb) => {
-    const traceId = uuidv4();
+    const traceId = getGuid();
     const context = { ...payload, traceId };
 
     debug(`createCtx: ${traceId}`);

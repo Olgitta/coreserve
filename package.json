@@ -9,7 +9,7 @@
     "start": "node ./bin/www",
     "lint": "eslint src/",
     "lint:fix": "eslint src/ --fix",
-    "test": "jest --coverage"
+    "test": "jest ./test --coverage"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",

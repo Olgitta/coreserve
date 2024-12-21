@@ -2,9 +2,9 @@
 
 const app = require('../src/app');
 const debug = require('debug')('coreserve:server');
-const http = require('http');
+const http = require('node:http');
 const {getShutdownCallbacks} = require('./core/shutdownManager');
-const getConfiguration = require('./core/configuration');
+const getConfiguration = require('./config/configuration');
 const mongoDbSetup = require('./infra/db/mongodb');
 
 process.on('uncaughtException', (err) => {

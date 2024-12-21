@@ -7,7 +7,7 @@ const {isNonEmptyString, isNonEmptyObject} = require('../core/utils/validators')
 const {Types} = require('mongoose');
 const debug = require('debug')('coreserve:todos');
 const {getCtx} = require('../core/execution-context/context');
-const getConfiguration=require('../core/configuration');
+const getConfiguration=require('../config/configuration');
 
 async function create(title) {
     try {
