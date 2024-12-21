@@ -1,7 +1,7 @@
 'use strict';
 
 const debug = require('debug')('coreserve:healthcheck');
-const log = require('./logger');
+const log = require('../core/logger');
 const {pingDatabase} = require('../infra/db/mongodb/connection');
 
 module.exports = function getHealthCheckController() {

@@ -1,10 +1,10 @@
 'use strict';
 
 const Joi = require('joi');
-const fs = require('fs');
-const path = require('path');
+const fs = require('node:fs');
+const path = require('node:path');
 const dotenv = require('dotenv');
-const log = require('./logger');
+const log = require('../core/logger');
 const debug = require('debug')('coreserve:configuration');
 
 // Define the schema for MongoDB configuration
