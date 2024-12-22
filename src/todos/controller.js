@@ -5,9 +5,10 @@ const {createTodo, getTodoById, updateTodo, deleteTodo, getTodosWithPagination} 
 const log = require('../core/logger');
 const {isNonEmptyString, isNonEmptyObject} = require('../core/utils/validators');
 const {Types} = require('mongoose');
-const debug = require('debug')('coreserve:todos');
+const debug = require('debug')('coreserve:TodosController');
 const {getCtx} = require('../core/execution-context/context');
 const getConfiguration=require('../config/configuration');
+const {PaginationBuilder, normalizePaginationParams} = require('../pagination');
 
 async function create(title) {
     try {
@@ -27,20 +28,23 @@ async function create(title) {
 async function getAll(requestQuery) {
     try {
         const ctx = getCtx();
-        debug('Todos Controller:getAll ctx', ctx);
+        debug('getAll ctx', ctx);
         const config = getConfiguration();
-        debug('Todos Controller:getAll config', config);
-        const {page, limit} = normalizePaginationParams(requestQuery, config.todos);
+        debug('getAll config', config);
+        const {page, limit} = normalizePaginationParams(requestQuery.page, requestQuery.limit, config.todos);
 
         const skip = (page - 1) * limit;
         const {todos, total} = await getTodosWithPagination(skip, limit);
-
-        const {totalPages, hasNextPage, hasPrevPage} = derivePagination(total, page, limit);
-
         const cleanUrl = ctx?.request?.url.split('?')[0];
-        const nextPage = hasNextPage ? `${cleanUrl}?page=${page + 1}&limit=${limit}` : null;
-        const prevPage = hasPrevPage ? `${cleanUrl}?page=${page - 1}&limit=${limit}` : null;
 
+        const paginationBuilder = new PaginationBuilder();
+        paginationBuilder
+            .setUrl(cleanUrl)
+            .setTotal(total)
+            .setLimit(limit)
+            .setPage(page);
+
+        const {totalPages, nextPage, prevPage} = paginationBuilder.build();
         debug('pagination', {totalPages, nextPage, prevPage});
 
         return {
@@ -115,28 +119,6 @@ async function remove(id) {
     } catch (err) {
         log.error(`Todos Controller:remove:error: ${err.message}`, err);
         return handleError(err);
-    }
-}
-
-function normalizePaginationParams(requestQuery, config) {
-    const {page, limit} = requestQuery;
-    const p = Number.parseInt(page);
-    const l = Number.parseInt(limit);
-    return {
-        page: Number.isNaN(p) || p < 1 ? 1 : p,
-        limit: Number.isNaN(l) || l < 1 ? config.pagination.limit : l,
-    };
-}
-
-function derivePagination(total, page, limit) {
-    const totalPages = Math.ceil(total / limit);
-    const hasNextPage = page < totalPages;
-    const hasPrevPage = page > 1;
-
-    return {
-        totalPages,
-        hasNextPage,
-        hasPrevPage,
     }
 }
 

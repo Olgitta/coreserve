@@ -7,23 +7,35 @@ const dotenv = require('dotenv');
 const log = require('../core/logger');
 const debug = require('debug')('coreserve:configuration');
 
-// Define the schema for MongoDB configuration
 const mongodbSchema = Joi.object({
     url: Joi.string().uri().required(),
     database: Joi.string().min(1).required(),
 });
 
-// Define the schema for Todos configuration
+const mysqlSchema = Joi.object({
+    host: Joi.string().required(),
+    user: Joi.string().required(),
+    password: Joi.string(),
+    database: Joi.string().min(1).required(),
+});
+
 const todosSchema = Joi.object({
     pagination: Joi.object({
         limit: Joi.number().integer().min(1).required(),
     }).required(),
 });
 
-// Define the overall config schema
+const postsSchema = Joi.object({
+    pagination: Joi.object({
+        limit: Joi.number().integer().min(1).required(),
+    }).required(),
+});
+
 const configSchema = Joi.object({
     mongodb: mongodbSchema.required(),
+    mysql: mysqlSchema.required(),
     todos: todosSchema.required(),
+    posts: postsSchema.required(),
 });
 
 const NODE_ENV = process.env.NODE_ENV || 'development';
@@ -54,9 +66,22 @@ function loadConfig() {
         database: process.env.MONGODB_DATABASE,
     }
 
+    config.mysql = {
+        host: process.env.MYSQL_HOST,
+        user: process.env.MYSQL_USER,
+        password: process.env.MYSQL_PASSWORD,
+        database: process.env.MYSQL_DATABASE,
+    }
+
     config.todos = {
         pagination: {
             limit: Number.parseInt(process.env.TODOS_PAGINATION_LIMIT, 10),
+        }
+    }
+
+    config.posts = {
+        pagination: {
+            limit: Number.parseInt(process.env.POSTS_PAGINATION_LIMIT, 10),
         }
     }
 }

@@ -5,21 +5,90 @@
         "version": "1.0.0"
     },
     "servers": [
-      {
-        "url": "http://localhost:3000"
-      },
-      {
-        "url": "http://localhost:5000"
-      }
+        {
+            "url": "http://{{base_url}}"
+        }
+    ],
+    "tags": [
+        {
+            "name": "posts"
+        },
+        {
+            "name": "todos"
+        },
+        {
+            "name": "core"
+        }
     ],
     "paths": {
-        "/health": {
+        "/posts": {
+            "post": {
+                "tags": [
+                    "posts"
+                ],
+                "summary": "Create post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "example": {
+                                    "title": "title 100100",
+                                    "content": "kfjhg kjshgkjfhgkjfh kgjhfj gkjfh gjfdhgk"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "metadata": {
+                                        "traceId": "92445f2f-da16-4371-8075-4040365d7d25"
+                                    },
+                                    "resources": {
+                                        "likes": 0,
+                                        "id": 6,
+                                        "title": "title 300400",
+                                        "content": "sasaasa sasdaasa kjshgkjfhgkjfh kgjhfj gkjfh gjfdhgk",
+                                        "updatedAt": "2024-12-21T18:26:32.951Z",
+                                        "createdAt": "2024-12-21T18:26:32.951Z"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
             "get": {
                 "tags": [
-                    "API"
+                    "posts"
                 ],
-                "summary": "Healthcheck",
-                "description": "Healthcheck",
+                "summary": "Get posts",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "20"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -30,24 +99,30 @@
                                 },
                                 "example": {
                                     "metadata": {
-                                        "traceId": "ffe7a619-56dc-4c7c-a692-49c011578869",
-                                        "message": "OK"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                },
-                                "example": {
-                                    "metadata": {
-                                        "traceId": "e5e9211d-68b8-4bea-bf0a-d14dbbefeec3",
-                                        "message": "ERROR: getaddrinfo ENOTFOUND mongodb"
+                                        "traceId": "cd0f9af9-12e5-4744-b090-3f6ee707d94c"
+                                    },
+                                    "resources": [
+                                        {
+                                            "id": 4,
+                                            "title": "title 200300",
+                                            "content": "kfjhg kjshgkjfhgkjfh kgjhfj gkjfh gjfdhgk",
+                                            "likes": 0,
+                                            "createdAt": "2024-12-21T18:21:06.000Z",
+                                            "updatedAt": "2024-12-21T18:21:06.000Z"
+                                        },
+                                        {
+                                            "id": 3,
+                                            "title": "title 200300",
+                                            "content": "kfjhg kjshgkjfhgkjfh kgjhfj gkjfh gjfdhgk",
+                                            "likes": 0,
+                                            "createdAt": "2024-12-21T18:15:24.000Z",
+                                            "updatedAt": "2024-12-21T18:15:24.000Z"
+                                        }
+                                    ],
+                                    "pagination": {
+                                        "totalPages": 3,
+                                        "prevPage": "/posts?page=1&limit=2",
+                                        "nextPage": "/posts?page=3&limit=2"
                                     }
                                 }
                             }
@@ -56,10 +131,132 @@
                 }
             }
         },
+        "/posts/{id}": {
+            "get": {
+                "tags": [
+                    "posts"
+                ],
+                "summary": "Get post by id",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "required": true,
+                        "example": "2"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "metadata": {
+                                        "traceId": "78d9961e-ba6e-4f5d-a65a-1e4f3cc7323f"
+                                    },
+                                    "resources": {
+                                        "id": 2,
+                                        "title": "title 100100",
+                                        "content": "kfjhg kjshgkjfhgkjfh kgjhfj gkjfh gjfdhgk",
+                                        "likes": 0,
+                                        "createdAt": "2024-12-21T18:07:56.000Z",
+                                        "updatedAt": "2024-12-21T18:07:56.000Z"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "metadata": {
+                                        "traceId": "fcea64a4-eeca-4aaf-ad8b-e21b05220805"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "posts"
+                ],
+                "summary": "Update post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "example": {
+                                    "title": "Mauris ac rhoncus velit.",
+                                    "content": "Vestibulum egestas non turpis sit amet condimentum. Cras eget tempus nulla. Duis porta ipsum eu urna imperdiet, in feugiat velit dignissim. Vivamus tempus tortor vel elit elementum dignissim. Etiam non dolor et ante accumsan accumsan nec non velit. Donec in ipsum semper, tempus metus et, eleifend est. Maecenas mi tortor, tincidunt id ultricies eget, dignissim vitae lorem. Aliquam nisi magna, aliquam at odio fringilla, sollicitudin fermentum felis. Donec vehicula vel massa a faucibus. Quisque tincidunt porttitor lorem, id hendrerit ligula consequat et."
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "required": true,
+                        "example": "5"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "posts"
+                ],
+                "summary": "Delete post",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "required": true,
+                        "example": "2"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            }
+        },
         "/todos": {
             "get": {
                 "tags": [
-                    "API"
+                    "todos"
                 ],
                 "summary": "Get todos with pagination",
                 "description": "Get todos with pagination",
@@ -70,7 +267,7 @@
                         "schema": {
                             "type": "integer"
                         },
-                        "example": "2"
+                        "example": "1"
                     },
                     {
                         "name": "limit",
@@ -78,7 +275,7 @@
                         "schema": {
                             "type": "integer"
                         },
-                        "example": "1"
+                        "example": "5"
                     }
                 ],
                 "responses": {
@@ -95,7 +292,7 @@
                                     },
                                     "resources": [
                                         {
-                                            "title": "Todo title ",
+                                            "title": "bbb i fkjgdfkjglfkjglkdfjglkfjd uoi ",
                                             "completed": false,
                                             "createdAt": "2024-12-19T16:18:05.982Z",
                                             "updatedAt": "2024-12-19T16:18:05.982Z",
@@ -130,7 +327,7 @@
             },
             "post": {
                 "tags": [
-                    "API"
+                    "todos"
                 ],
                 "summary": "Create todo",
                 "description": "Create todo",
@@ -190,7 +387,7 @@
         "/todos/{id}": {
             "get": {
                 "tags": [
-                    "API"
+                    "todos"
                 ],
                 "summary": "Get todo by id",
                 "description": "Get todo by id",
@@ -218,7 +415,7 @@
                                         "traceId": "d5810ac9-87f5-43f6-be74-d3542d205bbe"
                                     },
                                     "resources": {
-                                        "title": "Todo Title ",
+                                        "title": "bbb i fkjgdfkjglfkjglkdfjglkfjd uoi ",
                                         "completed": false,
                                         "createdAt": "2024-12-19T16:18:05.982Z",
                                         "updatedAt": "2024-12-19T16:18:05.982Z",
@@ -262,7 +459,7 @@
             },
             "put": {
                 "tags": [
-                    "API"
+                    "todos"
                 ],
                 "summary": "Update todo",
                 "description": "Update todo",
@@ -332,7 +529,7 @@
             },
             "delete": {
                 "tags": [
-                    "API"
+                    "todos"
                 ],
                 "summary": "Delete todo",
                 "description": "Delete todo",
@@ -360,7 +557,7 @@
                                         "traceId": "6dc71c56-a94f-4f65-b77b-26e65ae6bf98"
                                     },
                                     "resources": {
-                                        "title": "Todo Title ",
+                                        "title": "ccc i fkjgdfkjglfkjglkdfjglkfjd uoi ",
                                         "completed": false,
                                         "createdAt": "2024-12-19T16:18:12.137Z",
                                         "updatedAt": "2024-12-19T16:18:12.137Z",
@@ -380,6 +577,49 @@
                                 "example": {
                                     "metadata": {
                                         "traceId": "add1da98-6f9e-43c1-ab02-1a595018ab7a"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/health": {
+            "get": {
+                "tags": [
+                    "core"
+                ],
+                "summary": "Healthcheck",
+                "description": "Healthcheck",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "metadata": {
+                                        "traceId": "ffe7a619-56dc-4c7c-a692-49c011578869",
+                                        "message": "OK"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "metadata": {
+                                        "traceId": "e5e9211d-68b8-4bea-bf0a-d14dbbefeec3",
+                                        "message": "ERROR: getaddrinfo ENOTFOUND mongodb"
                                     }
                                 }
                             }

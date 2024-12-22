@@ -2,7 +2,8 @@
 
 const debug = require('debug')('coreserve:healthcheck');
 const log = require('../core/logger');
-const {pingDatabase} = require('../infra/db/mongodb/connection');
+const mongodbPing = require('../infra/db/mongodb/connection').pingDatabase;
+const mysqlPing = require('../infra/db/mysql/connection').pingDatabase;
 
 module.exports = function getHealthCheckController() {
 
@@ -10,7 +11,8 @@ module.exports = function getHealthCheckController() {
         async healthCheck() {
             try {
                 debug('healthCheck started.');
-                await pingDatabase();
+                await mongodbPing();
+                await mysqlPing();
                 debug('healthCheck finished.');
                 return {};
             } catch (error) {
