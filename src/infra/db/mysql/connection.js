@@ -7,6 +7,8 @@ const {Sequelize} = require('sequelize');
 
 let sequelize;
 
+module.exports = {connectToDatabase, closeDatabaseConnection, pingDatabase, createModel};
+
 /**
  *
  * @param config
@@ -55,5 +57,3 @@ async function pingDatabase() {
 function createModel(name, definition, options={}) {
     return sequelize.define(name, definition, options);
 }
-
-module.exports = {connectToDatabase, closeDatabaseConnection, pingDatabase, createModel};
