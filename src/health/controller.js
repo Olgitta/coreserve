@@ -1,17 +1,18 @@
 'use strict';
 
-const debug = require('debug')('coreserve:healthcheck');
 const log = require('../core/logger');
-const {pingDatabase} = require('../infra/db/mongodb/connection');
+const mongodbPing = require('../infra/db/mongodb/connection').pingDatabase;
+const mysqlPing = require('../infra/db/mysql/connection').pingDatabase;
 
 module.exports = function getHealthCheckController() {
 
     return {
         async healthCheck() {
             try {
-                debug('healthCheck started.');
-                await pingDatabase();
-                debug('healthCheck finished.');
+                log.info('healthCheck started.');
+                await mongodbPing();
+                await mysqlPing();
+                log.info('healthCheck finished.');
                 return {};
             } catch (error) {
                 log.error('healthCheck failed...', error);

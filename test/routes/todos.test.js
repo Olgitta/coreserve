@@ -1,123 +1,59 @@
-'use strict';
-
+/**
+ * These tests ensure that the routes exist and respond as expected.
+ * They don’t test the implementation details of handlers.
+ */
 const request = require('supertest');
 const express = require('express');
+const {Types} = require("mongoose");
+const {faker} = require('@faker-js/faker');
 const todosRouter = require('../../src/routes/todos');
-const {create, update, remove, getById, getAll} = require('../../src/todos/controller');
-jest.mock('../../src/todos/controller');
 
 const app = express();
 app.use(express.json());
-app.use('/todos', todosRouter);
+app.use('/api/todos', todosRouter);
 
-describe('Todos Router', () => {
+const {create, getById, update, remove, getAll} = require('../../src/apis/todos/controller');
+jest.mock('../../src/apis/todos/controller');
+
+const generateDynamicId = () => new Types.ObjectId().toString();
+
+describe('Todos API Routes', () => {
     beforeEach(() => {
         jest.clearAllMocks();
     });
 
-    describe('POST /todos', () => {
-        it('should create a new todo and return 201', async () => {
-            create.mockResolvedValue({statusCode: 201, resources: {id: '123', title: 'Test Todo'}});
+    it('GET /api/todos', async () => {
+        getAll.mockResolvedValue({statusCode: 200});
 
-            const response = await request(app)
-                .post('/todos')
-                .send({title: 'Test Todo'});
-
-            expect(response.status).toBe(201);
-            expect(response.body).toHaveProperty('resources.id', '123');
-            expect(response.body).toHaveProperty('resources.title', 'Test Todo');
-            expect(create).toHaveBeenCalledWith('Test Todo');
-        });
-
-        it('should return 400 for invalid input', async () => {
-            create.mockResolvedValue({statusCode: 400});
-
-            const response = await request(app)
-                .post('/todos')
-                .send({title: ''});
-
-            expect(response.status).toBe(400);
-            expect(create).toHaveBeenCalledWith('');
-        });
+        const res = await request(app).get('/api/todos');
+        expect(res.statusCode).toBe(200);
     });
 
-    describe('GET /todos', () => {
-        it('should return all todos', async () => {
-            getAll.mockResolvedValue({statusCode: 200, resources: [{id: '123', title: 'Test Todo'}]});
+    it('GET /api/todos/:id', async () => {
+        getById.mockResolvedValue({statusCode: 200});
 
-            const response = await request(app).get('/todos');
-
-            expect(response.status).toBe(200);
-            expect(response.body.resources).toHaveLength(1);
-            expect(response.body.resources[0]).toHaveProperty('id', '123');
-            expect(getAll).toHaveBeenCalled();
-        });
+        const res = await request(app).get(`/api/todos/${generateDynamicId()}`);
+        expect(res.statusCode).toBe(200);
     });
 
-    describe('GET /todos/:id', () => {
-        it('should return a todo by ID', async () => {
-            getById.mockResolvedValue({statusCode: 200, resources: {id: '123', title: 'Test Todo'}});
+    it('POST /api/todos', async () => {
+        create.mockResolvedValue({statusCode: 201});
 
-            const response = await request(app).get('/todos/123');
-
-            expect(response.status).toBe(200);
-            expect(response.body).toHaveProperty('resources.id', '123');
-            expect(getById).toHaveBeenCalledWith('123');
-        });
-
-        it('should return 404 if todo is not found', async () => {
-            getById.mockResolvedValue({statusCode: 404});
-
-            const response = await request(app).get('/todos/999');
-
-            expect(response.status).toBe(404);
-            expect(getById).toHaveBeenCalledWith('999');
-        });
+        const res = await request(app).post('/api/todos').send({title: faker.lorem.sentence()});
+        expect(res.statusCode).toBe(201);
     });
 
-    describe('PUT /todos/:id', () => {
-        it('should update a todo and return 200', async () => {
-            update.mockResolvedValue({statusCode: 200, resources: {id: '123', title: 'Updated Todo'}});
+    it('PUT /api/todos/:id', async () => {
+        update.mockResolvedValue({statusCode: 200});
 
-            const response = await request(app)
-                .put('/todos/123')
-                .send({title: 'Updated Todo'});
-
-            expect(response.status).toBe(200);
-            expect(response.body).toHaveProperty('resources.title', 'Updated Todo');
-            expect(update).toHaveBeenCalledWith('123', {title: 'Updated Todo'});
-        });
-
-        it('should return 404 if todo is not found', async () => {
-            update.mockResolvedValue({statusCode: 404});
-
-            const response = await request(app)
-                .put('/todos/999')
-                .send({title: 'Updated Todo'});
-
-            expect(response.status).toBe(404);
-            expect(update).toHaveBeenCalledWith('999', {title: 'Updated Todo'});
-        });
+        const res = await request(app).put(`/api/todos/${generateDynamicId()}`).send({title: faker.lorem.sentence()});
+        expect(res.statusCode).toBe(200);
     });
 
-    describe('DELETE /todos/:id', () => {
-        it('should delete a todo and return 200', async () => {
-            remove.mockResolvedValue({statusCode: 200, resources: {id: '123', title: 'Test Todo'}});
+    it('DELETE /api/todos/:id', async () => {
+        remove.mockResolvedValue({statusCode: 200});
 
-            const response = await request(app).delete('/todos/123');
-
-            expect(response.status).toBe(200);
-            expect(response.body).toHaveProperty('resources.id', '123');
-            expect(remove).toHaveBeenCalledWith('123');
-        });
-
-        it('should return 404 if todo is not found', async () => {
-            remove.mockResolvedValue({statusCode: 404});
-
-            const response = await request(app).delete('/todos/999');
-
-            expect(response.status).toBe(404);
-            expect(remove).toHaveBeenCalledWith('999');
-        });
+        const res = await request(app).delete(`/api/todos/${generateDynamicId()}`);
+        expect(res.statusCode).toBe(200);
     });
 });

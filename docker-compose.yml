@@ -8,15 +8,17 @@ services:
             - "5000:5000"
         environment:
             NODE_ENV: production
-            DEBUG: coreserve.*
             PORT: 5000
-#        env_file:
-#            - .env
-#            - .env.production
         depends_on:
             - redis
             - mongodb
             - mysql
+        healthcheck:
+          test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+          interval: 30s    # Check every 30 seconds
+          timeout: 10s     # Timeout for each health check
+          retries: 1       # Number of retries before marking as unhealthy
+          start_period: 5s # Grace period before starting health checks
 
     mongodb:
         image: mongo:6.0
@@ -26,10 +28,6 @@ services:
         volumes:
             - "mongodb_data:/data/db"
             - "./scripts/mongodb_scripts.js:/docker-entrypoint-initdb.d/init-script.js"
-
-    #        environment:
-#            MONGO_INITDB_ROOT_USERNAME: root
-#            MONGO_INITDB_ROOT_PASSWORD: 123456
 
     redis:
         image: redis:7.0
@@ -47,10 +45,6 @@ services:
             - "3306:3306"
         environment:
             MYSQL_ALLOW_EMPTY_PASSWORD: yes
-#            MYSQL_ROOT_PASSWORD: 123456
-#            MYSQL_DATABASE: devel
-#            MYSQL_USER: sa
-#            MYSQL_PASSWORD: 123456
         volumes:
             - "mysql_data:/var/lib/mysql"
             - "./scripts/mysql_scripts.sql:/docker-entrypoint-initdb.d/init-script.sql"

@@ -7,581 +7,16 @@
 	},
 	"item": [
 		{
-			"name": "Healthcheck",
-			"event": [
+			"name": "posts",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{base_url}}/health",
-					"host": [
-						"{{base_url}}"
-					],
-					"path": [
-						"health"
-					]
-				},
-				"description": "Healthcheck"
-			},
-			"response": [
-				{
-					"name": "200",
-					"originalRequest": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:5000/health",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "5000",
-							"path": [
-								"health"
-							]
-						}
-					},
-					"status": "OK",
-					"code": 200,
-					"_postman_previewlanguage": "json",
-					"header": [
-						{
-							"key": "X-Powered-By",
-							"value": "Express"
-						},
-						{
-							"key": "Content-Type",
-							"value": "application/json; charset=utf-8"
-						},
-						{
-							"key": "Content-Length",
-							"value": "78"
-						},
-						{
-							"key": "ETag",
-							"value": "W/\"4e-zuyT4G7RBSJAVPptwtUInVtYeh0\""
-						},
-						{
-							"key": "Date",
-							"value": "Fri, 20 Dec 2024 10:39:45 GMT"
-						},
-						{
-							"key": "Connection",
-							"value": "keep-alive"
-						},
-						{
-							"key": "Keep-Alive",
-							"value": "timeout=5"
-						}
-					],
-					"cookie": [],
-					"body": "{\n    \"metadata\": {\n        \"traceId\": \"ffe7a619-56dc-4c7c-a692-49c011578869\",\n        \"message\": \"OK\"\n    }\n}"
-				},
-				{
-					"name": "500",
-					"originalRequest": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/health",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"health"
-							]
-						}
-					},
-					"status": "Internal Server Error",
-					"code": 500,
-					"_postman_previewlanguage": "json",
-					"header": [
-						{
-							"key": "X-Powered-By",
-							"value": "Express"
-						},
-						{
-							"key": "Content-Type",
-							"value": "application/json; charset=utf-8"
-						},
-						{
-							"key": "Content-Length",
-							"value": "112"
-						},
-						{
-							"key": "ETag",
-							"value": "W/\"70-ye4UAV7+EwZ4BFR040MstuKJ0jA\""
-						},
-						{
-							"key": "Date",
-							"value": "Fri, 20 Dec 2024 18:28:44 GMT"
-						},
-						{
-							"key": "Connection",
-							"value": "keep-alive"
-						},
-						{
-							"key": "Keep-Alive",
-							"value": "timeout=5"
-						}
-					],
-					"cookie": [],
-					"body": "{\n    \"metadata\": {\n        \"traceId\": \"e5e9211d-68b8-4bea-bf0a-d14dbbefeec3\",\n        \"message\": \"ERROR: getaddrinfo ENOTFOUND mongodb\"\n    }\n}"
-				}
-			]
-		},
-		{
-			"name": "Get todos with pagination",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{base_url}}/todos?page=2&limit=1",
-					"host": [
-						"{{base_url}}"
-					],
-					"path": [
-						"todos"
-					],
-					"query": [
-						{
-							"key": "page",
-							"value": "2"
-						},
-						{
-							"key": "limit",
-							"value": "1"
-						}
-					]
-				},
-				"description": "Get todos with pagination"
-			},
-			"response": [
-				{
-					"name": "200",
-					"originalRequest": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:5000/todos?page=2&limit=1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "5000",
-							"path": [
-								"todos"
-							],
-							"query": [
-								{
-									"key": "page",
-									"value": "2"
-								},
-								{
-									"key": "limit",
-									"value": "1"
-								}
-							]
-						}
-					},
-					"status": "OK",
-					"code": 200,
-					"_postman_previewlanguage": "json",
-					"header": [
-						{
-							"key": "X-Powered-By",
-							"value": "Express"
-						},
-						{
-							"key": "Content-Type",
-							"value": "application/json; charset=utf-8"
-						},
-						{
-							"key": "Content-Length",
-							"value": "354"
-						},
-						{
-							"key": "ETag",
-							"value": "W/\"162-IHeI+9cEmrMUdidbzOQLOAmUq1Y\""
-						},
-						{
-							"key": "Date",
-							"value": "Fri, 20 Dec 2024 10:49:31 GMT"
-						},
-						{
-							"key": "Connection",
-							"value": "keep-alive"
-						},
-						{
-							"key": "Keep-Alive",
-							"value": "timeout=5"
-						}
-					],
-					"cookie": [],
-					"body": "{\n    \"metadata\": {\n        \"traceId\": \"e240894b-a848-4183-9825-87c512818102\"\n    },\n    \"resources\": [\n        {\n            \"title\": \"Todo title \",\n            \"completed\": false,\n            \"createdAt\": \"2024-12-19T16:18:05.982Z\",\n            \"updatedAt\": \"2024-12-19T16:18:05.982Z\",\n            \"id\": \"6764473d12467b2009a3cdff\"\n        }\n    ],\n    \"pagination\": {\n        \"totalPages\": 4,\n        \"prevPage\": \"/todos?page=1&limit=1\",\n        \"nextPage\": \"/todos?page=3&limit=1\"\n    }\n}"
-				},
-				{
-					"name": "500",
-					"originalRequest": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/todos?page=2&limit=1",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"todos"
-							],
-							"query": [
-								{
-									"key": "page",
-									"value": "2"
-								},
-								{
-									"key": "limit",
-									"value": "1"
-								}
-							]
-						}
-					},
-					"status": "Internal Server Error",
-					"code": 500,
-					"_postman_previewlanguage": "json",
-					"header": [
-						{
-							"key": "X-Powered-By",
-							"value": "Express"
-						},
-						{
-							"key": "Content-Type",
-							"value": "application/json; charset=utf-8"
-						},
-						{
-							"key": "Content-Length",
-							"value": "63"
-						},
-						{
-							"key": "ETag",
-							"value": "W/\"3f-sxS5OoIC7NgggfBEeM5PZvDrmPM\""
-						},
-						{
-							"key": "Date",
-							"value": "Fri, 20 Dec 2024 18:29:48 GMT"
-						},
-						{
-							"key": "Connection",
-							"value": "keep-alive"
-						},
-						{
-							"key": "Keep-Alive",
-							"value": "timeout=5"
-						}
-					],
-					"cookie": [],
-					"body": "{\n    \"metadata\": {\n        \"traceId\": \"a3deaef6-4daf-4ae6-b5eb-30e27f1aa128\"\n    }\n}"
-				}
-			]
-		},
-		{
-			"name": "Get todo by id",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{base_url}}/todos/:id",
-					"host": [
-						"{{base_url}}"
-					],
-					"path": [
-						"todos",
-						":id"
-					],
-					"query": [
-						{
-							"key": "",
-							"value": null,
-							"disabled": true
-						}
-					],
-					"variable": [
-						{
-							"key": "id",
-							"value": "6764473d12467b2009a3cdff"
-						}
-					]
-				},
-				"description": "Get todo by id"
-			},
-			"response": [
-				{
-					"name": "500",
-					"originalRequest": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:5000/todos/:id",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "5000",
-							"path": [
-								"todos",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "6764473d12467b2009a3cdff"
-								}
-							]
-						}
-					},
-					"status": "Internal Server Error",
-					"code": 500,
-					"_postman_previewlanguage": "json",
-					"header": [
-						{
-							"key": "X-Powered-By",
-							"value": "Express"
-						},
-						{
-							"key": "Content-Type",
-							"value": "application/json; charset=utf-8"
-						},
-						{
-							"key": "Content-Length",
-							"value": "63"
-						},
-						{
-							"key": "ETag",
-							"value": "W/\"3f-sxS5OoIC7NgggfBEeM5PZvDrmPM\""
-						},
-						{
-							"key": "Date",
-							"value": "Fri, 20 Dec 2024 18:29:48 GMT"
-						},
-						{
-							"key": "Connection",
-							"value": "keep-alive"
-						},
-						{
-							"key": "Keep-Alive",
-							"value": "timeout=5"
-						}
-					],
-					"cookie": [],
-					"body": "{\n    \"metadata\": {\n        \"traceId\": \"a3deaef6-4daf-4ae6-b5eb-30e27f1aa128\"\n    }\n}"
-				},
-				{
-					"name": "404",
-					"originalRequest": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/todos/:id",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"todos",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "6764473d12467b2009a3cdff"
-								}
-							]
-						}
-					},
-					"status": "Not Found",
-					"code": 404,
-					"_postman_previewlanguage": "json",
-					"header": [
-						{
-							"key": "X-Powered-By",
-							"value": "Express"
-						},
-						{
-							"key": "Content-Type",
-							"value": "application/json; charset=utf-8"
-						},
-						{
-							"key": "Content-Length",
-							"value": "63"
-						},
-						{
-							"key": "ETag",
-							"value": "W/\"3f-qZGCizo12QxerkHYl1nIM4UGN/Q\""
-						},
-						{
-							"key": "Date",
-							"value": "Fri, 20 Dec 2024 18:40:46 GMT"
-						},
-						{
-							"key": "Connection",
-							"value": "keep-alive"
-						},
-						{
-							"key": "Keep-Alive",
-							"value": "timeout=5"
-						}
-					],
-					"cookie": [],
-					"body": "{\n    \"metadata\": {\n        \"traceId\": \"b1121a96-2211-42ee-b6b6-15773d8bd563\"\n    }\n}"
-				},
-				{
-					"name": "200",
-					"originalRequest": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/todos/:id",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"todos",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "6764473d12467b2009a3cdff"
-								}
-							]
-						}
-					},
-					"status": "OK",
-					"code": 200,
-					"_postman_previewlanguage": "json",
-					"header": [
-						{
-							"key": "X-Powered-By",
-							"value": "Express"
-						},
-						{
-							"key": "Content-Type",
-							"value": "application/json; charset=utf-8"
-						},
-						{
-							"key": "Content-Length",
-							"value": "252"
-						},
-						{
-							"key": "ETag",
-							"value": "W/\"fc-v5/MO9zhXJ7HXBeWtYgM416jlqI\""
-						},
-						{
-							"key": "Date",
-							"value": "Fri, 20 Dec 2024 18:41:37 GMT"
-						},
-						{
-							"key": "Connection",
-							"value": "keep-alive"
-						},
-						{
-							"key": "Keep-Alive",
-							"value": "timeout=5"
-						}
-					],
-					"cookie": [],
-					"body": "{\n    \"metadata\": {\n        \"traceId\": \"d5810ac9-87f5-43f6-be74-d3542d205bbe\"\n    },\n    \"resources\": {\n        \"title\": \"Todo Title \",\n        \"completed\": false,\n        \"createdAt\": \"2024-12-19T16:18:05.982Z\",\n        \"updatedAt\": \"2024-12-19T16:18:05.982Z\",\n        \"id\": \"6764473d12467b2009a3cdff\"\n    }\n}"
-				}
-			]
-		},
-		{
-			"name": "Create todo",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Successful POST request\", function () {",
-							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
-							"});",
-							""
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"title\": \"todo title\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{base_url}}/todos",
-					"host": [
-						"{{base_url}}"
-					],
-					"path": [
-						"todos"
-					]
-				},
-				"description": "Create todo"
-			},
-			"response": [
-				{
-					"name": "400",
-					"originalRequest": {
+					"name": "Create post",
+					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"Add your name in the body\"\n}",
+							"raw": "{\r\n    \"title\": \"title 100100\",\r\n    \"content\": \"kfjhg kjshgkjfhgkjfh kgjhfj gkjfh gjfdhgk\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -589,56 +24,774 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:5000/todos",
-							"protocol": "http",
+							"raw": "{{base_url}}/posts",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "5000",
 							"path": [
-								"todos"
+								"posts"
 							]
 						}
 					},
-					"status": "Bad Request",
-					"code": 400,
-					"_postman_previewlanguage": "json",
-					"header": [
+					"response": [
 						{
-							"key": "X-Powered-By",
-							"value": "Express"
-						},
-						{
-							"key": "Content-Type",
-							"value": "application/json; charset=utf-8"
-						},
-						{
-							"key": "Content-Length",
-							"value": "63"
-						},
-						{
-							"key": "ETag",
-							"value": "W/\"3f-+UYdGuoX1OA2lQ2gu+NYIB+ZXTo\""
-						},
-						{
-							"key": "Date",
-							"value": "Fri, 20 Dec 2024 18:32:18 GMT"
-						},
-						{
-							"key": "Connection",
-							"value": "keep-alive"
-						},
-						{
-							"key": "Keep-Alive",
-							"value": "timeout=5"
+							"name": "201",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\": \"title 300400\",\r\n    \"content\": \"sasaasa sasdaasa kjshgkjfhgkjfh kgjhfj gkjfh gjfdhgk\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/posts",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"posts"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "260"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"104-WlaWF1zhsgR9UDmfwwU7GqXti7o\""
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 21 Dec 2024 18:26:33 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"metadata\": {\n        \"traceId\": \"92445f2f-da16-4371-8075-4040365d7d25\"\n    },\n    \"resources\": {\n        \"likes\": 0,\n        \"id\": 6,\n        \"title\": \"title 300400\",\n        \"content\": \"sasaasa sasdaasa kjshgkjfhgkjfh kgjhfj gkjfh gjfdhgk\",\n        \"updatedAt\": \"2024-12-21T18:26:32.951Z\",\n        \"createdAt\": \"2024-12-21T18:26:32.951Z\"\n    }\n}"
 						}
-					],
-					"cookie": [],
-					"body": "{\n    \"metadata\": {\n        \"traceId\": \"9aa90d28-bade-4c98-9c89-47836c2d440f\"\n    }\n}"
+					]
 				},
 				{
-					"name": "201",
-					"originalRequest": {
+					"name": "Get posts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/posts?page=1&limit=20",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"posts"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "200",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/posts?page=2&limit=2",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"posts"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "2"
+										},
+										{
+											"key": "limit",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "525"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"20d-QYfGOnDDFxA37qJHiHq2BsTx+B8\""
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 21 Dec 2024 20:30:25 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"metadata\": {\n        \"traceId\": \"cd0f9af9-12e5-4744-b090-3f6ee707d94c\"\n    },\n    \"resources\": [\n        {\n            \"id\": 4,\n            \"title\": \"title 200300\",\n            \"content\": \"kfjhg kjshgkjfhgkjfh kgjhfj gkjfh gjfdhgk\",\n            \"likes\": 0,\n            \"createdAt\": \"2024-12-21T18:21:06.000Z\",\n            \"updatedAt\": \"2024-12-21T18:21:06.000Z\"\n        },\n        {\n            \"id\": 3,\n            \"title\": \"title 200300\",\n            \"content\": \"kfjhg kjshgkjfhgkjfh kgjhfj gkjfh gjfdhgk\",\n            \"likes\": 0,\n            \"createdAt\": \"2024-12-21T18:15:24.000Z\",\n            \"updatedAt\": \"2024-12-21T18:15:24.000Z\"\n        }\n    ],\n    \"pagination\": {\n        \"totalPages\": 3,\n        \"prevPage\": \"/posts?page=1&limit=2\",\n        \"nextPage\": \"/posts?page=3&limit=2\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Get post by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/posts/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"posts",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "404",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/posts/:id",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"posts",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "55453453453"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "63"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"3f-5y7sAAvR598pu5Kf/vad3xSHOJc\""
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 21 Dec 2024 21:45:22 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"metadata\": {\n        \"traceId\": \"fcea64a4-eeca-4aaf-ad8b-e21b05220805\"\n    }\n}"
+						},
+						{
+							"name": "200",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/posts/:id",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"posts",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "249"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"f9-4PaSWHYGSnotRGd5DxEQ/aL4uUM\""
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 21 Dec 2024 21:45:46 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"metadata\": {\n        \"traceId\": \"78d9961e-ba6e-4f5d-a65a-1e4f3cc7323f\"\n    },\n    \"resources\": {\n        \"id\": 2,\n        \"title\": \"title 100100\",\n        \"content\": \"kfjhg kjshgkjfhgkjfh kgjhfj gkjfh gjfdhgk\",\n        \"likes\": 0,\n        \"createdAt\": \"2024-12-21T18:07:56.000Z\",\n        \"updatedAt\": \"2024-12-21T18:07:56.000Z\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Update post",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n            \"title\": \"Mauris ac rhoncus velit.\",\r\n            \"content\": \"Vestibulum egestas non turpis sit amet condimentum. Cras eget tempus nulla. Duis porta ipsum eu urna imperdiet, in feugiat velit dignissim. Vivamus tempus tortor vel elit elementum dignissim. Etiam non dolor et ante accumsan accumsan nec non velit. Donec in ipsum semper, tempus metus et, eleifend est. Maecenas mi tortor, tincidunt id ultricies eget, dignissim vitae lorem. Aliquam nisi magna, aliquam at odio fringilla, sollicitudin fermentum felis. Donec vehicula vel massa a faucibus. Quisque tincidunt porttitor lorem, id hendrerit ligula consequat et.\"\r\n        }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/posts/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"posts",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete post",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/posts/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"posts",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "todos",
+			"item": [
+				{
+					"name": "Get todos with pagination",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/todos?page=1&limit=5",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"todos"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "5"
+								}
+							]
+						},
+						"description": "Get todos with pagination"
+					},
+					"response": [
+						{
+							"name": "200",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/todos?page=2&limit=1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"todos"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "2"
+										},
+										{
+											"key": "limit",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "354"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"162-IHeI+9cEmrMUdidbzOQLOAmUq1Y\""
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 20 Dec 2024 10:49:31 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"metadata\": {\n        \"traceId\": \"e240894b-a848-4183-9825-87c512818102\"\n    },\n    \"resources\": [\n        {\n            \"title\": \"bbb i fkjgdfkjglfkjglkdfjglkfjd uoi \",\n            \"completed\": false,\n            \"createdAt\": \"2024-12-19T16:18:05.982Z\",\n            \"updatedAt\": \"2024-12-19T16:18:05.982Z\",\n            \"id\": \"6764473d12467b2009a3cdff\"\n        }\n    ],\n    \"pagination\": {\n        \"totalPages\": 4,\n        \"prevPage\": \"/todos?page=1&limit=1\",\n        \"nextPage\": \"/todos?page=3&limit=1\"\n    }\n}"
+						},
+						{
+							"name": "500",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/todos?page=2&limit=1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"todos"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "2"
+										},
+										{
+											"key": "limit",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "63"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"3f-sxS5OoIC7NgggfBEeM5PZvDrmPM\""
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 20 Dec 2024 18:29:48 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"metadata\": {\n        \"traceId\": \"a3deaef6-4daf-4ae6-b5eb-30e27f1aa128\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Get todo by id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/todos/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"todos",
+								":id"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "6764473d12467b2009a3cdff"
+								}
+							]
+						},
+						"description": "Get todo by id"
+					},
+					"response": [
+						{
+							"name": "500",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/todos/:id",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"todos",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "6764473d12467b2009a3cdff"
+										}
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "63"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"3f-sxS5OoIC7NgggfBEeM5PZvDrmPM\""
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 20 Dec 2024 18:29:48 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"metadata\": {\n        \"traceId\": \"a3deaef6-4daf-4ae6-b5eb-30e27f1aa128\"\n    }\n}"
+						},
+						{
+							"name": "404",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/todos/:id",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"todos",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "6764473d12467b2009a3cdff"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "63"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"3f-qZGCizo12QxerkHYl1nIM4UGN/Q\""
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 20 Dec 2024 18:40:46 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"metadata\": {\n        \"traceId\": \"b1121a96-2211-42ee-b6b6-15773d8bd563\"\n    }\n}"
+						},
+						{
+							"name": "200",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/todos/:id",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"todos",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "6764473d12467b2009a3cdff"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "252"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"fc-v5/MO9zhXJ7HXBeWtYgM416jlqI\""
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 20 Dec 2024 18:41:37 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"metadata\": {\n        \"traceId\": \"d5810ac9-87f5-43f6-be74-d3542d205bbe\"\n    },\n    \"resources\": {\n        \"title\": \"bbb i fkjgdfkjglfkjglkdfjglkfjd uoi \",\n        \"completed\": false,\n        \"createdAt\": \"2024-12-19T16:18:05.982Z\",\n        \"updatedAt\": \"2024-12-19T16:18:05.982Z\",\n        \"id\": \"6764473d12467b2009a3cdff\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Create todo",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -658,166 +811,152 @@
 							"path": [
 								"todos"
 							]
-						}
+						},
+						"description": "Create todo"
 					},
-					"status": "Created",
-					"code": 201,
-					"_postman_previewlanguage": "json",
-					"header": [
+					"response": [
 						{
-							"key": "X-Powered-By",
-							"value": "Express"
+							"name": "400",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"name\": \"Add your name in the body\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5000/todos",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"todos"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "63"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"3f-+UYdGuoX1OA2lQ2gu+NYIB+ZXTo\""
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 20 Dec 2024 18:32:18 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"metadata\": {\n        \"traceId\": \"9aa90d28-bade-4c98-9c89-47836c2d440f\"\n    }\n}"
 						},
 						{
-							"key": "Content-Type",
-							"value": "application/json; charset=utf-8"
-						},
-						{
-							"key": "Content-Length",
-							"value": "226"
-						},
-						{
-							"key": "ETag",
-							"value": "W/\"e2-AkIQRjdkTn950LiiI9AEMnV8wB8\""
-						},
-						{
-							"key": "Date",
-							"value": "Fri, 20 Dec 2024 18:33:16 GMT"
-						},
-						{
-							"key": "Connection",
-							"value": "keep-alive"
-						},
-						{
-							"key": "Keep-Alive",
-							"value": "timeout=5"
-						}
-					],
-					"cookie": [],
-					"body": "{\n    \"metadata\": {\n        \"traceId\": \"4b0cf6a2-400f-40ce-98f7-a977a64135d8\"\n    },\n    \"resources\": {\n        \"title\": \"todo title\",\n        \"completed\": false,\n        \"createdAt\": \"2024-12-20T18:33:16.007Z\",\n        \"updatedAt\": \"2024-12-20T18:33:16.007Z\",\n        \"id\": \"6765b86cb7e1d374bfb59d98\"\n    }\n}"
-				}
-			]
-		},
-		{
-			"name": "Update todo",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Successful PUT request\", function () {",
-							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 204]);",
-							"});",
-							""
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"method": "PUT",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"name\": \"todo title\",\n    \"completed\": true\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{base_url}}/todos/:id",
-					"host": [
-						"{{base_url}}"
-					],
-					"path": [
-						"todos",
-						":id"
-					],
-					"variable": [
-						{
-							"key": "id",
-							"value": "6764474412467b2009a3ce01"
+							"name": "201",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"title\": \"todo title\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/todos",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"todos"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "226"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"e2-AkIQRjdkTn950LiiI9AEMnV8wB8\""
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 20 Dec 2024 18:33:16 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"metadata\": {\n        \"traceId\": \"4b0cf6a2-400f-40ce-98f7-a977a64135d8\"\n    },\n    \"resources\": {\n        \"title\": \"todo title\",\n        \"completed\": false,\n        \"createdAt\": \"2024-12-20T18:33:16.007Z\",\n        \"updatedAt\": \"2024-12-20T18:33:16.007Z\",\n        \"id\": \"6765b86cb7e1d374bfb59d98\"\n    }\n}"
 						}
 					]
 				},
-				"description": "Update todo"
-			},
-			"response": [
 				{
-					"name": "200",
-					"originalRequest": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\t\"name\": \"todo title\",\n    \"completed\": true\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
+					"name": "Update todo",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful PUT request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 204]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
 							}
-						},
-						"url": {
-							"raw": "http://localhost:5000/todos/:id",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "5000",
-							"path": [
-								"todos",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "6765b86cb7e1d374bfb59d98"
-								}
-							]
-						}
-					},
-					"status": "OK",
-					"code": 200,
-					"_postman_previewlanguage": "json",
-					"header": [
-						{
-							"key": "X-Powered-By",
-							"value": "Express"
-						},
-						{
-							"key": "Content-Type",
-							"value": "application/json; charset=utf-8"
-						},
-						{
-							"key": "Content-Length",
-							"value": "225"
-						},
-						{
-							"key": "ETag",
-							"value": "W/\"e1-AeCH7CAXfYJjYTzsKpHwe9kw0FA\""
-						},
-						{
-							"key": "Date",
-							"value": "Fri, 20 Dec 2024 18:35:17 GMT"
-						},
-						{
-							"key": "Connection",
-							"value": "keep-alive"
-						},
-						{
-							"key": "Keep-Alive",
-							"value": "timeout=5"
 						}
 					],
-					"cookie": [],
-					"body": "{\n    \"metadata\": {\n        \"traceId\": \"eb204a27-b8a5-4ca1-aaa2-85cbf2f8d78c\"\n    },\n    \"resources\": {\n        \"title\": \"todo title\",\n        \"completed\": true,\n        \"createdAt\": \"2024-12-20T18:33:16.007Z\",\n        \"updatedAt\": \"2024-12-20T18:35:17.193Z\",\n        \"id\": \"6765b86cb7e1d374bfb59d98\"\n    }\n}"
-				},
-				{
-					"name": "404",
-					"originalRequest": {
+					"request": {
 						"method": "PUT",
 						"header": [],
 						"body": {
@@ -844,148 +983,164 @@
 									"value": "6764474412467b2009a3ce01"
 								}
 							]
-						}
+						},
+						"description": "Update todo"
 					},
-					"status": "Not Found",
-					"code": 404,
-					"_postman_previewlanguage": "json",
-					"header": [
+					"response": [
 						{
-							"key": "X-Powered-By",
-							"value": "Express"
+							"name": "200",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"name\": \"todo title\",\n    \"completed\": true\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/todos/:id",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"todos",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "6765b86cb7e1d374bfb59d98"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "225"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"e1-AeCH7CAXfYJjYTzsKpHwe9kw0FA\""
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 20 Dec 2024 18:35:17 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"metadata\": {\n        \"traceId\": \"eb204a27-b8a5-4ca1-aaa2-85cbf2f8d78c\"\n    },\n    \"resources\": {\n        \"title\": \"todo title\",\n        \"completed\": true,\n        \"createdAt\": \"2024-12-20T18:33:16.007Z\",\n        \"updatedAt\": \"2024-12-20T18:35:17.193Z\",\n        \"id\": \"6765b86cb7e1d374bfb59d98\"\n    }\n}"
 						},
 						{
-							"key": "Content-Type",
-							"value": "application/json; charset=utf-8"
-						},
-						{
-							"key": "Content-Length",
-							"value": "63"
-						},
-						{
-							"key": "ETag",
-							"value": "W/\"3f-J+G4s+XZMSBqs2b8FRLF+dWGgwE\""
-						},
-						{
-							"key": "Date",
-							"value": "Fri, 20 Dec 2024 18:37:41 GMT"
-						},
-						{
-							"key": "Connection",
-							"value": "keep-alive"
-						},
-						{
-							"key": "Keep-Alive",
-							"value": "timeout=5"
-						}
-					],
-					"cookie": [],
-					"body": "{\n    \"metadata\": {\n        \"traceId\": \"023b2407-980e-40f0-abff-6d4c915e980b\"\n    }\n}"
-				}
-			]
-		},
-		{
-			"name": "Delete todo",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Successful DELETE request\", function () {",
-							"    pm.expect(pm.response.code).to.be.oneOf([200, 202, 204]);",
-							"});",
-							""
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "{{base_url}}/todos/:id",
-					"host": [
-						"{{base_url}}"
-					],
-					"path": [
-						"todos",
-						":id"
-					],
-					"variable": [
-						{
-							"key": "id",
-							"value": "6764474412467b2009a3ce01"
+							"name": "404",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"name\": \"todo title\",\n    \"completed\": true\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/todos/:id",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"todos",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "6764474412467b2009a3ce01"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "63"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"3f-J+G4s+XZMSBqs2b8FRLF+dWGgwE\""
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 20 Dec 2024 18:37:41 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"metadata\": {\n        \"traceId\": \"023b2407-980e-40f0-abff-6d4c915e980b\"\n    }\n}"
 						}
 					]
 				},
-				"description": "Delete todo"
-			},
-			"response": [
 				{
-					"name": "200",
-					"originalRequest": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:5000/todos/:id",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "5000",
-							"path": [
-								"todos",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "6764474412467b2009a3ce01"
-								}
-							]
-						}
-					},
-					"status": "OK",
-					"code": 200,
-					"_postman_previewlanguage": "json",
-					"header": [
+					"name": "Delete todo",
+					"event": [
 						{
-							"key": "X-Powered-By",
-							"value": "Express"
-						},
-						{
-							"key": "Content-Type",
-							"value": "application/json; charset=utf-8"
-						},
-						{
-							"key": "Content-Length",
-							"value": "252"
-						},
-						{
-							"key": "ETag",
-							"value": "W/\"fc-UMerYYQW/4LzaAbhwWxcm8vPFA0\""
-						},
-						{
-							"key": "Date",
-							"value": "Fri, 20 Dec 2024 18:36:46 GMT"
-						},
-						{
-							"key": "Connection",
-							"value": "keep-alive"
-						},
-						{
-							"key": "Keep-Alive",
-							"value": "timeout=5"
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful DELETE request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 202, 204]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
 						}
 					],
-					"cookie": [],
-					"body": "{\n    \"metadata\": {\n        \"traceId\": \"6dc71c56-a94f-4f65-b77b-26e65ae6bf98\"\n    },\n    \"resources\": {\n        \"title\": \"Todo Title \",\n        \"completed\": false,\n        \"createdAt\": \"2024-12-19T16:18:12.137Z\",\n        \"updatedAt\": \"2024-12-19T16:18:12.137Z\",\n        \"id\": \"6764474412467b2009a3ce01\"\n    }\n}"
-				},
-				{
-					"name": "404",
-					"originalRequest": {
+					"request": {
 						"method": "DELETE",
 						"header": [],
 						"url": {
@@ -1003,43 +1158,267 @@
 									"value": "6764474412467b2009a3ce01"
 								}
 							]
-						}
+						},
+						"description": "Delete todo"
 					},
-					"status": "Not Found",
-					"code": 404,
-					"_postman_previewlanguage": "json",
-					"header": [
+					"response": [
 						{
-							"key": "X-Powered-By",
-							"value": "Express"
+							"name": "200",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/todos/:id",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"todos",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "6764474412467b2009a3ce01"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "252"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"fc-UMerYYQW/4LzaAbhwWxcm8vPFA0\""
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 20 Dec 2024 18:36:46 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"metadata\": {\n        \"traceId\": \"6dc71c56-a94f-4f65-b77b-26e65ae6bf98\"\n    },\n    \"resources\": {\n        \"title\": \"ccc i fkjgdfkjglfkjglkdfjglkfjd uoi \",\n        \"completed\": false,\n        \"createdAt\": \"2024-12-19T16:18:12.137Z\",\n        \"updatedAt\": \"2024-12-19T16:18:12.137Z\",\n        \"id\": \"6764474412467b2009a3ce01\"\n    }\n}"
 						},
 						{
-							"key": "Content-Type",
-							"value": "application/json; charset=utf-8"
-						},
+							"name": "404",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/todos/:id",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"todos",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "6764474412467b2009a3ce01"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "63"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"3f-CVNcsTOrk8DkW7abL0zo23dgzDI\""
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 20 Dec 2024 18:37:15 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"metadata\": {\n        \"traceId\": \"add1da98-6f9e-43c1-ab02-1a595018ab7a\"\n    }\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "core",
+			"item": [
+				{
+					"name": "Healthcheck",
+					"event": [
 						{
-							"key": "Content-Length",
-							"value": "63"
-						},
-						{
-							"key": "ETag",
-							"value": "W/\"3f-CVNcsTOrk8DkW7abL0zo23dgzDI\""
-						},
-						{
-							"key": "Date",
-							"value": "Fri, 20 Dec 2024 18:37:15 GMT"
-						},
-						{
-							"key": "Connection",
-							"value": "keep-alive"
-						},
-						{
-							"key": "Keep-Alive",
-							"value": "timeout=5"
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
 						}
 					],
-					"cookie": [],
-					"body": "{\n    \"metadata\": {\n        \"traceId\": \"add1da98-6f9e-43c1-ab02-1a595018ab7a\"\n    }\n}"
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/health",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"health"
+							]
+						},
+						"description": "Healthcheck"
+					},
+					"response": [
+						{
+							"name": "200",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/health",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"health"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "78"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"4e-zuyT4G7RBSJAVPptwtUInVtYeh0\""
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 20 Dec 2024 10:39:45 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"metadata\": {\n        \"traceId\": \"ffe7a619-56dc-4c7c-a692-49c011578869\",\n        \"message\": \"OK\"\n    }\n}"
+						},
+						{
+							"name": "500",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/health",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"health"
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "112"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"70-ye4UAV7+EwZ4BFR040MstuKJ0jA\""
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 20 Dec 2024 18:28:44 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"metadata\": {\n        \"traceId\": \"e5e9211d-68b8-4bea-bf0a-d14dbbefeec3\",\n        \"message\": \"ERROR: getaddrinfo ENOTFOUND mongodb\"\n    }\n}"
+						}
+					]
 				}
 			]
 		}
@@ -1062,16 +1441,6 @@
 					""
 				]
 			}
-		}
-	],
-	"variable": [
-		{
-			"key": "id",
-			"value": "1"
-		},
-		{
-			"key": "base_url",
-			"value": "http://localhost:5000"
 		}
 	]
 }

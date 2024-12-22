@@ -1,7 +1,7 @@
 'use strict';
 
 const mongoose = require('mongoose');
-const idTransformPlugin = require('../infra/db/mongodb/idTransformPlugin');
+const idTransformPlugin = require('../../infra/db/mongodb/idTransformPlugin');
 
 const todoSchema = new mongoose.Schema({
     title: { type: String, required: true },

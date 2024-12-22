@@ -1,7 +1,7 @@
 'use strict';
 
 const express = require('express');
-const {create, update, remove, getById, getAll} = require('../apis/todos/controller');
+const {create, update, remove, getById, getAll,like,unlike} = require('../apis/posts/controller');
 const ResponseBuilder = require('../builders/ResponseBuilder');
 const {getTraceId} = require('../core/execution-context/context');
 const {isNonEmptyObject} = require('../core/utils/validators');
@@ -24,8 +24,20 @@ function handleResult(result) {
 }
 
 router.post('/', async (req, res) => {
-    const {title} = req.body;
-    const result = await create(title);
+    const {title, content} = req.body;
+    const result = await create(title, content);
+    res.status(result.statusCode).send(handleResult(result));
+});
+
+router.post('/like/:id', async (req, res) => {
+    const {id} = req.params;
+    const result = await like(id);
+    res.status(result.statusCode).send(handleResult(result));
+});
+
+router.post('/unlike/:id', async (req, res) => {
+    const {id} = req.params;
+    const result = await unlike(id);
     res.status(result.statusCode).send(handleResult(result));
 });
 

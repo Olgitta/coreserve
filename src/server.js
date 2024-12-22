@@ -1,11 +1,11 @@
 'use strict';
 
-const app = require('../src/app');
 const debug = require('debug')('coreserve:server');
 const http = require('node:http');
-const {getShutdownCallbacks} = require('./core/shutdownManager');
+const {getShutdownCallbacks} = require('./core/shutdown-manager');
 const getConfiguration = require('./config/configuration');
 const mongoDbSetup = require('./infra/db/mongodb');
+const mySqlSetup = require('./infra/db/mysql');
 
 process.on('uncaughtException', (err) => {
     console.error('Uncaught Exception:', err);
@@ -24,7 +24,9 @@ module.exports = async function start() {
     const config = getConfiguration();
 
     await mongoDbSetup(config.mongodb);
+    await mySqlSetup(config.mysql);
 
+    const app = require('../src/app');
     app.set('port', port);
 
     const server = http.createServer(app);

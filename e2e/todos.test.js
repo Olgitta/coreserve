@@ -1,14 +1,22 @@
 const request = require('supertest');
-const {BASE_URL, testStatusAndTraceId, testTodoStructure,} = require('./helpers');
+const { faker } = require('@faker-js/faker');
+
+const {
+    BASE_URL,
+    testStatusAndTraceId,
+    testTodoStructure
+} = require('./helpers');
 
 describe('TODOS API Endpoints', () => {
+    // Grouping tests for the "happy path"
+    describe('Happy Path Scenarios', () => {
+        const toRemove = []; // Track created items to clean up after tests
 
-    describe('happy path', () => {
+        test('POST /todos - successfully creates a new todo item', async () => {
+            // Arrange: Prepare a new todo item
+            const newItem = {title: faker.lorem.sentence()};
 
-        const toRemove = [];
-
-        test('POST /todos - should create a new todo', async () => {
-            const newItem = {title: 'todo e2e 1'};
+            // Act: Send a POST request to create the todo
             const response = await request(BASE_URL)
                 .post('/todos')
                 .send(newItem)
@@ -16,24 +24,28 @@ describe('TODOS API Endpoints', () => {
 
             const actual = response.body;
 
+            // Assert: Check the status, structure, and content of the response
             testStatusAndTraceId(response.status, actual.metadata.traceId, 201);
             testTodoStructure(actual.resources);
-
             expect(actual.resources.title).toEqual(newItem.title);
 
+            // Cleanup: Add the created item's ID to the removal list
             toRemove.push(actual.resources.id);
         });
 
-        test('PUT /todos/:id - should update an existing todo', async () => {
-            const newItem = {title: 'todo e2e 1'};
+        test('PUT /todos/:id - successfully updates an existing todo item', async () => {
+            // Arrange: Create a new todo item
+            const newItem = {title: faker.lorem.sentence()};
             const created = await request(BASE_URL)
                 .post('/todos')
                 .send(newItem)
                 .set('Content-Type', 'application/json');
-
             const id = created.body.resources.id;
 
-            const updateData = {title: 'updated todo', completed: true};
+            // Prepare the update data
+            const updateData = {title: faker.lorem.sentence(), completed: true};
+
+            // Act: Send a PUT request to update the todo
             const response = await request(BASE_URL)
                 .put(`/todos/${id}`)
                 .send(updateData)
@@ -41,104 +53,56 @@ describe('TODOS API Endpoints', () => {
 
             const actual = response.body;
 
+            // Assert: Validate the response structure and updated content
             testStatusAndTraceId(response.status, actual.metadata.traceId, 200);
             testTodoStructure(actual.resources);
             expect(actual.resources.title).toEqual(updateData.title);
             expect(actual.resources.completed).toEqual(updateData.completed);
 
+            // Cleanup: Add the updated item's ID to the removal list
             toRemove.push(id);
         });
 
-        test('GET /todos - paginated - should return status 200', async () => {
+        test('GET /todos - retrieves a paginated list of todos', async () => {
+            // Act: Send a GET request with pagination parameters
             const response = await request(BASE_URL).get('/todos').query({page: 1, limit: 10});
             const actual = response.body;
 
+            // Assert: Validate the response structure and pagination details
             testStatusAndTraceId(response.status, actual.metadata.traceId, 200);
             expect(actual.resources).toBeInstanceOf(Array);
             expect(actual.pagination.totalPages).toBeGreaterThan(0);
             testTodoStructure(actual.resources[0]);
         });
 
-        test('GET /todos/:id - should return status 200', async () => {
-            const newItem = {title: 'todo e2e get by id'};
+        test('GET /todos/:id - retrieves details of a specific todo item', async () => {
+            // Arrange: Create a new todo item
+            const newItem = {title: faker.lorem.sentence()};
             const created = await request(BASE_URL)
                 .post('/todos')
                 .send(newItem)
                 .set('Content-Type', 'application/json');
-
             const id = created.body.resources.id;
 
+            // Act: Send a GET request to fetch the todo by ID
             const response = await request(BASE_URL).get(`/todos/${id}`);
             const actual = response.body;
 
+            // Assert: Validate the response structure and content
             testStatusAndTraceId(response.status, actual.metadata.traceId, 200);
             testTodoStructure(actual.resources);
-
             expect(actual.resources.title).toEqual(newItem.title);
 
+            // Cleanup: Add the fetched item's ID to the removal list
             toRemove.push(id);
-
         });
 
-        test('DELETE /todos/:id - should delete todo', async () => {
-
+        test('DELETE /todos/:id - successfully deletes todo items created during tests', async () => {
+            // Cleanup: Iterate over tracked IDs and delete each todo
             for (const id of toRemove) {
                 const response = await request(BASE_URL).delete(`/todos/${id}`);
                 testStatusAndTraceId(response.status, response.body.metadata.traceId, 200);
             }
         });
-
-    });
-
-});
-
-/*
-const request = require('supertest');
-
-// Assuming your API is running on http://localhost:3000
-const BASE_URL = 'http://localhost:3000';
-
-describe('API Endpoints', () => {
-    test('GET /healthcheck - should return status 200', async () => {
-        const response = await request(BASE_URL).get('/healthcheck');
-        expect(response.status).toBe(200);
-        expect(response.body).toHaveProperty('status', 'ok');
-    });
-
-    test('GET /items - should return a list of items', async () => {
-        const response = await request(BASE_URL).get('/items');
-        expect(response.status).toBe(200);
-        expect(Array.isArray(response.body)).toBe(true);
-    });
-
-    test('POST /items - should create a new item', async () => {
-        const newItem = { name: 'Test Item', quantity: 10 };
-        const response = await request(BASE_URL)
-            .post('/items')
-            .send(newItem)
-            .set('Content-Type', 'application/json');
-
-        expect(response.status).toBe(201);
-        expect(response.body).toHaveProperty('id');
-        expect(response.body.name).toBe(newItem.name);
-    });
-
-    test('PUT /items/:id - should update an existing item', async () => {
-        const updateData = { quantity: 20 };
-        const response = await request(BASE_URL)
-            .put('/items/1')
-            .send(updateData)
-            .set('Content-Type', 'application/json');
-
-        expect(response.status).toBe(200);
-        expect(response.body.quantity).toBe(updateData.quantity);
-    });
-
-    test('DELETE /items/:id - should delete an item', async () => {
-        const response = await request(BASE_URL).delete('/items/1');
-        expect(response.status).toBe(200);
-        expect(response.body).toHaveProperty('message', 'Item deleted');
     });
 });
-
- */
