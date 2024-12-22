@@ -1,7 +1,7 @@
 'use strict';
 
 const {DataTypes} = require('sequelize');
-const {createModel} = require('../infra/db/mysql/connection');
+const {createModel} = require('../../infra/db/mysql/connection');
 
 const Post = createModel('Post', {
         id: {

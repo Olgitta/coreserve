@@ -1,9 +1,10 @@
 const request = require('supertest');
+const { faker } = require('@faker-js/faker');
+
 const {
     BASE_URL,
     testStatusAndTraceId,
-    testPostStructure,
-    loremIpsum
+    testPostStructure
 } = require('./helpers');
 
 describe('POSTS API Endpoints', () => {
@@ -16,8 +17,8 @@ describe('POSTS API Endpoints', () => {
         test('POST /posts - Create a new post', async () => {
             // Arrange
             const newItem = {
-                title: loremIpsum.getLoremIpsum().title,
-                content: loremIpsum.getLoremIpsum().text,
+                title: faker.lorem.sentence(),
+                content: faker.lorem.paragraph(),
             };
 
             // Act
@@ -41,8 +42,8 @@ describe('POSTS API Endpoints', () => {
         test('POST /posts/like/:id - Increment post likes', async () => {
             // Arrange
             const newItem = {
-                title: loremIpsum.getLoremIpsum().title,
-                content: loremIpsum.getLoremIpsum().text,
+                title: faker.lorem.sentence(),
+                content: faker.lorem.paragraph(),
             };
 
             // Act: Create a new post
@@ -68,8 +69,8 @@ describe('POSTS API Endpoints', () => {
         test('POST /posts/unlike/:id - Decrement post likes', async () => {
             // Arrange
             const newItem = {
-                title: loremIpsum.getLoremIpsum().title,
-                content: loremIpsum.getLoremIpsum().text,
+                title: faker.lorem.sentence(),
+                content: faker.lorem.paragraph(),
             };
 
             // Act: Create a new post and increment likes
@@ -103,8 +104,8 @@ describe('POSTS API Endpoints', () => {
         test('PUT /posts/:id - Update an existing post', async () => {
             // Arrange: Create a new post
             const newItem = {
-                title: loremIpsum.getLoremIpsum().title,
-                content: loremIpsum.getLoremIpsum().text,
+                title: faker.lorem.sentence(),
+                content: faker.lorem.paragraph(),
             };
             const created = await request(BASE_URL)
                 .post('/posts')
@@ -113,8 +114,8 @@ describe('POSTS API Endpoints', () => {
             const id = created.body.resources.id;
 
             const updateData = {
-                title: loremIpsum.getLoremIpsum(1).title,
-                content: loremIpsum.getLoremIpsum(1).text,
+                title: faker.lorem.sentence(),
+                content: faker.lorem.paragraph(),
             };
 
             // Act: Update the post
@@ -149,8 +150,8 @@ describe('POSTS API Endpoints', () => {
         test('GET /posts/:id - Fetch post by ID', async () => {
             // Arrange: Create a new post
             const newItem = {
-                title: loremIpsum.getLoremIpsum().title,
-                content: loremIpsum.getLoremIpsum().text,
+                title: faker.lorem.sentence(),
+                content: faker.lorem.paragraph(),
             };
             const created = await request(BASE_URL)
                 .post('/posts')

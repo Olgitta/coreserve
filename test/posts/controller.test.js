@@ -8,15 +8,14 @@ const {
     getPostById,
     updatePost,
     updateLikes,
-} = require('../../src/posts/crud');
-const PostsController = require('../../src/posts/controller');
+} = require('../../src/apis/posts/crud');
+const PostsController = require('../../src/apis/posts/controller');
 const log = require('../../src/core/logger');
 const { getCtx } = require('../../src/core/execution-context/context');
 const getConfiguration = require('../../src/config/configuration');
 const { PaginationBuilder, normalizePaginationParams } = require('../../src/pagination');
 
-// Mock dependencies
-jest.mock('../../src/posts/crud', () => ({
+jest.mock('../../src/apis/posts/crud', () => ({
     createPost: jest.fn(),
     deletePost: jest.fn(),
     getPostsWithPagination: jest.fn(),

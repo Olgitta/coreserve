@@ -18,7 +18,7 @@ const postSchema = Joi.object({
 });
 
 
-const BASE_URL = `http://localhost:${process.env.E2EPORT}`;
+const BASE_URL = `http://localhost:${process.env.E2EPORT}/api`;
 const guidRegex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
 
 const loremIpsumSet = [

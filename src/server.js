@@ -2,7 +2,7 @@
 
 const debug = require('debug')('coreserve:server');
 const http = require('node:http');
-const {getShutdownCallbacks} = require('./core/shutdownManager');
+const {getShutdownCallbacks} = require('./core/shutdown-manager');
 const getConfiguration = require('./config/configuration');
 const mongoDbSetup = require('./infra/db/mongodb');
 const mySqlSetup = require('./infra/db/mysql');

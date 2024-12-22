@@ -2,12 +2,12 @@
 
 const {StatusCodes} = require('http-status-codes');
 const {createPost, deletePost, getPostsWithPagination, getPostById, updatePost, updateLikes} = require('./crud');
-const log = require('../core/logger');
-const {isNonEmptyString, isNonEmptyObject} = require('../core/utils/validators');
+const log = require('../../core/logger');
+const {isNonEmptyString, isNonEmptyObject} = require('../../core/utils/validators');
 const debug = require('debug')('coreserve:PostsController');
-const {getCtx} = require('../core/execution-context/context');
-const getConfiguration = require('../config/configuration');
-const {PaginationBuilder, normalizePaginationParams} = require('../pagination');
+const {getCtx} = require('../../core/execution-context/context');
+const getConfiguration = require('../../config/configuration');
+const {PaginationBuilder, normalizePaginationParams} = require('../../pagination');
 
 module.exports = {
     create,

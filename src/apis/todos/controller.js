@@ -2,13 +2,13 @@
 
 const {StatusCodes} = require('http-status-codes');
 const {createTodo, getTodoById, updateTodo, deleteTodo, getTodosWithPagination} = require('./crud');
-const log = require('../core/logger');
-const {isNonEmptyString, isNonEmptyObject} = require('../core/utils/validators');
+const log = require('../../core/logger');
+const {isNonEmptyString, isNonEmptyObject} = require('../../core/utils/validators');
 const {Types} = require('mongoose');
 const debug = require('debug')('coreserve:TodosController');
-const {getCtx} = require('../core/execution-context/context');
-const getConfiguration=require('../config/configuration');
-const {PaginationBuilder, normalizePaginationParams} = require('../pagination');
+const {getCtx} = require('../../core/execution-context/context');
+const getConfiguration=require('../../config/configuration');
+const {PaginationBuilder, normalizePaginationParams} = require('../../pagination');
 
 async function create(title) {
     try {

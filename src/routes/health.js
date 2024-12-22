@@ -3,7 +3,7 @@
 const express = require('express');
 const router = express.Router();
 
-const getHealthCheckController = require('../controllers/healthCheckController');
+const getHealthCheckController = require('../health/controller');
 const ResponseBuilder = require('../builders/ResponseBuilder');
 const {getTraceId} = require('../core/execution-context/context');
 

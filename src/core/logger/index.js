@@ -1,6 +1,6 @@
 'use strict';
 
-const {getCtx} = require('./execution-context/context');
+const {getCtx} = require('../execution-context/context');
 const {createLogger, format, transports} = require('winston');
 
 const devFormat = format.combine(

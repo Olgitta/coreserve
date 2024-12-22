@@ -1,16 +1,16 @@
 'use strict';
 
 const {Types} = require("mongoose");
-const {create, getAll, getById, update, remove} = require('../../src/todos/controller');
+const {create, getAll, getById, update, remove} = require('../../src/apis/todos/controller');
 const {StatusCodes} = require('http-status-codes');
-const {createTodo, getTodoById, updateTodo, deleteTodo, getTodosWithPagination} = require('../../src/todos/crud');
+const {createTodo, getTodoById, updateTodo, deleteTodo, getTodosWithPagination} = require('../../src/apis/todos/crud');
 const log = require('../../src/core/logger');
 const {isNonEmptyString, isNonEmptyObject} = require('../../src/core/utils/validators');
 const {getCtx} = require('../../src/core/execution-context/context');
 const getConfiguration = require('../../src/config/configuration');
 const {PaginationBuilder, normalizePaginationParams} = require('../../src/pagination');
 
-jest.mock('../../src/todos/crud');
+jest.mock('../../src/apis/todos/crud');
 jest.mock('../../src/core/logger');
 jest.mock('../../src/core/utils/validators');
 jest.mock('../../src/core/execution-context/context');

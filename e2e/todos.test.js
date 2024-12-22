@@ -1,9 +1,10 @@
 const request = require('supertest');
+const { faker } = require('@faker-js/faker');
+
 const {
     BASE_URL,
     testStatusAndTraceId,
-    testTodoStructure,
-    loremIpsum
+    testTodoStructure
 } = require('./helpers');
 
 describe('TODOS API Endpoints', () => {
@@ -13,7 +14,7 @@ describe('TODOS API Endpoints', () => {
 
         test('POST /todos - successfully creates a new todo item', async () => {
             // Arrange: Prepare a new todo item
-            const newItem = {title: loremIpsum.getLoremIpsum().title};
+            const newItem = {title: faker.lorem.sentence()};
 
             // Act: Send a POST request to create the todo
             const response = await request(BASE_URL)
@@ -34,7 +35,7 @@ describe('TODOS API Endpoints', () => {
 
         test('PUT /todos/:id - successfully updates an existing todo item', async () => {
             // Arrange: Create a new todo item
-            const newItem = {title: loremIpsum.getLoremIpsum().title};
+            const newItem = {title: faker.lorem.sentence()};
             const created = await request(BASE_URL)
                 .post('/todos')
                 .send(newItem)
@@ -42,7 +43,7 @@ describe('TODOS API Endpoints', () => {
             const id = created.body.resources.id;
 
             // Prepare the update data
-            const updateData = {title: loremIpsum.getLoremIpsum(1).title, completed: true};
+            const updateData = {title: faker.lorem.sentence(), completed: true};
 
             // Act: Send a PUT request to update the todo
             const response = await request(BASE_URL)
@@ -76,7 +77,7 @@ describe('TODOS API Endpoints', () => {
 
         test('GET /todos/:id - retrieves details of a specific todo item', async () => {
             // Arrange: Create a new todo item
-            const newItem = {title: loremIpsum.getLoremIpsum().title};
+            const newItem = {title: faker.lorem.sentence()};
             const created = await request(BASE_URL)
                 .post('/todos')
                 .send(newItem)

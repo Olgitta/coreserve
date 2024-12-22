@@ -46,7 +46,7 @@ app.use('/api-spec', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use('/', indexRouter);
 app.use('/', healthRouter);
-app.use('/todos', todosRouter);
-app.use('/posts', postsRouter);
+app.use('/api/todos', todosRouter);
+app.use('/api/posts', postsRouter);
 
 module.exports = app;
