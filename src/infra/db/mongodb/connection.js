@@ -2,7 +2,7 @@
 
 const mongoose = require('mongoose');
 const debug = require('debug')('coreserve:mongodb');
-const log = require('../../../core/logger');
+const log = require('../../../core/logger')('MongoDbConnection');
 
 /**
  *
@@ -18,7 +18,7 @@ async function connectToDatabase(config) {
         });
         debug(`Connected to MongoDB: ${url}/${database}`);
     } catch (error) {
-        log.error(`Error connecting to MongoDB: ${url}/${database}: ${error.message}`);
+        log.error(`Error connecting to MongoDB: ${url}/${database}`, error);
         throw error;
     }
 }

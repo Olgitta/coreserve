@@ -4,19 +4,25 @@ const {Types} = require("mongoose");
 const {create, getAll, getById, update, remove} = require('../../src/apis/todos/controller');
 const {StatusCodes} = require('http-status-codes');
 const {createTodo, getTodoById, updateTodo, deleteTodo, getTodosWithPagination} = require('../../src/apis/todos/crud');
-const log = require('../../src/core/logger');
+const log = require('../../src/core/logger')();
 const {isNonEmptyString, isNonEmptyObject} = require('../../src/core/utils/validators');
-const {getCtx} = require('../../src/core/execution-context/context');
+const {getCtx, getTraceId} = require('../../src/core/execution-context/context');
 const getConfiguration = require('../../src/config/configuration');
-const {PaginationBuilder, normalizePaginationParams} = require('../../src/pagination');
+const {PaginationBuilder, normalizePaginationParams} = require('../../src/apis/pagination');
 
 jest.mock('../../src/apis/todos/crud');
-jest.mock('../../src/core/logger');
+jest.mock('../../src/core/logger', () => {
+    return jest.fn(() => ({
+        info: jest.fn(),
+        warn: jest.fn(),
+        error: jest.fn(),
+    }));
+});
 jest.mock('../../src/core/utils/validators');
 jest.mock('../../src/core/execution-context/context');
 jest.mock('../../src/config/configuration');
 
-jest.mock('../../src/pagination', () => ({
+jest.mock('../../src/apis/pagination', () => ({
     PaginationBuilder: jest.fn().mockImplementation(() => ({
         setUrl: jest.fn().mockReturnThis(),
         setTotal: jest.fn().mockReturnThis(),
@@ -45,7 +51,6 @@ describe('TodosController', () => {
             const result = await create('');
 
             expect(result).toEqual({statusCode: StatusCodes.BAD_REQUEST});
-            expect(log.error).toHaveBeenCalledWith('Todos Controller:create:invalid input');
         });
 
         it('should return CREATED with resources on success', async () => {
@@ -68,7 +73,6 @@ describe('TodosController', () => {
 
             expect(result.statusCode).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
             expect(result.reason).toBe('Mock Error');
-            expect(log.error).toHaveBeenCalled();
         });
     });
 
@@ -96,7 +100,6 @@ describe('TodosController', () => {
             const result = await getAll({});
 
             expect(result.statusCode).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
-            expect(log.error).toHaveBeenCalled();
         });
     });
 

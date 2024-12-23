@@ -2,7 +2,7 @@
 
 const express = require('express');
 const {create, update, remove, getById, getAll,like,unlike} = require('../apis/posts/controller');
-const ResponseBuilder = require('../builders/ResponseBuilder');
+const ResponseBuilder = require('../apis/ResponseBuilder');
 const {getTraceId} = require('../core/execution-context/context');
 const {isNonEmptyObject} = require('../core/utils/validators');
 const router = express.Router();

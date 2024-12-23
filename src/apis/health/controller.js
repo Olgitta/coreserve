@@ -1,8 +1,8 @@
 'use strict';
 
-const log = require('../core/logger');
-const mongodbPing = require('../infra/db/mongodb/connection').pingDatabase;
-const mysqlPing = require('../infra/db/mysql/connection').pingDatabase;
+const log = require('../../core/logger')('HealthCheckController');
+const mongodbPing = require('../../infra/db/mongodb/connection').pingDatabase;
+const mysqlPing = require('../../infra/db/mysql/connection').pingDatabase;
 
 module.exports = function getHealthCheckController() {
 

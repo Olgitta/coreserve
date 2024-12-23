@@ -3,6 +3,7 @@
 const debug = require('debug')('coreserve:posts:crud');
 const Post = require('./Post');
 const {Sequelize} = require('sequelize');
+const {getCommentById} = require('../comments/crud');
 
 module.exports = {
     createPost,
@@ -14,10 +15,10 @@ module.exports = {
 }
 
 async function createPost(payload) {
-    const post = await Post.create(payload);
+    const {dataValues} = await Post.create(payload);
 
-    debug('createPost', post);
-    return post;
+    debug('createPost', dataValues);
+    return dataValues;
 }
 
 async function getPosts() {
@@ -34,7 +35,7 @@ async function getPostsWithPagination(skip, limit) {
         order: [['updatedAt', 'DESC']],
     });
 
-    debug('getPostsWithPagination', posts);
+    debug(`getPostsWithPagination:total:${count}`);
     return {
         posts,
         total: count,

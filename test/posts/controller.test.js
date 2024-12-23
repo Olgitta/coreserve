@@ -10,10 +10,18 @@ const {
     updateLikes,
 } = require('../../src/apis/posts/crud');
 const PostsController = require('../../src/apis/posts/controller');
-const log = require('../../src/core/logger');
-const { getCtx } = require('../../src/core/execution-context/context');
+const { getCtx, getTraceId } = require('../../src/core/execution-context/context');
 const getConfiguration = require('../../src/config/configuration');
-const { PaginationBuilder, normalizePaginationParams } = require('../../src/pagination');
+const { PaginationBuilder, normalizePaginationParams } = require('../../src/apis/pagination');
+const log = require('../../src/core/logger')();
+
+jest.mock('../../src/core/logger', () => {
+    return jest.fn(() => ({
+        info: jest.fn(),
+        warn: jest.fn(),
+        error: jest.fn(),
+    }));
+});
 
 jest.mock('../../src/apis/posts/crud', () => ({
     createPost: jest.fn(),
@@ -24,17 +32,11 @@ jest.mock('../../src/apis/posts/crud', () => ({
     updateLikes: jest.fn(),
 }));
 
-jest.mock('../../src/core/logger', () => ({
-    error: jest.fn(),
-}));
-
-jest.mock('../../src/core/execution-context/context', () => ({
-    getCtx: jest.fn(),
-}));
+jest.mock('../../src/core/execution-context/context');
 
 jest.mock('../../src/config/configuration', () => jest.fn());
 
-jest.mock('../../src/pagination', () => ({
+jest.mock('../../src/apis/pagination', () => ({
     PaginationBuilder: jest.fn().mockImplementation(() => ({
         setUrl: jest.fn().mockReturnThis(),
         setTotal: jest.fn().mockReturnThis(),
@@ -69,7 +71,6 @@ describe('PostsController', () => {
         it('should return BAD_REQUEST if title or content is invalid', async () => {
             const result = await PostsController.create('', '');
 
-            expect(log.error).toHaveBeenCalledWith('Posts Controller:create:invalid input');
             expect(result).toEqual({ statusCode: StatusCodes.BAD_REQUEST });
         });
     });

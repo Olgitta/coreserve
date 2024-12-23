@@ -4,7 +4,7 @@ const Joi = require('joi');
 const fs = require('node:fs');
 const path = require('node:path');
 const dotenv = require('dotenv');
-const log = require('../core/logger');
+const log = require('../core/logger')('Configuration');
 const debug = require('debug')('coreserve:configuration');
 
 const mongodbSchema = Joi.object({
@@ -31,11 +31,18 @@ const postsSchema = Joi.object({
     }).required(),
 });
 
+const commentsSchema = Joi.object({
+    pagination: Joi.object({
+        limit: Joi.number().integer().min(1).required(),
+    }).required(),
+});
+
 const configSchema = Joi.object({
     mongodb: mongodbSchema.required(),
     mysql: mysqlSchema.required(),
     todos: todosSchema.required(),
     posts: postsSchema.required(),
+    comments: commentsSchema.required(),
 });
 
 const NODE_ENV = process.env.NODE_ENV || 'development';
@@ -82,6 +89,12 @@ function loadConfig() {
     config.posts = {
         pagination: {
             limit: Number.parseInt(process.env.POSTS_PAGINATION_LIMIT, 10),
+        }
+    }
+
+    config.comments = {
+        pagination: {
+            limit: Number.parseInt(process.env.COMMENTS_PAGINATION_LIMIT, 10),
         }
     }
 }

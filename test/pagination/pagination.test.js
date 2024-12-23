@@ -1,4 +1,4 @@
-const {PaginationBuilder} = require('../../src/pagination');
+const {PaginationBuilder} = require('../../src/apis/pagination');
 
 describe('PaginationBuilder', () => {
     let paginationBuilder;

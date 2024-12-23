@@ -29,7 +29,8 @@ class ResponseBuilder {
             return this;
         }
         if (process.env.NODE_ENV !== 'production') {
-            this.response.metadata.error = error;
+            const {code = '', message = ''} = error;
+            this.response.metadata.error = {code, message};
         }
 
         return this;

@@ -2,12 +2,12 @@
 
 const {StatusCodes} = require('http-status-codes');
 const {createPost, deletePost, getPostsWithPagination, getPostById, updatePost, updateLikes} = require('./crud');
-const log = require('../../core/logger');
-const {isNonEmptyString, isNonEmptyObject} = require('../../core/utils/validators');
+const log = require('../../core/logger')('PostsController');
 const debug = require('debug')('coreserve:PostsController');
 const {getCtx} = require('../../core/execution-context/context');
 const getConfiguration = require('../../config/configuration');
-const {PaginationBuilder, normalizePaginationParams} = require('../../pagination');
+const {PaginationBuilder, normalizePaginationParams} = require('../pagination');
+const Validator = require("../../core/utils/Validator");
 
 module.exports = {
     create,
@@ -21,15 +21,20 @@ module.exports = {
 
 async function create(title, content) {
     try {
-        if (!isNonEmptyString(title) || !isNonEmptyString(content)) {
-            log.error('Posts Controller:create:invalid input');
+        const {success, failed} = new Validator()
+            .isNonEmptyString(title)
+            .isNonEmptyString(content)
+            .validate();
+
+        if (failed) {
+            log.error(`create:invalid input:${failed.join(',')}`);
             return {statusCode: StatusCodes.BAD_REQUEST};
         }
 
         const result = await createPost({title, content});
         return {statusCode: StatusCodes.CREATED, resources: result};
     } catch (err) {
-        log.error(`Posts Controller:create:error: ${err.message}`, err);
+        log.error(`create:error`, err);
         return handleError(err);
     }
 }
@@ -37,10 +42,9 @@ async function create(title, content) {
 async function getAll(requestQuery) {
     try {
         const ctx = getCtx();
-        debug('getAll ctx', ctx);
-        const config = getConfiguration();
+        const config = getConfiguration().posts;
         debug('getAll config', config);
-        const {page, limit} = normalizePaginationParams(requestQuery.page, requestQuery.limit, config.posts);
+        const {page, limit} = normalizePaginationParams(requestQuery.page, requestQuery.limit, config);
         const skip = (page - 1) * limit;
         const {posts, total} = await getPostsWithPagination(skip, limit);
         const cleanUrl = ctx?.request?.url.split('?')[0];
@@ -65,7 +69,7 @@ async function getAll(requestQuery) {
             }
         };
     } catch (err) {
-        log.error(`Posts Controller:getAll:error: ${err.message}`, err);
+        log.error(`getAll:error`, err);
         return handleError(err);
     }
 }
@@ -74,13 +78,13 @@ async function getById(id) {
     try {
         const result = await getPostById(id);
         if (result === null) {
-            log.error('Posts Controller:getById:not found');
+            log.error('getById:not found');
             return {statusCode: StatusCodes.NOT_FOUND};
         }
 
         return {statusCode: StatusCodes.OK, resources: result};
     } catch (err) {
-        log.error(`Posts Controller:getById:error: ${err.message}`, err);
+        log.error(`getById:error`, err);
         return handleError(err);
     }
 }
@@ -89,13 +93,13 @@ async function remove(id) {
     try {
         const result = await deletePost(id);
         if (result === null) {
-            log.error('Posts Controller:remove:not found');
+            log.error('remove:not found');
             return {statusCode: StatusCodes.NOT_FOUND};
         }
 
         return {statusCode: StatusCodes.OK, resources: result};
     } catch (err) {
-        log.error(`Posts Controller:remove:error: ${err.message}`, err);
+        log.error(`remove:error`, err);
         return handleError(err);
     }
 }
@@ -104,13 +108,13 @@ async function update(id, data) {
     try {
         const result = await updatePost(id, data);
         if (result === null) {
-            log.error('Posts Controller:update:not found');
+            log.error('update:not found');
             return {statusCode: StatusCodes.NOT_FOUND};
         }
 
         return {statusCode: StatusCodes.OK, resources: result};
     } catch (err) {
-        log.error(`Posts Controller:update:error: ${err.message}`, err);
+        log.error(`update:error`, err);
         return handleError(err);
     }
 }
@@ -120,13 +124,13 @@ async function like(id) {
         const result = await updateLikes(id, true);
 
         if (result === null) {
-            log.error('Posts Controller:like:not found');
+            log.error('like:not found');
             return {statusCode: StatusCodes.NOT_FOUND};
         }
 
         return {statusCode: StatusCodes.OK, resources: result};
     } catch (err) {
-        log.error(`Posts Controller:like:error: ${err.message}`, err);
+        log.error(`like:error`, err);
         return handleError(err);
     }
 }
@@ -136,13 +140,13 @@ async function unlike(id) {
         const result = await updateLikes(id, false);
 
         if (result === null) {
-            log.error('Posts Controller:unlike:not found or no changes made.');
+            log.error('unlike:not found or no changes made.');
             return {statusCode: StatusCodes.NOT_FOUND};
         }
 
         return {statusCode: StatusCodes.OK, resources: result};
     } catch (err) {
-        log.error(`Posts Controller:unlike:error: ${err.message}`, err);
+        log.error(`unlike:error`, err);
         return handleError(err);
     }
 }

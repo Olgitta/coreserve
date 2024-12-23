@@ -1,10 +1,12 @@
 'use strict';
 
 const express = require('express');
-const path = require('path');
+const path = require('node:path');
 const cookieParser = require('cookie-parser');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./openapi/api-spec.json');
+
+const log = require('./core/logger')('APP');
 
 const contextMiddleware = require('./core/execution-context/contextMiddleware');
 
@@ -12,6 +14,7 @@ const indexRouter = require('./routes');
 const healthRouter = require('./routes/health');
 const todosRouter = require('./routes/todos');
 const postsRouter = require('./routes/posts');
+const commentsRouter = require('./routes/comments');
 
 const app = express();
 
@@ -48,5 +51,8 @@ app.use('/', indexRouter);
 app.use('/', healthRouter);
 app.use('/api/todos', todosRouter);
 app.use('/api/posts', postsRouter);
+app.use('/api/comments', commentsRouter);
+
+log.info('API initialized')
 
 module.exports = app;

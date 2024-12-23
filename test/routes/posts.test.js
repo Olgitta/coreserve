@@ -24,7 +24,7 @@ jest.mock('../../src/apis/posts/crud', () => ({
     updateLikes: jest.fn(),
 }));
 
-describe('Todos API Routes', () => {
+describe('Posts API Routes', () => {
     beforeEach(() => {
         jest.clearAllMocks();
     });
