@@ -1,6 +1,5 @@
 'use strict';
 
-const mysql = require('mysql2/promise');
 const debug = require('debug')('coreserve:mysql');
 const log = require('../../../core/logger')('MySqlConnection');
 const {Sequelize} = require('sequelize');

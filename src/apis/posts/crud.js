@@ -3,7 +3,7 @@
 const debug = require('debug')('coreserve:posts:crud');
 const Post = require('./Post');
 const {Sequelize} = require('sequelize');
-const {getCommentById} = require('../comments/crud');
+const {ApiError, ErrorCodes} = require('../../core/errors');
 
 module.exports = {
     createPost,
@@ -19,13 +19,6 @@ async function createPost(payload) {
 
     debug('createPost', dataValues);
     return dataValues;
-}
-
-async function getPosts() {
-    const posts = Post.findAll();
-
-    debug('getPosts', posts);
-    return posts;
 }
 
 async function getPostsWithPagination(skip, limit) {
@@ -50,7 +43,7 @@ async function getPostById(id) {
         return null;
     }
 
-    debug(`getPostById:${id}`, post);
+    debug(`getPostById:${id}`, post.dataValues);
     return post;
 }
 
@@ -66,7 +59,7 @@ async function updatePost(id, payload) {
 
     const post = await Post.findByPk(id);
 
-    debug(`updatePost:${id}:`, post);
+    debug(`updatePost:${id}:`, post.dataValues);
     return post;
 }
 
@@ -85,7 +78,7 @@ async function deletePost(id) {
 
 async function updateLikes(id, like = null) {
     if (like === null) {
-        return null;
+        throw new ApiError(`Unprocessable params on updateLikes comment with ID ${id}.`, ErrorCodes.UNPROCESSABLE_OPERATION);
     }
 
     const operation = like ? 'increment' : 'decrement';
@@ -97,11 +90,6 @@ async function updateLikes(id, like = null) {
         by: 1,
         where: where,
     });
-
-    if (affectedRows === 0) {
-        debug(`updateLikes: id=${id}, operation=${operation} - not found or no changes made.`);
-        return null;
-    }
 
     debug(`updateLikes: id=${id}, operation=${operation} - affectedRows=${affectedRows}`);
     return affectedRows;

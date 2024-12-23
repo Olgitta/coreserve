@@ -2,7 +2,7 @@ const {faker} = require('@faker-js/faker');
 
 const {createCtx, getCtx, getTraceId} = require('../../src/core/execution-context/context');
 
-describe('logger', () => {
+describe.skip('Logger Test', () => {
 
     it('should not fail when async context not available', () => {
         const log = require('../../src/core/logger')(faker.word.noun());

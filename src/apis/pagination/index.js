@@ -37,7 +37,7 @@ class PaginationBuilder {
 
     build() {
 
-        const {error, value} = builderSchema.validate(this.dataset);
+        const {error} = builderSchema.validate(this.dataset);
         if (error) {
             return {};
         }

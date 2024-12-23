@@ -8,4 +8,11 @@ function isNonEmptyObject(value) {
     return value !== null && typeof value === 'object' && Object.keys(value).length > 0;
 }
 
-module.exports = {isNonEmptyString, isNonEmptyObject};
+function isNumberGreaterThan(value, threshold) {
+    if (typeof value !== 'number') {
+        return false;
+    }
+    return value > threshold;
+}
+
+module.exports = {isNonEmptyString, isNonEmptyObject, isNumberGreaterThan};

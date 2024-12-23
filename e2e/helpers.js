@@ -21,27 +21,6 @@ const postSchema = Joi.object({
 const BASE_URL = `http://localhost:${process.env.E2EPORT}/api`;
 const guidRegex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
 
-const loremIpsumSet = [
-    {
-        title: 'Lorem ipsum dolor sit amet.',
-        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis laoreet mauris. Mauris eu sapien maximus, varius diam a, molestie ipsum. Quisque eget fermentum nisi. Donec molestie risus id ipsum hendrerit dignissim. Nulla nec lectus commodo libero pellentesque efficitur quis facilisis nisi. Pellentesque sed metus rutrum, condimentum ligula elementum, fermentum turpis. Pellentesque in imperdiet purus.',
-    },
-    {
-        title: 'Nunc ut vestibulum libero.',
-        text: 'Nunc ut vestibulum libero. Nulla facilisi. Integer quis maximus erat, at malesuada augue. Fusce ultricies mauris eu orci viverra, et dictum orci ultrices. Sed cursus rhoncus elementum. Integer metus arcu, consectetur in viverra ut, ultrices id ipsum. Phasellus venenatis, lectus sit amet imperdiet aliquam, augue dui imperdiet odio, sit amet aliquam lacus purus in nulla.',
-    },
-];
-
-const loremIpsum = {
-    getLoremIpsum(i = 0) {
-        if (i >= loremIpsumSet.length) {
-            return loremIpsumSet[0];
-        }
-
-        return loremIpsumSet[i];
-    },
-};
-
 function testStatusAndTraceId(status, traceId, expectedStatus) {
     expect(status).toBe(expectedStatus);
     expect(traceId).toMatch(guidRegex);
@@ -62,7 +41,6 @@ module.exports = {
     guidRegex,
     testStatusAndTraceId,
     testTodoStructure,
-    loremIpsum,
     postSchema,
     testPostStructure
 }

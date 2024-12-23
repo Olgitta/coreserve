@@ -3,7 +3,7 @@
 const {StatusCodes} = require('http-status-codes');
 const {createTodo, getTodoById, updateTodo, deleteTodo, getTodosWithPagination} = require('./crud');
 const log = require('../../core/logger')('TodosController');
-const {isNonEmptyString, isNonEmptyObject} = require('../../core/utils/validators');
+const Validator = require('../../core/utils/Validator');
 const {Types} = require('mongoose');
 const debug = require('debug')('coreserve:TodosController');
 const {getCtx} = require('../../core/execution-context/context');
@@ -12,15 +12,19 @@ const {PaginationBuilder, normalizePaginationParams} = require('../pagination');
 
 async function create(title) {
     try {
-        if (!isNonEmptyString(title)) {
-            log.error('create:invalid input');
+        const {errors} = new Validator()
+            .isNonEmptyString(title)
+            .validate();
+
+        if(errors) {
+            log.error(`create:invalid input:${errors.join(',')}`);
             return {statusCode: StatusCodes.BAD_REQUEST};
         }
 
         const result = await createTodo(title);
         return {statusCode: StatusCodes.CREATED, resources: result};
     } catch (err) {
-        log.error(`create:error`, err);
+        log.error('create:error', err);
         return handleError(err);
     }
 }
@@ -64,7 +68,16 @@ async function getAll(requestQuery) {
 
 async function getById(id) {
     try {
-        if (!isNonEmptyString(id) || !isValidObjectId(id)) {
+        const {errors} = new Validator()
+            .isNonEmptyString(id)
+            .validate();
+
+        if(errors) {
+            log.error(`getById:invalid input:${errors.join(',')}`);
+            return {statusCode: StatusCodes.BAD_REQUEST};
+        }
+
+        if (!isValidObjectId(id)) {
             log.error('getById:invalid input');
             return {statusCode: StatusCodes.BAD_REQUEST};
         }
@@ -84,7 +97,17 @@ async function getById(id) {
 
 async function update(id, updates) {
     try {
-        if (!isNonEmptyString(id) || !isValidObjectId(id) || !isNonEmptyObject(updates)) {
+        const {errors} = new Validator()
+            .isNonEmptyString(id)
+            .isNonEmptyObject(updates)
+            .validate();
+
+        if(errors) {
+            log.error(`update:invalid input:${errors.join(',')}`);
+            return {statusCode: StatusCodes.BAD_REQUEST};
+        }
+
+        if (!isValidObjectId(id)) {
             log.error('update:invalid input');
             return {statusCode: StatusCodes.BAD_REQUEST};
         }
@@ -104,7 +127,16 @@ async function update(id, updates) {
 
 async function remove(id) {
     try {
-        if (!isNonEmptyString(id) || !isValidObjectId(id)) {
+        const {errors} = new Validator()
+            .isNonEmptyString(id)
+            .validate();
+
+        if(errors) {
+            log.error(`remove:invalid input:${errors.join(',')}`);
+            return {statusCode: StatusCodes.BAD_REQUEST};
+        }
+
+        if (!isValidObjectId(id)) {
             log.error('remove:invalid input');
             return {statusCode: StatusCodes.BAD_REQUEST};
         }

@@ -3,29 +3,29 @@ CREATE DATABASE `devel` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_u
 
 USE `devel`;
 
--- Create the 'posts' table
-CREATE TABLE IF NOT EXISTS posts
+DROP TABLE IF EXISTS posts;
+CREATE TABLE posts
 (
-    id    INT AUTO_INCREMENT PRIMARY KEY,
-    title      VARCHAR(255) NOT NULL,
-    content    TEXT         NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    likes      INT       DEFAULT 0
+    id          INT AUTO_INCREMENT PRIMARY KEY,
+    title       VARCHAR(255) NOT NULL,
+    content     TEXT         NOT NULL,
+    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    likes       INT DEFAULT 0
 );
 
--- Create the 'comments' table
-CREATE TABLE IF NOT EXISTS comments
+DROP TABLE IF EXISTS comments;
+CREATE TABLE comments
 (
-    id        INT AUTO_INCREMENT PRIMARY KEY,
-    post_id           INT  NOT NULL,
-    parent_comment_id INT       DEFAULT NULL, -- Used for replies
-    content           TEXT NOT NULL,
-    created_at        TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at        TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    likes             INT       DEFAULT 0,
+    id                 INT AUTO_INCREMENT PRIMARY KEY,
+    post_id            INT NOT NULL,
+    parent_id          INT DEFAULT NULL, -- NULL indicates a top-level comment
+    content            TEXT NOT NULL,
+    created_at         TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at         TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    likes              INT DEFAULT 0,
     FOREIGN KEY (post_id) REFERENCES posts (id) ON DELETE CASCADE,
-    FOREIGN KEY (parent_comment_id) REFERENCES comments (id) ON DELETE CASCADE
+    FOREIGN KEY (parent_id) REFERENCES comments (id) ON DELETE CASCADE
 );
 
 CREATE TABLE users

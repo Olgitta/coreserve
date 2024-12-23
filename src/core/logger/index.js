@@ -40,7 +40,7 @@ const buildMeta = function (additional) {
 
 module.exports = function (p='ApiLog') {
 
-    let prefix = p;
+    const prefix = p;
 
     const log = {
         info(msg, payload = {}) {
@@ -52,7 +52,6 @@ module.exports = function (p='ApiLog') {
             logger.warn(`${prefix}:${msg}`, buildMeta(payload));
         },
         error(msg, error, payload={}) {
-            const context = getCtx() || {};
             const {message, stack, code = ''} = error || {};
             logger.error(`${prefix}:${msg}`, buildMeta({
                 ...payload,
