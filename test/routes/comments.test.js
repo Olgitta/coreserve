@@ -59,7 +59,7 @@ describe('Comments API Routes', () => {
     it('DELETE /api/comments/:id', async () => {
         remove.mockResolvedValue({statusCode: 200});
 
-        const res = await request(app).delete(`/api/comments/100`);
+        const res = await request(app).delete('/api/comments/100');
         expect(res.statusCode).toBe(200);
     });
 });

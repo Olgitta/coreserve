@@ -1,6 +1,6 @@
 'use strict';
 
-const {Types} = require("mongoose");
+const {Types} = require('mongoose');
 const {create, getAll, getById, update, remove} = require('../../src/apis/todos/controller');
 const {StatusCodes} = require('http-status-codes');
 const {createTodo, getTodoById, updateTodo, deleteTodo, getTodosWithPagination} = require('../../src/apis/todos/crud');

@@ -8,6 +8,8 @@
   "scripts": {
     "start": "node ./bin/www",
     "lint": "eslint src/",
+    "lintest": "eslint test/",
+    "lintest:fix": "eslint test/ --fix",
     "lint:fix": "eslint src/ --fix",
     "test": "jest ./test --coverage",
     "e2e3000": "cross-env E2EPORT=3000 jest ./e2e",

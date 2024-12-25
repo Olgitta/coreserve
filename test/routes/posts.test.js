@@ -39,7 +39,7 @@ describe('Posts API Routes', () => {
     it('GET /api/posts/:id', async () => {
         getById.mockResolvedValue({statusCode: 200});
 
-        const res = await request(app).get(`/api/posts/100`);
+        const res = await request(app).get('/api/posts/100');
         expect(res.statusCode).toBe(200);
     });
 
@@ -53,14 +53,14 @@ describe('Posts API Routes', () => {
     it('PUT /api/posts/:id', async () => {
         update.mockResolvedValue({statusCode: 200});
 
-        const res = await request(app).put(`/api/posts/100`).send({title: faker.lorem.sentence()});
+        const res = await request(app).put('/api/posts/100').send({title: faker.lorem.sentence()});
         expect(res.statusCode).toBe(200);
     });
 
     it('DELETE /api/posts/:id', async () => {
         remove.mockResolvedValue({statusCode: 200});
 
-        const res = await request(app).delete(`/api/posts/100`);
+        const res = await request(app).delete('/api/posts/100');
         expect(res.statusCode).toBe(200);
     });
 });

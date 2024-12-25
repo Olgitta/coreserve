@@ -32,8 +32,8 @@ describe('context module', () => {
 
         const mockPayload = {user: 'test-user'};
 
-        let actual = [];
-        let traceId = [];
+        const actual = [];
+        const traceId = [];
 
         const mockCallback = jest.fn(() => {
             traceId.push(getTraceId());

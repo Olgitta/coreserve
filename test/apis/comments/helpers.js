@@ -1,5 +1,5 @@
-const {StatusCodes} = require("http-status-codes");
-const LikeOps = require("../../../src/apis/comments/LikeOps");
+const {StatusCodes} = require('http-status-codes');
+const LikeOps = require('../../../src/apis/comments/LikeOps');
 
 const COMMENT_ID = 12;
 const PARENT_COMMENT_ID = 1;

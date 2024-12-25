@@ -15,7 +15,7 @@ const {
     DELETE_200, DELETE_400,
     GET_ALL_200, GET_ALL_200_NO_PAGINATION_PARAMS, GET_ALL_400,
     LIKE_200, LIKE_UNLIKE_400, UNLIKE_200,
-} = require("./helpers");
+} = require('./helpers');
 
 jest.mock('../../../src/apis/comments/crud', () => ({
     createComment: jest.fn(),

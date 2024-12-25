@@ -1,5 +1,5 @@
-const {StatusCodes} = require("http-status-codes");
-const LikeOps = require("../../../src/apis/posts/LikeOps");
+const {StatusCodes} = require('http-status-codes');
+const LikeOps = require('../../../src/apis/posts/LikeOps');
 
 const POST_ID = 1;
 const USER_ID = 100;
