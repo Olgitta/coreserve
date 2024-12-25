@@ -5,7 +5,7 @@
 const request = require('supertest');
 const express = require('express');
 const {faker} = require('@faker-js/faker');
-const postsRouter = require('../../src/routes/posts');
+const postsRouter = require('../../src/apis/posts/routes');
 
 const app = express();
 app.use(express.json());

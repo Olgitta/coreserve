@@ -2,7 +2,7 @@
 
 const {StatusCodes} = require('http-status-codes');
 const {createTodo, getTodoById, updateTodo, deleteTodo, getTodosWithPagination} = require('./crud');
-const log = require('../../core/logger')('TodosController');
+const logger = require('../../core/logger')('TodosController');
 const Validator = require('../../core/utils/Validator');
 const {Types} = require('mongoose');
 const debug = require('debug')('coreserve:TodosController');
@@ -17,14 +17,14 @@ async function create(title) {
             .validate();
 
         if(errors) {
-            log.error(`create:invalid input:${errors.join(',')}`);
+            logger.error(`create:invalid input:${errors.join(',')}`);
             return {statusCode: StatusCodes.BAD_REQUEST};
         }
 
         const result = await createTodo(title);
         return {statusCode: StatusCodes.CREATED, resources: result};
     } catch (err) {
-        log.error('create:error', err);
+        logger.error('create:error', err);
         return handleError(err);
     }
 }
@@ -61,7 +61,7 @@ async function getAll(requestQuery) {
             }
         };
     } catch (err) {
-        log.error(`getAll:error: ${err.message}`, err);
+        logger.error(`getAll:error: ${err.message}`, err);
         return handleError(err);
     }
 }
@@ -73,24 +73,24 @@ async function getById(id) {
             .validate();
 
         if(errors) {
-            log.error(`getById:invalid input:${errors.join(',')}`);
+            logger.error(`getById:invalid input:${errors.join(',')}`);
             return {statusCode: StatusCodes.BAD_REQUEST};
         }
 
         if (!isValidObjectId(id)) {
-            log.error('getById:invalid input');
+            logger.error('getById:invalid input');
             return {statusCode: StatusCodes.BAD_REQUEST};
         }
 
         const result = await getTodoById(id);
         if (result === null) {
-            log.error('getById:not found');
+            logger.error('getById:not found');
             return {statusCode: StatusCodes.NOT_FOUND};
         }
 
         return {statusCode: StatusCodes.OK, resources: result};
     } catch (err) {
-        log.error(`getById:error: ${err.message}`, err);
+        logger.error(`getById:error: ${err.message}`, err);
         return handleError(err);
     }
 }
@@ -103,24 +103,24 @@ async function update(id, updates) {
             .validate();
 
         if(errors) {
-            log.error(`update:invalid input:${errors.join(',')}`);
+            logger.error(`update:invalid input:${errors.join(',')}`);
             return {statusCode: StatusCodes.BAD_REQUEST};
         }
 
         if (!isValidObjectId(id)) {
-            log.error('update:invalid input');
+            logger.error('update:invalid input');
             return {statusCode: StatusCodes.BAD_REQUEST};
         }
 
         const result = await updateTodo(id, updates);
         if (result === null) {
-            log.error('update:not found');
+            logger.error('update:not found');
             return {statusCode: StatusCodes.NOT_FOUND};
         }
 
         return {statusCode: StatusCodes.OK, resources: result};
     } catch (err) {
-        log.error(`update:error: ${err.message}`, err);
+        logger.error(`update:error: ${err.message}`, err);
         return handleError(err);
     }
 }
@@ -132,24 +132,24 @@ async function remove(id) {
             .validate();
 
         if(errors) {
-            log.error(`remove:invalid input:${errors.join(',')}`);
+            logger.error(`remove:invalid input:${errors.join(',')}`);
             return {statusCode: StatusCodes.BAD_REQUEST};
         }
 
         if (!isValidObjectId(id)) {
-            log.error('remove:invalid input');
+            logger.error('remove:invalid input');
             return {statusCode: StatusCodes.BAD_REQUEST};
         }
 
         const result = await deleteTodo(id);
         if (result === null) {
-            log.error('remove:not found');
+            logger.error('remove:not found');
             return {statusCode: StatusCodes.NOT_FOUND};
         }
 
         return {statusCode: StatusCodes.OK, resources: result};
     } catch (err) {
-        log.error(`remove:error: ${err.message}`, err);
+        logger.error(`remove:error: ${err.message}`, err);
         return handleError(err);
     }
 }

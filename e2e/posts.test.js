@@ -136,15 +136,31 @@ describe('POSTS API Endpoints', () => {
         });
 
         test('GET /posts - Fetch paginated posts', async () => {
+            // Arrange: Populate the posts
+            for(let i=0; i<=5; i++) {
+                const response = await request(BASE_URL)
+                    .post('/posts')
+                    .send({
+                        title: faker.lorem.sentence(),
+                        content: faker.lorem.paragraph(),
+                    })
+                    .set('Content-Type', 'application/json');
+                toRemove.push(response.body.resources.id);
+            }
+
             // Act: Fetch the posts
-            const response = await request(BASE_URL).get('/posts').query({ page: 1, limit: 10 });
+            const response = await request(BASE_URL).get('/posts').query({ page: 2, limit: 2 });
             const actual = response.body;
 
             // Assert
             testStatusAndTraceId(response.status, actual.metadata.traceId, 200);
             expect(actual.resources).toBeInstanceOf(Array);
-            expect(actual.pagination.totalPages).toBeGreaterThan(0);
+            expect(actual.resources.length).toEqual(2);
             testPostStructure(actual.resources[0]);
+
+            expect(actual.pagination.totalPages).toBeGreaterThan(0);
+            expect(actual.pagination.prevPage).not.toBeUndefined();
+            expect(actual.pagination.nextPage).not.toBeUndefined();
         });
 
         test('GET /posts/:id - Fetch post by ID', async () => {
@@ -183,4 +199,53 @@ describe('POSTS API Endpoints', () => {
 
     });
 
+    describe('Negative Path Tests', () => {
+
+        const toRemove = [];
+
+        describe('Invalid Input Tests', () => {
+
+            test('POST /posts - Create a new post should respond with 400', async () => {
+                // Act: invalid title
+                const rs1 = await request(BASE_URL)
+                    .post('/posts')
+                    .send({
+                        title: '',
+                        content: faker.lorem.paragraph(1),
+                    })
+                    .set('Content-Type', 'application/json');
+                const actual1 = rs1.body;
+
+                // Act: invalid content
+                const rs2 = await request(BASE_URL)
+                    .post('/posts')
+                    .send({
+                        title: faker.lorem.sentence(2),
+                        content: faker.number.int(),
+                    })
+                    .set('Content-Type', 'application/json');
+                const actual2 = rs2.body;
+
+                // Assert
+                testStatusAndTraceId(rs1.status, actual1.metadata.traceId, 400);
+                testStatusAndTraceId(rs2.status, actual2.metadata.traceId, 400);
+
+            });
+
+            test('GET /posts/:id - Fetch post by ID should respond with 400', async () => {
+                const response = await request(BASE_URL).get(`/posts/777invalid`);
+                testStatusAndTraceId(response.status, response.body.metadata.traceId, 400);
+            });
+
+            test('DELETE /posts/:id - Delete posts by ID should respond with 400', async () => {
+                const response = await request(BASE_URL).delete(`/posts/invalidid`);
+                testStatusAndTraceId(response.status, response.body.metadata.traceId, 400);
+            });
+
+
+        });
+
+
+
+    });
 });

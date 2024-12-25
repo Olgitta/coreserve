@@ -2,12 +2,15 @@
 
 const {StatusCodes} = require('http-status-codes');
 const {createPost, deletePost, getPostsWithPagination, getPostById, updatePost, updateLikes} = require('./crud');
-const log = require('../../core/logger')('PostsController');
+const logger = require('../../core/logger')('PostsController');
 const debug = require('debug')('coreserve:PostsController');
-const {getCtx} = require('../../core/execution-context/context');
+const context = require('../../core/execution-context/context');
 const getConfiguration = require('../../config/configuration');
-const {PaginationBuilder, normalizePaginationParams} = require('../pagination');
+const {PaginationBuilder} = require('../pagination');
 const Validator = require('../../core/utils/Validator');
+const {ValidationError, ApiErrorCodes} = require('../../core/errors');
+const ErrorHandler = require('../ErrorHandler');
+const SuccessHandler = require('../SuccessHandler');
 
 module.exports = {
     create,
@@ -15,38 +18,69 @@ module.exports = {
     getById,
     remove,
     update,
-    like,
-    unlike
+    likeUnlike
 };
 
-async function create(title, content) {
+/**
+ *
+ * @param request
+ * @param request.title
+ * @param request.content
+ * @returns {Promise<{statusCode: StatusCodes.INTERNAL_SERVER_ERROR, error: ApiError}|{statusCode: StatusCodes.INTERNAL_SERVER_ERROR, error}|{statusCode: StatusCodes.OK, resources, message}>}
+ */
+async function create(request) {
+    debug('create called with:', request);
     try {
-        const {errors} = new Validator()
-            .isNonEmptyString(title)
-            .isNonEmptyString(content)
+        const {title, content} = request;
+        const {userId} = context.getUser();
+        const errors = new Validator()
+            .isNonEmptyString(title, 'title')
+            .isNonEmptyString(content, 'content')
             .validate();
 
-        if (errors) {
-            log.error(`create:invalid input:${errors.join(',')}`);
-            return {statusCode: StatusCodes.BAD_REQUEST};
+        if (errors !== null) {
+            throw new ValidationError('Invalid input on post creation', ApiErrorCodes.BAD_REQUEST, errors);
         }
 
-        const result = await createPost({title, content});
-        return {statusCode: StatusCodes.CREATED, resources: result};
+        const result = await createPost({userId, title, content});
+        return SuccessHandler.handle(
+            StatusCodes.CREATED,
+            result,
+            'created'
+        );
     } catch (err) {
-        log.error('create:error', err);
-        return handleError(err);
+        logger.error('Error on post creation', err);
+        return ErrorHandler.handleError(err);
     }
 }
 
-async function getAll(requestQuery) {
+/**
+ *
+ * @param request
+ * @param request.page {optional}
+ * @param request.limit {optional}
+ * @returns {Promise<{statusCode: StatusCodes.INTERNAL_SERVER_ERROR, error: ApiError}|{statusCode: StatusCodes.INTERNAL_SERVER_ERROR, error}|*>}
+ */
+async function getAll(request) {
+    debug('getAll called with:', request);
     try {
-        const ctx = getCtx();
+        const ctx = context.getCtx();
         const config = getConfiguration().posts;
-        debug('getAll config', config);
-        const {page, limit} = normalizePaginationParams(requestQuery.page, requestQuery.limit, config);
-        const skip = (page - 1) * limit;
-        const {posts, total} = await getPostsWithPagination(skip, limit);
+        const {page = 1, limit = config.pagination.limit} = request;
+        const p = Number(page);
+        const l = Number(limit);
+        const {userId} = context.getUser();
+        const errors = new Validator()
+            .isValidNumber(p, 'page')
+            .isValidNumber(l, 'limit')
+            .validate();
+
+        if (errors !== null) {
+            throw new ValidationError('Invalid input on get all posts', ApiErrorCodes.BAD_REQUEST, errors);
+        }
+
+        const skip = (p - 1) * l;
+        const {posts, total} = await getPostsWithPagination(userId, skip, l);
         const cleanUrl = ctx?.request?.url.split('?')[0];
 
         const paginationBuilder = new PaginationBuilder();
@@ -56,152 +90,133 @@ async function getAll(requestQuery) {
             .setLimit(limit)
             .setPage(page);
 
-        const {totalPages, nextPage, prevPage} = paginationBuilder.build();
-        debug('pagination', {totalPages, nextPage, prevPage});
-
-        return {
-            statusCode: StatusCodes.OK,
-            resources: posts,
-            pagination: {
-                nextPage,
-                prevPage,
-                totalPages
-            }
-        };
+        return SuccessHandler.handleWithPagination(
+            StatusCodes.OK,
+            posts,
+            'proceeded',
+            paginationBuilder.build());
     } catch (err) {
-        log.error('getAll:error', err);
-        return handleError(err);
+        logger.error('Error on get all posts', err);
+        return ErrorHandler.handleError(err);
     }
 }
 
-async function getById(id) {
+/**
+ *
+ * @param request
+ * @param request.id
+ * @returns {Promise<{statusCode: StatusCodes.INTERNAL_SERVER_ERROR, error: ApiError}|{statusCode: StatusCodes.INTERNAL_SERVER_ERROR, error}|{statusCode: StatusCodes.OK, resources, message}>}
+ */
+async function getById(request) {
+    debug('getById called with:', request);
     try {
-        const parsedId = Number(id);
-
-        const {errors} = new Validator()
-            .isValidNumber(parsedId)
+        const {id} = request;
+        const poi = Number(id);
+        const {userId} = context.getUser();
+        const errors = new Validator()
+            .isValidNumber(poi, 'id')
             .validate();
 
         if (errors) {
-            log.error(`getById:invalid input:${errors.join(',')}`);
-            return {statusCode: StatusCodes.BAD_REQUEST};
+            throw new ValidationError('Invalid input on get post by Id', ApiErrorCodes.BAD_REQUEST);
         }
 
-        const result = await getPostById(parsedId);
-        if (result === null) {
-            log.error('getById:not found');
-            return {statusCode: StatusCodes.NOT_FOUND};
-        }
+        const result = await getPostById(poi, userId);
 
-        return {statusCode: StatusCodes.OK, resources: result};
+        return SuccessHandler.handle(StatusCodes.OK, result || {}, 'proceeded');
     } catch (err) {
-        log.error('getById:error', err);
-        return handleError(err);
+        logger.error('Error on get post by id', err);
+        return ErrorHandler.handleError(err);
     }
 }
 
-async function remove(id) {
+/**
+ *
+ * @param request
+ * @param request.id
+ * @returns {Promise<{statusCode: StatusCodes.NOT_FOUND}|{statusCode: StatusCodes.INTERNAL_SERVER_ERROR, reason, error}|{statusCode: StatusCodes.BAD_REQUEST}|{statusCode: StatusCodes.OK, resources}>}
+ */
+async function remove(request) {
+    debug('remove called with:', request);
     try {
-        const parsedId = Number(id);
-
-        const {errors} = new Validator()
-            .isValidNumber(parsedId)
+        const {id} = request;
+        const poi = Number(id);
+        const {userId} = context.getUser();
+        const errors = new Validator()
+            .isValidNumber(poi, 'id')
             .validate();
 
         if (errors) {
-            log.error(`remove:invalid input:${errors.join(',')}`);
-            return {statusCode: StatusCodes.BAD_REQUEST};
+            throw new ValidationError('Invalid input on remove post', ApiErrorCodes.BAD_REQUEST);
         }
 
-        const result = await deletePost(parsedId);
-        if (result === null) {
-            log.error('remove:not found');
-            return {statusCode: StatusCodes.NOT_FOUND};
-        }
+        const {deleted, post} = await deletePost(poi, userId);
 
-        return {statusCode: StatusCodes.OK, resources: result};
+        return SuccessHandler.handle(StatusCodes.OK, post, `deleted:${deleted}`);
     } catch (err) {
-        log.error('remove:error', err);
-        return handleError(err);
+        logger.error('Error on remove post by id', err);
+        return ErrorHandler.handleError(err);
     }
 }
 
-async function update(id, data) {
+/**
+ *
+ * @param request
+ * @param request.id
+ * @param request.title
+ * @param request.content * @returns {Promise<{statusCode: StatusCodes.INTERNAL_SERVER_ERROR, error: ApiError}|{statusCode: StatusCodes.INTERNAL_SERVER_ERROR, error}|{statusCode: StatusCodes.OK, resources, message}>}
+ */
+async function update(request) {
+    debug('update called with:', request);
     try {
-        const parsedId = Number(id);
-
-        const {errors} = new Validator()
-            .isValidNumber(parsedId)
-            .isNonEmptyObject(data)
+        const {id, title, content} = request;
+        const {userId} = context.getUser();
+        const poi = Number(id);
+        const errors = new Validator()
+            .isValidNumber(poi, 'id')
+            .isNonEmptyString(title, 'title')
+            .isNonEmptyString(content, 'content')
             .validate();
 
         if (errors) {
-            log.error(`update:invalid input:${errors.join(',')}`);
-            return {statusCode: StatusCodes.BAD_REQUEST};
+            throw new ValidationError('Invalid input on update post', ApiErrorCodes.BAD_REQUEST);
         }
 
-        const result = await updatePost(parsedId, data);
-        if (result === null) {
-            log.error('update:not found');
-            return {statusCode: StatusCodes.NOT_FOUND};
-        }
+        const {updated, post} = await updatePost(poi, userId, {title, content});
 
-        return {statusCode: StatusCodes.OK, resources: result};
+        return SuccessHandler.handle(StatusCodes.OK, post, `updated:${updated}`);
     } catch (err) {
-        log.error('update:error', err);
-        return handleError(err);
+        logger.error('Error on update post', err);
+        return ErrorHandler.handleError(err);
     }
 }
 
-async function like(id) {
+/**
+ *
+ * @param request
+ * @param request.id
+ * @param request.op
+ * @returns {Promise<{statusCode: StatusCodes.INTERNAL_SERVER_ERROR, error: ApiError}|{statusCode: StatusCodes.INTERNAL_SERVER_ERROR, error}|{statusCode: StatusCodes.OK, resources, message}>}
+ */
+async function likeUnlike(request) {
+    debug('likeUnlike called with:', request);
     try {
-        const parsedId = Number(id);
-
-        const {errors} = new Validator()
-            .isValidNumber(parsedId)
+        const {id, op} = request;
+        const poi = Number(id);
+        const {userId} = context.getUser();
+        const errors = new Validator()
+            .isValidNumber(poi, 'id')
             .validate();
 
         if (errors) {
-            log.error(`like:invalid input:${errors.join(',')}`);
-            return {statusCode: StatusCodes.BAD_REQUEST};
+            throw new ValidationError('Invalid input on likeUnlike', ApiErrorCodes.BAD_REQUEST, errors);
         }
 
-        const result = await updateLikes(parsedId, true);
+        const result = await updateLikes(poi, userId, op);
 
-        return {statusCode: StatusCodes.OK, resources: result};
+        return SuccessHandler.handle(StatusCodes.OK, {}, `proceeded:${result}`);
     } catch (err) {
-        log.error('like:error', err);
-        return handleError(err);
+        logger.error('Error on likeUnlike', err);
+        return ErrorHandler.handleError(err);
     }
-}
-
-async function unlike(id) {
-    try {
-        const parsedId = Number(id);
-
-        const {errors} = new Validator()
-            .isValidNumber(parsedId)
-            .validate();
-
-        if (errors) {
-            log.error(`unlike:invalid input:${errors.join(',')}`);
-            return {statusCode: StatusCodes.BAD_REQUEST};
-        }
-
-        const result = await updateLikes(parsedId, false);
-
-        return {statusCode: StatusCodes.OK, resources: result};
-    } catch (err) {
-        log.error('unlike:error', err);
-        return handleError(err);
-    }
-}
-
-function handleError(err) {
-
-    return {
-        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
-        reason: err.message,
-        error: err
-    };
 }

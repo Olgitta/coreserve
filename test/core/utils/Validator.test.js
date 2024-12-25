@@ -2,7 +2,7 @@
 
 const Validator = require('../../../src/core/utils/Validator');
 
-describe('Validator Test', () => {
+describe('Validator', () => {
     let validator;
 
     beforeEach(() => {
@@ -10,102 +10,98 @@ describe('Validator Test', () => {
     });
 
     describe('isNonEmptyString', () => {
-        it('should return true for a non-empty string', () => {
-            const result = validator.isNonEmptyString('Hello').validate();
-            expect(result.errors).toBeNull();
+        test('should add error for empty string', () => {
+            validator.isNonEmptyString('', 'name');
+            const result = validator.validate();
+            expect(result).toBe('name value is invalid string');
         });
 
-        it('should return false for an empty string', () => {
-            const result = validator.isNonEmptyString('').validate();
-            expect(result.errors).toEqual(expect.arrayContaining(['isNonEmptyString']));
-        });
-
-        it('should return false for a non-string value', () => {
-            const result = validator.isNonEmptyString(123).validate();
-            expect(result.errors).toEqual(expect.arrayContaining(['isNonEmptyString']));
+        test('should not add error for valid string', () => {
+            validator.isNonEmptyString('John Doe', 'name');
+            const result = validator.validate();
+            expect(result).toBeNull();
         });
     });
 
     describe('isNonEmptyObject', () => {
-        it('should return true for a non-empty object', () => {
-            const result = validator.isNonEmptyObject({ key: 'value' }).validate();
-            expect(result.errors).toBeNull();
+        test('should add error for non-object value', () => {
+            validator.isNonEmptyObject(null, 'profile');
+            const result = validator.validate();
+            expect(result).toBe('profile value is invalid object');
         });
 
-        it('should return false for an empty object', () => {
-            const result = validator.isNonEmptyObject({}).validate();
-            expect(result.errors).toEqual(expect.arrayContaining(['isNonEmptyObject']));
+        test('should add error for empty object', () => {
+            validator.isNonEmptyObject({}, 'profile');
+            const result = validator.validate();
+            expect(result).toBe('profile value is invalid object');
         });
 
-        it('should return false for null', () => {
-            const result = validator.isNonEmptyObject(null).validate();
-            expect(result.errors).toEqual(expect.arrayContaining(['isNonEmptyObject']));
-        });
-
-        it('should return false for a non-object value', () => {
-            const result = validator.isNonEmptyObject(123).validate();
-            expect(result.errors).toEqual(expect.arrayContaining(['isNonEmptyObject']));
+        test('should not add error for non-empty object', () => {
+            validator.isNonEmptyObject({ key: 'value' }, 'profile');
+            const result = validator.validate();
+            expect(result).toBeNull();
         });
     });
 
     describe('isValidNumber', () => {
-        it('should return true for a valid number', () => {
-            const result = validator.isValidNumber(123).validate();
-            expect(result.errors).toBeNull();
+        test('should add error for non-number value', () => {
+            validator.isValidNumber('string', 'age');
+            const result = validator.validate();
+            expect(result).toBe('age value is invalid number');
         });
 
-        it('should return false for NaN', () => {
-            const result = validator.isValidNumber(NaN).validate();
-            expect(result.errors).toEqual(expect.arrayContaining(['isValidNumber']));
+        test('should not add error for valid number', () => {
+            validator.isValidNumber(42, 'age');
+            const result = validator.validate();
+            expect(result).toBeNull();
         });
 
-        it('should return false for a non-number value', () => {
-            const result = validator.isValidNumber('123').validate();
-            expect(result.errors).toEqual(expect.arrayContaining(['isValidNumber']));
+        test('should add error for NaN', () => {
+            validator.isValidNumber(NaN, 'age');
+            const result = validator.validate();
+            expect(result).toBe('age value is invalid number');
         });
     });
 
     describe('isValidNumberOrNull', () => {
-        it('should return true for a valid number', () => {
-            const result = validator.isValidNumberOrNull(123).validate();
-            expect(result.errors).toBeNull();
+        test('should add error for non-number and non-null value', () => {
+            validator.isValidNumberOrNull('string', 'score');
+            const result = validator.validate();
+            expect(result).toBe('score value is invalid number');
         });
 
-        it('should return true for null', () => {
-            const result = validator.isValidNumberOrNull(null).validate();
-            expect(result.errors).toBeNull();
+        test('should not add error for valid number', () => {
+            validator.isValidNumberOrNull(99, 'score');
+            const result = validator.validate();
+            expect(result).toBeNull();
         });
 
-        it('should return false for NaN', () => {
-            const result = validator.isValidNumberOrNull(NaN).validate();
-            expect(result.errors).toEqual(expect.arrayContaining(['isValidNumberOrNull']));
+        test('should not add error for null value', () => {
+            validator.isValidNumberOrNull(null, 'score');
+            const result = validator.validate();
+            expect(result).toBeNull();
         });
 
-        it('should return false for a non-number value', () => {
-            const result = validator.isValidNumberOrNull('123').validate();
-            expect(result.errors).toEqual(expect.arrayContaining(['isValidNumberOrNull']));
+        test('should add error for NaN', () => {
+            validator.isValidNumberOrNull(NaN, 'score');
+            const result = validator.validate();
+            expect(result).toBe('score value is invalid number');
         });
     });
 
     describe('validate', () => {
-        it('should return errors for multiple failing validators', () => {
-            const result = validator
-                .isNonEmptyString('')
-                .isNonEmptyObject({})
-                .isValidNumber(NaN)
-                .validate();
-            expect(result.errors).toEqual(expect.arrayContaining([
-                'isNonEmptyString',
-                'isNonEmptyObject',
-                'isValidNumber'
-            ]));
+        test('should return all errors as a joined string', () => {
+            validator.isNonEmptyString('', 'name');
+            validator.isValidNumber('string', 'age');
+            const result = validator.validate();
+            expect(result).toBe('name value is invalid string|age value is invalid number');
         });
 
-        it('should clear payload after validation', () => {
-            validator.isNonEmptyString('');
+        test('should clear errors after validate', () => {
+            validator.isNonEmptyString('', 'name');
             validator.validate();
-            const result = validator.isNonEmptyString('Hello').validate();
-            expect(result.errors).toBeNull();
+            const result = validator.validate();
+            expect(result).toBeNull();
         });
     });
 });

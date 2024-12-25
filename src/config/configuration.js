@@ -4,7 +4,7 @@ const Joi = require('joi');
 const fs = require('node:fs');
 const path = require('node:path');
 const dotenv = require('dotenv');
-const log = require('../core/logger')('Configuration');
+const logger = require('../core/logger')('Configuration');
 const debug = require('debug')('coreserve:configuration');
 
 const mongodbSchema = Joi.object({
@@ -111,7 +111,7 @@ module.exports = function getConfiguration() {
     if (error) {
         const e = new Error('Config validation error');
         e.details = error.details;
-        log.error('Config validation error', error);
+        logger.error('Config validation error', error);
 
         throw e;
     } else {

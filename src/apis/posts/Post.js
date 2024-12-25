@@ -9,6 +9,15 @@ const Post = createModel('Post', {
             autoIncrement: true,
             primaryKey: true,
         },
+        userId: {
+            type: DataTypes.INTEGER,
+            field: 'user_id',
+            references: {
+                model: 'users', // Name of the target table
+                key: 'id',      // Key in the target table
+            },
+            onDelete: 'CASCADE', // Define behavior on delete
+        },
         title: {
             type: DataTypes.STRING,
             allowNull: false,

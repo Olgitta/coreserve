@@ -1,7 +1,7 @@
 'use strict';
 
 const debug = require('debug')('coreserve:mysql');
-const log = require('../../../core/logger')('MySqlConnection');
+const logger = require('../../../core/logger')('MySqlConnection');
 const {Sequelize} = require('sequelize');
 
 let sequelize;
@@ -25,7 +25,7 @@ async function connectToDatabase(config) {
 
         debug(`Connected to MySql: ${host}/${database}`);
     } catch (error) {
-        log.error(`Error connecting to MySql: ${host}/${database}`, error);
+        logger.error(`Error connecting to MySql: ${host}/${database}`, error);
         throw error;
     }
 }
@@ -40,7 +40,7 @@ async function closeDatabaseConnection() {
         await sequelize.close();
         debug('MySql closed.');
     } catch (error) {
-        log.error('Error disconnecting from MySql:', error);
+        logger.error('Error disconnecting from MySql:', error);
     }
 }
 

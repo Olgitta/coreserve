@@ -1,6 +1,5 @@
 'use strict';
 
-const {StatusCodes} = require('http-status-codes');
 const {
     USER_ID, CTX_PAYLOAD,
     CREATE_POST_201, CREATE_POST_400, GET_ALL_200, GET_ALL_400, GET_ALL_200_NO_PAGINATION_PARAMS,
@@ -57,59 +56,42 @@ describe('PostsController', () => {
     });
 
     describe('create', () => {
-        it('should return OK , create a post and return the created resource', async () => {
-
+        it('should return CREATED and include the created post resource', async () => {
             const {crudReceives, crudReturns, expected, request} = CREATE_POST_201();
 
-            // crud op
             createPost.mockResolvedValue(crudReturns);
             const actual = await PostsController.create(request);
 
-            // crud op
             expect(createPost).toHaveBeenCalledWith(crudReceives);
             expect(actual.statusCode).toEqual(expected.statusCode);
         });
 
-        it('should return BAD_REQUEST if title or content is invalid', async () => {
-
+        it('should return BAD_REQUEST when title or content is invalid', async () => {
             const {expected, request} = CREATE_POST_400();
 
             const actual = await PostsController.create(request);
 
-            //crud op
             expect(createPost).not.toHaveBeenCalled();
             expect(actual.statusCode).toEqual(expected.statusCode);
         });
     });
 
     describe('getAll', () => {
-        it('should return OK and paginated posts with pagination metadata', async () => {
-
-            const {
-                configMock,
-                contextMock,
-                crudReceives,
-                crudReturns,
-                expected,
-                request
-            } = GET_ALL_200();
+        it('should return OK with paginated posts and pagination metadata', async () => {
+            const {configMock, contextMock, crudReceives, crudReturns, expected, request} = GET_ALL_200();
 
             getCtx.mockReturnValue(contextMock);
             getConfiguration.mockReturnValue(configMock);
-
-            // crud op
             getPostsWithPagination.mockResolvedValue(crudReturns);
 
             const actual = await PostsController.getAll(request);
 
-            // crud op
             expect(getPostsWithPagination).toHaveBeenCalledWith(...crudReceives);
             expect(actual.statusCode).toEqual(expected.statusCode);
             expect(actual.pagination).toEqual(expected.pagination);
         });
 
-        it('should return OK and paginated posts with first page when page and limit not provided', async () => {
-
+        it('should return OK with paginated posts and default to first page when pagination parameters are not provided', async () => {
             const {
                 configMock,
                 contextMock,
@@ -121,33 +103,23 @@ describe('PostsController', () => {
 
             getCtx.mockReturnValue(contextMock);
             getConfiguration.mockReturnValue(configMock);
-
-            // crud op
             getPostsWithPagination.mockResolvedValue(crudReturns);
 
             const actual = await PostsController.getAll(request);
 
-            // crud op
             expect(getPostsWithPagination).toHaveBeenCalledWith(...crudReceives);
             expect(actual.statusCode).toEqual(expected.statusCode);
             expect(actual.pagination).toEqual(expected.pagination);
         });
 
-        it('should return BAD_REQUEST on invalid input', async () => {
-
-            const {
-                configMock,
-                contextMock,
-                expected,
-                request
-            } = GET_ALL_400();
+        it('should return BAD_REQUEST when input is invalid', async () => {
+            const {configMock, contextMock, expected, request} = GET_ALL_400();
 
             getCtx.mockReturnValue(contextMock);
             getConfiguration.mockReturnValue(configMock);
 
             const actual = await PostsController.getAll(request);
 
-            // crud op
             expect(getPostsWithPagination).not.toHaveBeenCalled();
             expect(actual.statusCode).toEqual(expected.statusCode);
             expect(actual.pagination).toBeUndefined();
@@ -155,42 +127,31 @@ describe('PostsController', () => {
     });
 
     describe('getById', () => {
-        it('should return OK and a post by id', async () => {
-            const {
-                crudReceives,
-                crudReturns,
-                expected,
-                request
-            } = GET_BY_ID_200();
+        it('should return OK and the post resource for the specified id', async () => {
+            const {crudReceives, crudReturns, expected, request} = GET_BY_ID_200();
 
-            //crud op
             getPostById.mockResolvedValue(crudReturns);
 
             const actual = await PostsController.getById(request);
-            //crud op
+
             expect(getPostById).toHaveBeenCalledWith(...crudReceives);
             expect(actual.statusCode).toEqual(expected.statusCode);
         });
 
-        it('should return BAD_REQUEST if called with invalid id', async () => {
+        it('should return BAD_REQUEST when called with an invalid id', async () => {
             const {expected, request} = GET_BY_ID_400();
+
             const actual = await PostsController.getById(request);
-            //crud op
+
             expect(getPostById).not.toHaveBeenCalled();
             expect(actual.statusCode).toEqual(expected.statusCode);
         });
-
     });
 
     describe('remove', () => {
         it('should delete a post by id and return the deleted resource', async () => {
-            const {
-                crudReceives,
-                crudReturns,
-                expected,
-                request
-            } = DELETE_200();
-            //crud op
+            const {crudReceives, crudReturns, expected, request} = DELETE_200();
+
             deletePost.mockResolvedValue(crudReturns);
 
             const actual = await PostsController.remove(request);
@@ -199,26 +160,20 @@ describe('PostsController', () => {
             expect(actual.statusCode).toEqual(expected.statusCode);
         });
 
-        it('should return BAD_REQUEST if called with invalid id', async () => {
+        it('should return BAD_REQUEST when called with an invalid id', async () => {
             const {expected, request} = DELETE_400();
 
             const actual = await PostsController.remove(request);
 
             expect(deletePost).not.toHaveBeenCalled();
-            expect(actual.statusCode).toEqual(actual.statusCode);
+            expect(actual.statusCode).toEqual(expected.statusCode);
         });
     });
 
     describe('update', () => {
         it('should update a post and return the updated resource', async () => {
-            const {
-                crudReceives,
-                crudReturns,
-                expected,
-                request
-            } = UPDATE_200();
+            const {crudReceives, crudReturns, expected, request} = UPDATE_200();
 
-            //crud op
             updatePost.mockResolvedValue(crudReturns);
 
             const actual = await PostsController.update(request);
@@ -227,7 +182,7 @@ describe('PostsController', () => {
             expect(actual.statusCode).toEqual(expected.statusCode);
         });
 
-        it('should return BAD_REQUEST if called with invalid input', async () => {
+        it('should return BAD_REQUEST when input is invalid', async () => {
             const {expected, request} = UPDATE_400();
 
             const actual = await PostsController.update(request);
@@ -238,14 +193,9 @@ describe('PostsController', () => {
     });
 
     describe('likeUnlike', () => {
-        it('should increment likes for a post', async () => {
-            const {
-                crudReceives,
-                crudReturns,
-                expected,
-                request
-            } = LIKE_200();
-            //crud op
+        it('should increment likes for the specified post', async () => {
+            const {crudReceives, crudReturns, expected, request} = LIKE_200();
+
             updateLikes.mockResolvedValue(crudReturns);
 
             const actual = await PostsController.likeUnlike(request);
@@ -254,15 +204,9 @@ describe('PostsController', () => {
             expect(actual.statusCode).toEqual(expected.statusCode);
         });
 
-        it('should decrement likes for a post', async () => {
-            const {
-                crudReceives,
-                crudReturns,
-                expected,
-                request
-            } = UNLIKE_200();
+        it('should decrement likes for the specified post', async () => {
+            const {crudReceives, crudReturns, expected, request} = UNLIKE_200();
 
-            //crud op
             updateLikes.mockResolvedValue(crudReturns);
 
             const actual = await PostsController.likeUnlike(request);
@@ -271,11 +215,8 @@ describe('PostsController', () => {
             expect(actual.statusCode).toEqual(expected.statusCode);
         });
 
-        it('should return BAD_REQUEST when called with invalid id', async () => {
-            const {
-                expected,
-                request
-            } = LIKE_UNLIKE_400();
+        it('should return BAD_REQUEST when called with an invalid id', async () => {
+            const {expected, request} = LIKE_UNLIKE_400();
 
             const actual = await PostsController.likeUnlike(request);
 
@@ -283,5 +224,4 @@ describe('PostsController', () => {
             expect(actual.statusCode).toEqual(expected.statusCode);
         });
     });
-
 });

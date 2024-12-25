@@ -1,50 +1,42 @@
 'use strict';
 
 class Validator {
-    #payload;
+    #errorsSet;
 
     constructor() {
-        this.#payload = new Map();
+        this.#errorsSet = new Set();
     }
 
     /**
      *
      * @param v
+     * @param k
      * @returns {Validator}
      */
-    isNonEmptyString(v) {
+    isNonEmptyString(v, k) {
+        const sym = Symbol(`${k} value is invalid string`);
         const result = typeof v === 'string' && v.trim().length > 0;
-        this.#payload.set(Symbol('isNonEmptyString'), result);
-
-        return this;
-    }
-
-    /**
-     *
-     * @param v
-     * @returns {Validator}
-     */
-    isNonEmptyObject(v) {
-        const result = v !== null && typeof v === 'object' && Object.keys(v).length > 0;
-        this.#payload.set(Symbol('isNonEmptyObject'), result);
-
-        return this;
-    }
-
-    /**
-     *
-     * @param v
-     * @returns {Validator}
-     */
-    isValidNumber(v) {
-
-        if(Number.isNaN(v)) {
-            this.#payload.set(Symbol('isValidNumber'), false);
+        if (!result) {
+            this.#errorsSet.add(sym);
             return this;
         }
 
-        const result = typeof v === 'number';
-        this.#payload.set(Symbol('isValidNumber'), result);
+        return this;
+    }
+
+    /**
+     *
+     * @param v
+     * @param k
+     * @returns {Validator}
+     */
+    isNonEmptyObject(v, k) {
+        const sym = Symbol(`${k} value is invalid object`);
+        const result = v !== null && typeof v === 'object' && Object.keys(v).length > 0;
+        if (!result) {
+            this.#errorsSet.add(sym);
+            return this;
+        }
 
         return this;
     }
@@ -52,40 +44,61 @@ class Validator {
     /**
      *
      * @param v
+     * @param k
      * @returns {Validator}
      */
-    isValidNumberOrNull(v){
+    isValidNumber(v, k) {
+        const sym = Symbol(`${k} value is invalid number`);
 
-        if(Number.isNaN(v)) {
-            this.#payload.set(Symbol('isValidNumberOrNull'), false);
+        if (Number.isNaN(v)) {
+            this.#errorsSet.add(sym);
+            return this;
+        }
+
+        if (typeof v !== 'number') {
+            this.#errorsSet.add(sym);
+            return this;
+        }
+
+        return this;
+    }
+
+    /**
+     *
+     * @param v
+     * @param k
+     * @returns {Validator}
+     */
+    isValidNumberOrNull(v, k) {
+        const sym = Symbol(`${k} value is invalid number`);
+
+        if (Number.isNaN(v)) {
+            this.#errorsSet.add(sym);
             return this;
         }
 
         const result = v === null || typeof v === 'number';
-        this.#payload.set(Symbol('isValidNumberOrNull'), result);
+        if (!result) {
+            this.#errorsSet.add(sym);
+            return this;
+        }
 
         return this;
     }
 
     /**
      *
-     * @returns {{errors: null}|{errors: *[]}}
+     * @returns {null|string}
      */
     validate() {
-        const falsy = [];
 
-        for (const p of this.#payload) {
-            const [validator, result] = p;
-            if (!result) {
-                falsy.push(validator.description);
-            }
+        let result = null;
+        if (this.#errorsSet.size > 0) {
+            result = Array.from(this.#errorsSet, sym => sym.description).join('|');
         }
+        this.#errorsSet.clear();
 
-        this.#payload.clear();
-
-        return falsy.length === 0
-            ? {errors: null}
-            : {errors: falsy};
+        return result
     }
 }
 

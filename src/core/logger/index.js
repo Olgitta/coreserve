@@ -42,7 +42,7 @@ module.exports = function (p='ApiLog') {
 
     const prefix = p;
 
-    const log = {
+    return {
         info(msg, payload = {}) {
 
             logger.info(`${prefix}:${msg}`, buildMeta(payload));
@@ -51,16 +51,12 @@ module.exports = function (p='ApiLog') {
 
             logger.warn(`${prefix}:${msg}`, buildMeta(payload));
         },
-        error(msg, error, payload={}) {
-            const {message, stack, code = ''} = error || {};
+        error(msg, error = {}, payload = {}) {
+
             logger.error(`${prefix}:${msg}`, buildMeta({
                 ...payload,
-                error: {
-                    message, code, stack
-                }
+                error: error
             }));
         }
     };
-
-    return log;
 };

@@ -28,10 +28,8 @@ class ResponseBuilder {
         if (!error) {
             return this;
         }
-        if (process.env.NODE_ENV !== 'production') {
-            const {code = '', message = ''} = error;
-            this.response.metadata.error = {code, message};
-        }
+
+        this.response.metadata.error = error;
 
         return this;
     }
@@ -50,12 +48,19 @@ class ResponseBuilder {
 
     /**
      *
-     * @param totalPages
-     * @param nextPage
-     * @param prevPage
+     * @param pagination
+     * @param pagination.totalPages
+     * @param pagination.prevPage
+     * @param pagination.nextPage
      * @returns {ResponseBuilder}
      */
-    setPagination(totalPages, nextPage, prevPage) {
+    setPagination(pagination) {
+
+        if(!pagination) {
+            return this;
+        }
+
+        const {totalPages, nextPage, prevPage} = pagination;
 
         this.response.pagination = {
             totalPages,

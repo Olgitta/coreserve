@@ -8,12 +8,12 @@ const {
     getCommentsWithPagination,
     updateLikes
 } = require('./crud');
-const log = require('../../core/logger')('CommentsController');
+const logger = require('../../core/logger')('CommentsController');
 const debug = require('debug')('coreserve:CommentsController');
 const {getCtx} = require('../../core/execution-context/context');
 const getConfiguration = require('../../config/configuration');
 const {PaginationBuilder, normalizePaginationParams} = require('../pagination');
-const {ApiError, ErrorCodes} = require('../../core/errors');
+const {ApiError, ApiErrorCodes} = require('../../core/errors');
 const Validator = require('../../core/utils/Validator');
 
 module.exports = {
@@ -42,15 +42,15 @@ async function create(reqBody = {}) {
             .validate();
 
         if (errors) {
-            log.error(`create:invalid input:${errors.join(',')}`);
+            logger.error(`create:invalid input:${errors.join(',')}`);
             return {statusCode: StatusCodes.BAD_REQUEST};
         }
 
         const result = await createComment({postId: poi, content, parentId:pai});
         return {statusCode: StatusCodes.CREATED, resources: result};
     } catch (err) {
-        log.error('create:error', err);
-        if (err instanceof ApiError && err.code === ErrorCodes.API_BAD_REQUEST) {
+        logger.error('create:error', err);
+        if (err instanceof ApiError && err.code === ApiErrorCodes.API_BAD_REQUEST) {
             return handleError(err, StatusCodes.BAD_REQUEST);
         }
         return handleError(err);
@@ -78,7 +78,7 @@ async function getAll(requestQuery) {
             .validate();
 
         if (errors) {
-            log.error(`getAll:invalid input:${errors.join(',')}`);
+            logger.error(`getAll:invalid input:${errors.join(',')}`);
             return {statusCode: StatusCodes.BAD_REQUEST};
         }
 
@@ -106,7 +106,7 @@ async function getAll(requestQuery) {
             }
         };
     } catch (err) {
-        log.error('getAll:error', err);
+        logger.error('getAll:error', err);
         return handleError(err);
     }
 }
@@ -120,19 +120,19 @@ async function getById(id) {
             .validate();
 
         if (errors) {
-            log.error(`getById:invalid input:${errors.join(',')}`);
+            logger.error(`getById:invalid input:${errors.join(',')}`);
             return {statusCode: StatusCodes.BAD_REQUEST};
         }
 
         const result = await getCommentById(parsedId);
         if (result === null) {
-            log.error('getById:not found');
+            logger.error('getById:not found');
             return {statusCode: StatusCodes.NOT_FOUND};
         }
 
         return {statusCode: StatusCodes.OK, resources: result};
     } catch (err) {
-        log.error(`getById:error: ${err.message}`, err);
+        logger.error(`getById:error: ${err.message}`, err);
         return handleError(err);
     }
 }
@@ -146,19 +146,19 @@ async function remove(id) {
             .validate();
 
         if (errors) {
-            log.error(`remove:invalid input:${errors.join(',')}`);
+            logger.error(`remove:invalid input:${errors.join(',')}`);
             return {statusCode: StatusCodes.BAD_REQUEST};
         }
 
         const result = await deleteComment(parsedId);
         if (result === null) {
-            log.error('remove:not found');
+            logger.error('remove:not found');
             return {statusCode: StatusCodes.NOT_FOUND};
         }
 
         return {statusCode: StatusCodes.OK, resources: result};
     } catch (err) {
-        log.error(`remove:error: ${err.message}`, err);
+        logger.error(`remove:error: ${err.message}`, err);
         return handleError(err);
     }
 }
@@ -172,7 +172,7 @@ async function like(id) {
             .validate();
 
         if (errors) {
-            log.error(`like:invalid input:${errors.join(',')}`);
+            logger.error(`like:invalid input:${errors.join(',')}`);
             return {statusCode: StatusCodes.BAD_REQUEST};
         }
 
@@ -180,7 +180,7 @@ async function like(id) {
 
         return {statusCode: StatusCodes.OK, resources: result};
     } catch (err) {
-        log.error('like:error', err);
+        logger.error('like:error', err);
         return handleError(err);
     }
 }
@@ -194,7 +194,7 @@ async function unlike(id) {
             .validate();
 
         if (errors) {
-            log.error(`unlike:invalid input:${errors.join(',')}`);
+            logger.error(`unlike:invalid input:${errors.join(',')}`);
             return {statusCode: StatusCodes.BAD_REQUEST};
         }
 
@@ -202,7 +202,7 @@ async function unlike(id) {
 
         return {statusCode: StatusCodes.OK, resources: result};
     } catch (err) {
-        log.error('unlike:error', err);
+        logger.error('unlike:error', err);
         return handleError(err);
     }
 }

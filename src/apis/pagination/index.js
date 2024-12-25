@@ -49,8 +49,8 @@ class PaginationBuilder {
 
         return {
             totalPages,
-            hasNextPage,
-            hasPrevPage,
+            // hasNextPage,
+            // hasPrevPage,
             nextPage: hasNextPage
                 ? `${url}?page=${page + 1}&limit=${limit}`
                 : null,
@@ -64,8 +64,8 @@ class PaginationBuilder {
 module.exports.PaginationBuilder = PaginationBuilder;
 
 module.exports.normalizePaginationParams = function (page, limit, config) {
-    const p = Number.parseInt(page);
-    const l = Number.parseInt(limit);
+    const p = Number(page);
+    const l = Number(limit);
     return {
         page: Number.isNaN(p) || p < 1 ? 1 : p,
         limit: Number.isNaN(l) || l < 1 ? config.pagination.limit : l,

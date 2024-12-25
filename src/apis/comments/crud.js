@@ -3,7 +3,7 @@
 const debug = require('debug')('coreserve:comments:crud');
 const Comment = require('./Comment');
 const {Sequelize} = require('sequelize');
-const {ErrorCodes, ApiError} = require('../../core/errors');
+const {ApiErrorCodes, ApiError} = require('../../core/errors');
 
 module.exports = {
     createComment,
@@ -22,12 +22,12 @@ async function createComment(payload) {
         const parentComment = await Comment.findByPk(parentId);
 
         if (!parentComment) {
-            throw new ApiError(`Parent comment with ID ${parentId} not found.`, ErrorCodes.API_BAD_REQUEST);
+            throw new ApiError(`Parent comment with ID ${parentId} not found.`, ApiErrorCodes.API_BAD_REQUEST);
         }
 
         // Check if `postId` matches the `postId` of the parent comment
         if (parentComment.postId !== postId) {
-            throw new ApiError(`Mismatch: parent comment belongs to post ID ${parentComment.postId}, not ${postId}.`, ErrorCodes.API_BAD_REQUEST);
+            throw new ApiError(`Mismatch: parent comment belongs to post ID ${parentComment.postId}, not ${postId}.`, ApiErrorCodes.API_BAD_REQUEST);
         }
     }
 
@@ -95,10 +95,6 @@ async function deleteComment(id) {
 }
 
 async function updateLikes(id, like = null) {
-    if (like === null) {
-        throw new ApiError(`Unprocessable params on updateLikes comment with ID ${id}.`, ErrorCodes.UNPROCESSABLE_OPERATION);
-    }
-
     const operation = like ? 'increment' : 'decrement';
     const where = like
         ? { id: id }

@@ -1,14 +1,13 @@
 'use strict';
 
 const {StatusCodes} = require('http-status-codes');
-const {ApiError, ValidationError, ApiErrorCodes} = require("../core/errors");
+const {ApiError, ValidationError, ApiErrorCodes} = require('../core/errors');
 
 class ErrorHandler {
     static #instance;
 
     constructor() {
         if (new.target === ErrorHandler) {
-        // if (!ErrorHandler.#instance) {
             throw new Error('ErrorHandler is a singleton. Use ErrorHandler.getInstance() to access the instance.');
         }
     }
@@ -19,7 +18,7 @@ class ErrorHandler {
      */
     static getInstance() {
         if (!ErrorHandler.#instance) {
-            ErrorHandler.#instance = this;// new ErrorHandler();
+            ErrorHandler.#instance = this;
         }
         return ErrorHandler.#instance;
     }
