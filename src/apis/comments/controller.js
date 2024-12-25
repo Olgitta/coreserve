@@ -14,9 +14,9 @@ const getConfiguration = require('../../config/configuration');
 const {PaginationBuilder, normalizePaginationParams} = require('../pagination');
 const {ApiError, ApiErrorCodes, ValidationError} = require('../../core/errors');
 const Validator = require('../../core/utils/Validator');
-const context = require("../../core/execution-context/context");
-const SuccessHandler = require("../SuccessHandler");
-const ErrorHandler = require("../ErrorHandler");
+const context = require('../../core/execution-context/context');
+const SuccessHandler = require('../SuccessHandler');
+const ErrorHandler = require('../ErrorHandler');
 
 module.exports = {
     create,
@@ -104,16 +104,16 @@ async function getAll(request) {
             throw new ValidationError('Invalid input on get all comments', ApiErrorCodes.BAD_REQUEST, errors);
         }
 
-        const skip = (page - 1) * limit;
-        const {comments, total} = await getCommentsWithPagination(poi, pai, userId, skip, limit);
+        const skip = (p - 1) * l;
+        const {comments, total} = await getCommentsWithPagination(poi, pai, userId, skip, l);
         const cleanUrl = ctx?.request?.url.split('?')[0];
 
         const paginationBuilder = new PaginationBuilder();
         paginationBuilder
             .setUrl(cleanUrl)
             .setTotal(total)
-            .setLimit(limit)
-            .setPage(page);
+            .setLimit(l)
+            .setPage(p);
 
         return SuccessHandler.handleWithPagination(
             StatusCodes.OK,

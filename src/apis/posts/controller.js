@@ -87,8 +87,8 @@ async function getAll(request) {
         paginationBuilder
             .setUrl(cleanUrl)
             .setTotal(total)
-            .setLimit(limit)
-            .setPage(page);
+            .setLimit(l)
+            .setPage(p);
 
         return SuccessHandler.handleWithPagination(
             StatusCodes.OK,

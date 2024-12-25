@@ -116,7 +116,7 @@ async function deleteComment(id, userId) {
  * @returns {Promise<*>}
  */
 async function updateLikes(id, userId, like) {
-    debug('updateLikes called with:', {id, userid, like});
+    debug('updateLikes called with:', {id, userId, like});
 
     const operation = like ? 'increment' : 'decrement';
     const where = like

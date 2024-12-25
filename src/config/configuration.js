@@ -82,19 +82,19 @@ function loadConfig() {
 
     config.todos = {
         pagination: {
-            limit: Number.parseInt(process.env.TODOS_PAGINATION_LIMIT, 10),
+            limit: Number(process.env.TODOS_PAGINATION_LIMIT),
         }
     }
 
     config.posts = {
         pagination: {
-            limit: Number.parseInt(process.env.POSTS_PAGINATION_LIMIT, 10),
+            limit: Number(process.env.POSTS_PAGINATION_LIMIT),
         }
     }
 
     config.comments = {
         pagination: {
-            limit: Number.parseInt(process.env.COMMENTS_PAGINATION_LIMIT, 10),
+            limit: Number(process.env.COMMENTS_PAGINATION_LIMIT),
         }
     }
 }
