@@ -1,5 +1,5 @@
 const {StatusCodes} = require("http-status-codes");
-const LikeOps = require("../../src/apis/posts/LikeOps");
+const LikeOps = require("../../../src/apis/posts/LikeOps");
 
 const POST_ID = 1;
 const USER_ID = 100;
@@ -18,7 +18,7 @@ module.exports = {
 
     CTX_PAYLOAD,
 
-    CREATE_POST_201: () => {
+    CREATE_201: () => {
 
         return {
             request: {
@@ -42,7 +42,7 @@ module.exports = {
         }
     },
 
-    CREATE_POST_400: () => {
+    CREATE_400: () => {
 
         return {
             request: {

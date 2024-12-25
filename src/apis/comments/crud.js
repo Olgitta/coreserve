@@ -3,42 +3,42 @@
 const debug = require('debug')('coreserve:comments:crud');
 const Comment = require('./Comment');
 const {Sequelize} = require('sequelize');
-const {ApiErrorCodes, ApiError} = require('../../core/errors');
 
 module.exports = {
     createComment,
     deleteComment,
     getCommentsWithPagination,
-    getCommentById,
-    updateComment,
     updateLikes
 }
 
+/**
+ *
+ * @param payload
+ * @param payload.postId
+ * @param payload.parentId
+ * @param payload.userId
+ * @param payload.content
+ * @returns {Promise<*>}
+ */
 async function createComment(payload) {
+    debug('createComment called with:', payload);
 
-    const {postId, parentId} = payload;
-    // Validate `parentId` if provided
-    if (parentId) {
-        const parentComment = await Comment.findByPk(parentId);
-
-        if (!parentComment) {
-            throw new ApiError(`Parent comment with ID ${parentId} not found.`, ApiErrorCodes.API_BAD_REQUEST);
-        }
-
-        // Check if `postId` matches the `postId` of the parent comment
-        if (parentComment.postId !== postId) {
-            throw new ApiError(`Mismatch: parent comment belongs to post ID ${parentComment.postId}, not ${postId}.`, ApiErrorCodes.API_BAD_REQUEST);
-        }
-    }
-
-    const {dataValues} = await Comment.create(payload);
-
-    debug('createComment', dataValues);
-    return dataValues;
+    return await Comment.create(payload);
 }
 
-async function getCommentsWithPagination(postId, parentId, skip, limit) {
-    const whereClause = {postId: postId, parentId: parentId};
+/**
+ *
+ * @param postId
+ * @param parentId
+ * @param userId
+ * @param skip
+ * @param limit
+ * @returns {Promise<{comments: *, total: *}>}
+ */
+async function getCommentsWithPagination(postId, parentId, userId, skip, limit) {
+    debug('getCommentsWithPagination called with:', {postId, parentId, userId, skip, limit});
+
+    const whereClause = {postId: postId, parentId: parentId, userId: userId};
     const {count, rows: comments} = await Comment.findAndCountAll({
         offset: skip,
         limit,
@@ -46,66 +46,87 @@ async function getCommentsWithPagination(postId, parentId, skip, limit) {
         where: whereClause
     });
 
-    debug(`getCommentsWithPagination:total:${count}`);
     return {
         comments,
         total: count,
     }
 }
 
-async function getCommentById(id) {
-    const result = await Comment.findByPk(id);
+// async function getCommentById(id) {
+//     const result = await Comment.findByPk(id);
+//
+//     if (!result) {
+//         debug(`getCommentById:${id} not found`);
+//         return null;
+//     }
+//
+//     debug(`getCommentById:${id}`, result);
+//     return result;
+// }
 
-    if (!result) {
-        debug(`getCommentById:${id} not found`);
-        return null;
-    }
+// async function updateComment(id, payload) {
+//     const [affectedRows] = await Comment.update(payload, {
+//         where: {id: id},
+//     });
+//
+//     if (affectedRows === 0) {
+//         debug(`updateComment:${id} not found or no changes made.`);
+//         return null;
+//     }
+//
+//     const result = await Comment.findByPk(id);
+//
+//     debug(`updateComment:${id}:`, result);
+//     return result;
+// }
 
-    debug(`getCommentById:${id}`, result);
-    return result;
-}
+/**
+ *
+ * @param id
+ * @param userId
+ * @returns {Promise<{deleted: *, comment: *}>}
+ */
+async function deleteComment(id, userId) {
+    debug('deleteComment called with:', {id, userId});
 
-async function updateComment(id, payload) {
-    const [affectedRows] = await Comment.update(payload, {
-        where: {id: id},
+    const result = await Comment.findOne({
+        where: {
+            id: id,
+            userId: userId,
+        }
     });
 
-    if (affectedRows === 0) {
-        debug(`updateComment:${id} not found or no changes made.`);
-        return null;
-    }
+    debug('deleteComment going to delete:', result);
 
-    const result = await Comment.findByPk(id);
-
-    debug(`updateComment:${id}:`, result);
-    return result;
-}
-
-async function deleteComment(id) {
-    const result = await Comment.findByPk(id);
     const destroyed = await Comment.destroy({
-        where: {id: id},
+        where: {
+            id: id,
+            userId: userId
+        },
     });
-    if (destroyed === 0) {
-        debug(`deleteComment:${id} not found or no changes made.`);
-        return null;
-    }
-    debug(`deleteComment:${id}:`, destroyed);
-    return result;
+
+    return {deleted: destroyed, comment: result};
 }
 
-async function updateLikes(id, like = null) {
+/**
+ *
+ * @param id
+ * @param userId
+ * @param like
+ * @returns {Promise<*>}
+ */
+async function updateLikes(id, userId, like) {
+    debug('updateLikes called with:', {id, userid, like});
+
     const operation = like ? 'increment' : 'decrement';
     const where = like
-        ? { id: id }
-        : { id: id, likes: { [Sequelize.Op.gt]: 0 } };
+        ? {id: id, userId: userId}
+        : {id: id, userId: userId, likes: {[Sequelize.Op.gt]: 0}};
 
     const [[noop, affectedRows]] = await Comment[operation]('likes', {
         by: 1,
         where: where,
     });
 
-    debug(`updateLikes: id=${id}, operation=${operation} - affectedRows=${affectedRows}`);
     return affectedRows;
 }
-

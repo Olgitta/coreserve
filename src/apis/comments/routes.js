@@ -2,10 +2,15 @@
 
 const express = require('express');
 const router = express.Router();
-const {create, update, remove, getById, getAll, likeUnlike} = require('./controller');
+const {
+    create,
+    getAll,
+    likeUnlike,
+    remove,
+} = require('./controller');
 const ResponseBuilder = require('../ResponseBuilder');
 const {getTraceId} = require('../../core/execution-context/context');
-const LikeOps = require('./LikeOps');
+const LikeOps = require("./LikeOps");
 
 /**
  *
@@ -55,16 +60,6 @@ router.post('/unlike/:id', async (req, res) => {
 
 router.get('/', async (req, res) => {
     const result = await getAll(req.query);
-    res.status(result.statusCode).send(handleResult(result));
-});
-
-router.get('/:id', async (req, res) => {
-    const result = await getById(req.params);
-    res.status(result.statusCode).send(handleResult(result));
-});
-
-router.put('/:id', async (req, res) => {
-    const result = await update({...req.body, ...req.params});
     res.status(result.statusCode).send(handleResult(result));
 });
 

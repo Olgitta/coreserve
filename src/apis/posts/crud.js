@@ -3,7 +3,6 @@
 const debug = require('debug')('coreserve:posts:crud');
 const Post = require('./Post');
 const {Sequelize} = require('sequelize');
-const {ApiError, ApiErrorCodes} = require('../../core/errors');
 
 module.exports = {
     createPost,

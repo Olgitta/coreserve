@@ -4,7 +4,6 @@ const {StatusCodes} = require('http-status-codes');
 const {
     createComment,
     deleteComment,
-    getCommentById,
     getCommentsWithPagination,
     updateLikes
 } = require('./crud');
@@ -13,77 +12,100 @@ const debug = require('debug')('coreserve:CommentsController');
 const {getCtx} = require('../../core/execution-context/context');
 const getConfiguration = require('../../config/configuration');
 const {PaginationBuilder, normalizePaginationParams} = require('../pagination');
-const {ApiError, ApiErrorCodes} = require('../../core/errors');
+const {ApiError, ApiErrorCodes, ValidationError} = require('../../core/errors');
 const Validator = require('../../core/utils/Validator');
+const context = require("../../core/execution-context/context");
+const SuccessHandler = require("../SuccessHandler");
+const ErrorHandler = require("../ErrorHandler");
 
 module.exports = {
     create,
     getAll,
-    getById,
     remove,
-    like,
-    unlike
+    likeUnlike
 };
 
-async function create(reqBody = {}) {
+/**
+ *
+ * @param request
+ * @param request.postId
+ * @param request.parentId {optional}
+ * @param request.content
+ * @returns {Promise<{statusCode: StatusCodes.INTERNAL_SERVER_ERROR, error: ApiError}|{statusCode: StatusCodes.INTERNAL_SERVER_ERROR, error}|{statusCode: StatusCodes.OK, resources, message}>}
+ */
+async function create(request) {
+    debug('create called with:', request);
     try {
-        const {postId, parentId, content} = reqBody;
+        const {postId, parentId, content} = request;
+        const {userId} = context.getUser();
         const poi = Number(postId);
         let pai = Number(parentId);
-        if(parentId === null || parentId === undefined) {
+        if (parentId === null || parentId === undefined) {
             // valid parentId for first level comment
             pai = null;
         }
 
-        const {errors} = new Validator()
-            .isValidNumber(poi)
-            .isValidNumberOrNull(pai)
-            .isNonEmptyString(content)
+        const errors = new Validator()
+            .isValidNumber(poi, 'postId')
+            .isValidNumberOrNull(pai, 'parentId')
+            .isNonEmptyString(content, 'content')
             .validate();
 
-        if (errors) {
-            logger.error(`create:invalid input:${errors.join(',')}`);
-            return {statusCode: StatusCodes.BAD_REQUEST};
+        if (errors !== null) {
+            throw new ValidationError('Invalid input on comment creation', ApiErrorCodes.BAD_REQUEST, errors);
         }
 
-        const result = await createComment({postId: poi, content, parentId:pai});
-        return {statusCode: StatusCodes.CREATED, resources: result};
+        const result = await createComment({postId: poi, parentId: pai, userId, content});
+        return SuccessHandler.handle(
+            StatusCodes.CREATED,
+            result,
+            'created'
+        );
     } catch (err) {
-        logger.error('create:error', err);
-        if (err instanceof ApiError && err.code === ApiErrorCodes.API_BAD_REQUEST) {
-            return handleError(err, StatusCodes.BAD_REQUEST);
-        }
-        return handleError(err);
+        logger.error('Error on comment creation', err);
+        return ErrorHandler.handleError(err);
     }
 }
 
-async function getAll(requestQuery) {
+/**
+ *
+ * @param request
+ * @param request.postId
+ * @param request.parentId {optional}
+ * @param request.page {optional}
+ * @param request.limit {optional}
+ * @returns {Promise<{statusCode: StatusCodes.INTERNAL_SERVER_ERROR, error: ApiError}|{statusCode: StatusCodes.INTERNAL_SERVER_ERROR, error}|*>}
+ */
+async function getAll(request) {
+    debug('getAll called with:', request);
     try {
         const ctx = getCtx();
         const config = getConfiguration().comments;
-        debug('getAll config', config);
-        const {page, limit} = normalizePaginationParams(requestQuery.page, requestQuery.limit, config);
-
-        const {postId, parentId} = requestQuery;
+        const {page = 1, limit = config.pagination.limit} = request;
+        const p = Number(page);
+        const l = Number(limit);
+        const {userId} = context.getUser();
+        const {postId, parentId} = request;
         const poi = Number(postId);
         let pai = Number(parentId);
-        if(parentId === null || parentId === undefined) {
+        if (parentId === null || parentId === undefined) {
             // valid parentId for first level comment
             pai = null;
         }
 
-        const {errors} = new Validator()
-            .isValidNumber(poi)
-            .isValidNumberOrNull(pai)
+        const errors = new Validator()
+            .isValidNumber(p, 'page')
+            .isValidNumber(l, 'limit')
+            .isValidNumber(poi, 'postId')
+            .isValidNumberOrNull(pai, 'parentId')
             .validate();
 
-        if (errors) {
-            logger.error(`getAll:invalid input:${errors.join(',')}`);
-            return {statusCode: StatusCodes.BAD_REQUEST};
+        if (errors !== null) {
+            throw new ValidationError('Invalid input on get all comments', ApiErrorCodes.BAD_REQUEST, errors);
         }
 
         const skip = (page - 1) * limit;
-        const {comments, total} = await getCommentsWithPagination(poi, pai, skip, limit);
+        const {comments, total} = await getCommentsWithPagination(poi, pai, userId, skip, limit);
         const cleanUrl = ctx?.request?.url.split('?')[0];
 
         const paginationBuilder = new PaginationBuilder();
@@ -93,125 +115,71 @@ async function getAll(requestQuery) {
             .setLimit(limit)
             .setPage(page);
 
-        const {totalPages, nextPage, prevPage} = paginationBuilder.build();
-        debug('pagination', {totalPages, nextPage, prevPage});
-
-        return {
-            statusCode: StatusCodes.OK,
-            resources: comments,
-            pagination: {
-                nextPage,
-                prevPage,
-                totalPages
-            }
-        };
+        return SuccessHandler.handleWithPagination(
+            StatusCodes.OK,
+            comments,
+            'proceeded',
+            paginationBuilder.build());
     } catch (err) {
-        logger.error('getAll:error', err);
-        return handleError(err);
+        logger.error('Error on get all comments', err);
+        return ErrorHandler.handleError(err);
     }
 }
 
-async function getById(id) {
+/**
+ *
+ * @param request
+ * @returns {Promise<{statusCode: StatusCodes.INTERNAL_SERVER_ERROR, error: ApiError}|{statusCode: StatusCodes.INTERNAL_SERVER_ERROR, error}|{statusCode: StatusCodes.OK, resources, message}>}
+ */
+async function remove(request) {
+    debug('remove called with:', request);
     try {
-        const parsedId = Number(id);
-
-        const {errors} = new Validator()
-            .isValidNumber(parsedId)
+        const {id} = request;
+        const coi = Number(id);
+        const {userId} = context.getUser();
+        const errors = new Validator()
+            .isValidNumber(coi, 'id')
             .validate();
 
         if (errors) {
-            logger.error(`getById:invalid input:${errors.join(',')}`);
-            return {statusCode: StatusCodes.BAD_REQUEST};
+            throw new ValidationError('Invalid input on remove comment', ApiErrorCodes.BAD_REQUEST);
         }
 
-        const result = await getCommentById(parsedId);
-        if (result === null) {
-            logger.error('getById:not found');
-            return {statusCode: StatusCodes.NOT_FOUND};
-        }
+        const {deleted, comment} = await deleteComment(coi, userId);
 
-        return {statusCode: StatusCodes.OK, resources: result};
+        return SuccessHandler.handle(StatusCodes.OK, comment, `deleted:${deleted}`);
     } catch (err) {
-        logger.error(`getById:error: ${err.message}`, err);
-        return handleError(err);
+        logger.error('Error on remove comment', err);
+        return ErrorHandler.handleError(err);
     }
 }
 
-async function remove(id) {
+/**
+ *
+ * @param request
+ * @param request.id
+ * @param request.op
+ * @returns {Promise<{statusCode: StatusCodes.INTERNAL_SERVER_ERROR, error: ApiError}|{statusCode: StatusCodes.INTERNAL_SERVER_ERROR, error}|{statusCode: StatusCodes.OK, resources, message}>}
+ */
+async function likeUnlike(request) {
+    debug('likeUnlike called with:', request);
     try {
-        const parsedId = Number(id);
-
-        const {errors} = new Validator()
-            .isValidNumber(parsedId)
+        const {id, op} = request;
+        const coi = Number(id);
+        const {userId} = context.getUser();
+        const errors = new Validator()
+            .isValidNumber(coi, 'id')
             .validate();
 
         if (errors) {
-            logger.error(`remove:invalid input:${errors.join(',')}`);
-            return {statusCode: StatusCodes.BAD_REQUEST};
+            throw new ValidationError('Invalid input on likeUnlike', ApiErrorCodes.BAD_REQUEST, errors);
         }
 
-        const result = await deleteComment(parsedId);
-        if (result === null) {
-            logger.error('remove:not found');
-            return {statusCode: StatusCodes.NOT_FOUND};
-        }
+        const result = await updateLikes(coi, userId, op);
 
-        return {statusCode: StatusCodes.OK, resources: result};
+        return SuccessHandler.handle(StatusCodes.OK, {}, `proceeded:${result}`);
     } catch (err) {
-        logger.error(`remove:error: ${err.message}`, err);
-        return handleError(err);
+        logger.error('Error on likeUnlike', err);
+        return ErrorHandler.handleError(err);
     }
-}
-
-async function like(id) {
-    try {
-        const parsedId = Number(id);
-
-        const {errors} = new Validator()
-            .isValidNumber(parsedId)
-            .validate();
-
-        if (errors) {
-            logger.error(`like:invalid input:${errors.join(',')}`);
-            return {statusCode: StatusCodes.BAD_REQUEST};
-        }
-
-        const result = await updateLikes(parsedId, true);
-
-        return {statusCode: StatusCodes.OK, resources: result};
-    } catch (err) {
-        logger.error('like:error', err);
-        return handleError(err);
-    }
-}
-
-async function unlike(id) {
-    try {
-        const parsedId = Number(id);
-
-        const {errors} = new Validator()
-            .isValidNumber(parsedId)
-            .validate();
-
-        if (errors) {
-            logger.error(`unlike:invalid input:${errors.join(',')}`);
-            return {statusCode: StatusCodes.BAD_REQUEST};
-        }
-
-        const result = await updateLikes(parsedId, false);
-
-        return {statusCode: StatusCodes.OK, resources: result};
-    } catch (err) {
-        logger.error('unlike:error', err);
-        return handleError(err);
-    }
-}
-
-function handleError(err, statusCode) {
-
-    return {
-        statusCode: statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
-        reason: err.message,
-        error: err
-    };
 }

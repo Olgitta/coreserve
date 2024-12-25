@@ -1,13 +1,12 @@
 'use strict';
 
 const {
-    USER_ID, CTX_PAYLOAD,
-    CREATE_POST_201, CREATE_POST_400, GET_ALL_200, GET_ALL_400, GET_ALL_200_NO_PAGINATION_PARAMS,
+    CREATE_201, CREATE_400, GET_ALL_200, GET_ALL_400, GET_ALL_200_NO_PAGINATION_PARAMS,
     GET_BY_ID_200, GET_BY_ID_400,
     DELETE_200, DELETE_400,
     UPDATE_200, UPDATE_400,
     LIKE_200, UNLIKE_200, LIKE_UNLIKE_400
-} = require('../helpers');
+} = require('./helpers');
 
 const {
     createPost,
@@ -40,7 +39,7 @@ jest.mock('../../../src/apis/posts/crud', () => ({
 }));
 
 jest.mock('../../../src/core/execution-context/context', () => {
-    const {USER_ID, CTX_PAYLOAD} = require('../helpers');
+    const {USER_ID, CTX_PAYLOAD} = require('./helpers');
 
     return {
         getUser: jest.fn().mockReturnValue({userId: USER_ID}),
@@ -57,7 +56,7 @@ describe('PostsController', () => {
 
     describe('create', () => {
         it('should return CREATED and include the created post resource', async () => {
-            const {crudReceives, crudReturns, expected, request} = CREATE_POST_201();
+            const {crudReceives, crudReturns, expected, request} = CREATE_201();
 
             createPost.mockResolvedValue(crudReturns);
             const actual = await PostsController.create(request);
@@ -67,7 +66,7 @@ describe('PostsController', () => {
         });
 
         it('should return BAD_REQUEST when title or content is invalid', async () => {
-            const {expected, request} = CREATE_POST_400();
+            const {expected, request} = CREATE_400();
 
             const actual = await PostsController.create(request);
 
