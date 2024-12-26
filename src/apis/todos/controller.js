@@ -8,7 +8,7 @@ const {Types} = require('mongoose');
 const debug = require('debug')('coreserve:TodosController');
 const {getCtx} = require('../../core/execution-context/context');
 const getConfiguration=require('../../config/configuration');
-const {PaginationBuilder, normalizePaginationParams} = require('../pagination');
+const {PaginationBuilder, normalizePaginationParams} = require('../PaginationBuilder');
 
 async function create(title) {
     try {

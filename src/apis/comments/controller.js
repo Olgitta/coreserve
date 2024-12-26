@@ -7,12 +7,12 @@ const {
     getCommentsWithPagination,
     updateLikes
 } = require('./crud');
-const logger = require('../../core/logger')('CommentsController');
+const logger = require('#core/logger/index.js')('CommentsController');
 const debug = require('debug')('coreserve:CommentsController');
 const {getCtx} = require('../../core/execution-context/context');
 const getConfiguration = require('../../config/configuration');
-const {PaginationBuilder, normalizePaginationParams} = require('../pagination');
-const {ApiError, ApiErrorCodes, ValidationError} = require('../../core/errors');
+const PaginationBuilder = require('../PaginationBuilder');
+const {ApiError, ApiErrorCodes, ValidationError} = require('#core/errors/index.js');
 const Validator = require('../../core/utils/Validator');
 const context = require('../../core/execution-context/context');
 const SuccessHandler = require('../SuccessHandler');
@@ -82,8 +82,9 @@ async function getAll(request) {
         const ctx = getCtx();
         const config = getConfiguration().comments;
         const {page = 1, limit = config.pagination.limit} = request;
-        const p = Number(page);
-        const l = Number(limit);
+
+        const paginationBuilder = new PaginationBuilder(page, limit);
+
         const {userId} = context.getUser();
         const {postId, parentId} = request;
         const poi = Number(postId);
@@ -94,8 +95,6 @@ async function getAll(request) {
         }
 
         const errors = new Validator()
-            .isValidNumber(p, 'page')
-            .isValidNumber(l, 'limit')
             .isValidNumber(poi, 'postId')
             .isValidNumberOrNull(pai, 'parentId')
             .validate();
@@ -104,16 +103,12 @@ async function getAll(request) {
             throw new ValidationError('Invalid input on get all comments', ApiErrorCodes.BAD_REQUEST, errors);
         }
 
-        const skip = (p - 1) * l;
-        const {comments, total} = await getCommentsWithPagination(poi, pai, userId, skip, l);
+        const {comments, total} = await getCommentsWithPagination(poi, pai, userId, paginationBuilder.skip, paginationBuilder.limit);
         const cleanUrl = ctx?.request?.url.split('?')[0];
 
-        const paginationBuilder = new PaginationBuilder();
         paginationBuilder
             .setUrl(cleanUrl)
-            .setTotal(total)
-            .setLimit(l)
-            .setPage(p);
+            .setTotal(total);
 
         return SuccessHandler.handleWithPagination(
             StatusCodes.OK,

@@ -13,7 +13,7 @@ const getConfiguration = require('../../../src/config/configuration');
 const {
     CREATE_201, CREATE_REPLY_201, CREATE_400,
     DELETE_200, DELETE_400,
-    GET_ALL_200, GET_ALL_200_NO_PAGINATION_PARAMS, GET_ALL_400,
+    GET_ALL_200, GET_ALL_200_NO_PAGINATION_PARAMS, GET_ALL_200_NO_RECORDS_FOUND, GET_ALL_400,
     LIKE_200, LIKE_UNLIKE_400, UNLIKE_200,
 } = require('./helpers');
 
@@ -103,6 +103,27 @@ describe('CommentsController', () => {
                 expected,
                 request
             } = GET_ALL_200_NO_PAGINATION_PARAMS();
+
+            getCtx.mockReturnValue(contextMock);
+            getConfiguration.mockReturnValue(configMock);
+            getCommentsWithPagination.mockResolvedValue(crudReturns);
+
+            const actual = await CommentsController.getAll(request);
+
+            expect(getCommentsWithPagination).toHaveBeenCalledWith(...crudReceives);
+            expect(actual.statusCode).toEqual(expected.statusCode);
+            expect(actual.pagination).toEqual(expected.pagination);
+        });
+
+        it('should respond OK when no records found', async () => {
+            const {
+                configMock,
+                contextMock,
+                crudReceives,
+                crudReturns,
+                expected,
+                request
+            } = GET_ALL_200_NO_RECORDS_FOUND();
 
             getCtx.mockReturnValue(contextMock);
             getConfiguration.mockReturnValue(configMock);

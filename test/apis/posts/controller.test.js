@@ -5,7 +5,7 @@ const {
     GET_BY_ID_200, GET_BY_ID_400,
     DELETE_200, DELETE_400,
     UPDATE_200, UPDATE_400,
-    LIKE_200, UNLIKE_200, LIKE_UNLIKE_400
+    LIKE_200, UNLIKE_200, LIKE_UNLIKE_400, GET_ALL_200_NO_RECORDS_FOUND
 } = require('./helpers');
 
 const {
@@ -99,6 +99,27 @@ describe('PostsController', () => {
                 expected,
                 request
             } = GET_ALL_200_NO_PAGINATION_PARAMS();
+
+            getCtx.mockReturnValue(contextMock);
+            getConfiguration.mockReturnValue(configMock);
+            getPostsWithPagination.mockResolvedValue(crudReturns);
+
+            const actual = await PostsController.getAll(request);
+
+            expect(getPostsWithPagination).toHaveBeenCalledWith(...crudReceives);
+            expect(actual.statusCode).toEqual(expected.statusCode);
+            expect(actual.pagination).toEqual(expected.pagination);
+        });
+
+        it('should respond OK when no records found', async () => {
+            const {
+                configMock,
+                contextMock,
+                crudReceives,
+                crudReturns,
+                expected,
+                request
+            } = GET_ALL_200_NO_RECORDS_FOUND();
 
             getCtx.mockReturnValue(contextMock);
             getConfiguration.mockReturnValue(configMock);

@@ -107,6 +107,7 @@ module.exports = {
             expected: {
                 statusCode: StatusCodes.OK,
                 pagination: {
+                    total: 10,
                     totalPages: 4,
                     nextPage: `${REQUEST_URL}?page=3&limit=${limit}`,
                     prevPage: `${REQUEST_URL}?page=1&limit=${limit}`,
@@ -132,12 +133,36 @@ module.exports = {
             expected: {
                 statusCode: StatusCodes.OK,
                 pagination: {
+                    total: 10,
                     totalPages: 2,
                     nextPage: `${REQUEST_URL}?page=2&limit=${configLimit}`,
-                    prevPage: null,
                 }
             },
         }
+    },
+
+    GET_ALL_200_NO_RECORDS_FOUND: () => {
+        const configLimit = 5;
+        const skip = 0;
+
+        return {
+            request: {
+                postId: POST_ID,
+                parentId: PARENT_COMMENT_ID,
+            },
+            configMock: {comments: {pagination: {limit: configLimit}}},
+            contextMock: {request: {url: REQUEST_URL}},
+            crudReturns: {comments: [], total: 0},
+            crudReceives: [POST_ID, PARENT_COMMENT_ID, USER_ID, skip, configLimit],
+            expected: {
+                statusCode: StatusCodes.OK,
+                pagination: {
+                    total: 0,
+                    totalPages: 0,
+                }
+            },
+        }
+
     },
 
     GET_ALL_400: () => {

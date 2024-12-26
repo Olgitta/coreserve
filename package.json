@@ -15,6 +15,9 @@
     "e2e3000": "cross-env E2EPORT=3000 jest ./e2e",
     "e2e5000": "cross-env E2EPORT=5000 jest ./e2e"
   },
+  "imports": {
+    "#core/*.js": "./src/core/*.js"
+  },
   "dependencies": {
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",

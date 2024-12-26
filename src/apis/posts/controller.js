@@ -6,7 +6,7 @@ const logger = require('../../core/logger')('PostsController');
 const debug = require('debug')('coreserve:PostsController');
 const context = require('../../core/execution-context/context');
 const getConfiguration = require('../../config/configuration');
-const {PaginationBuilder} = require('../pagination');
+const PaginationBuilder = require('../PaginationBuilder');
 const Validator = require('../../core/utils/Validator');
 const {ValidationError, ApiErrorCodes} = require('../../core/errors');
 const ErrorHandler = require('../ErrorHandler');
@@ -67,28 +67,15 @@ async function getAll(request) {
         const ctx = context.getCtx();
         const config = getConfiguration().posts;
         const {page = 1, limit = config.pagination.limit} = request;
-        const p = Number(page);
-        const l = Number(limit);
+        const paginationBuilder = new PaginationBuilder(page, limit);
         const {userId} = context.getUser();
-        const errors = new Validator()
-            .isValidNumber(p, 'page')
-            .isValidNumber(l, 'limit')
-            .validate();
 
-        if (errors !== null) {
-            throw new ValidationError('Invalid input on get all posts', ApiErrorCodes.BAD_REQUEST, errors);
-        }
-
-        const skip = (p - 1) * l;
-        const {posts, total} = await getPostsWithPagination(userId, skip, l);
+        const {posts, total} = await getPostsWithPagination(userId, paginationBuilder.skip, paginationBuilder.limit);
         const cleanUrl = ctx?.request?.url.split('?')[0];
 
-        const paginationBuilder = new PaginationBuilder();
         paginationBuilder
             .setUrl(cleanUrl)
-            .setTotal(total)
-            .setLimit(l)
-            .setPage(p);
+            .setTotal(total);
 
         return SuccessHandler.handleWithPagination(
             StatusCodes.OK,

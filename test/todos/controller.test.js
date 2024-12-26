@@ -7,7 +7,7 @@ const {createTodo, getTodoById, updateTodo, deleteTodo, getTodosWithPagination} 
 const log = require('../../src/core/logger')();
 const {getCtx, getTraceId} = require('../../src/core/execution-context/context');
 const getConfiguration = require('../../src/config/configuration');
-const {PaginationBuilder, normalizePaginationParams} = require('../../src/apis/pagination');
+const {PaginationBuilder, normalizePaginationParams} = require('../../src/apis/PaginationBuilder');
 
 jest.mock('../../src/apis/todos/crud');
 jest.mock('../../src/core/logger', () => {
@@ -20,7 +20,7 @@ jest.mock('../../src/core/logger', () => {
 jest.mock('../../src/core/execution-context/context');
 jest.mock('../../src/config/configuration');
 
-jest.mock('../../src/apis/pagination', () => ({
+jest.mock('../../src/apis/PaginationBuilder', () => ({
     PaginationBuilder: jest.fn().mockImplementation(() => ({
         setUrl: jest.fn().mockReturnThis(),
         setTotal: jest.fn().mockReturnThis(),

@@ -38,7 +38,7 @@ const buildMeta = function (additional) {
     }
 };
 
-module.exports = function (p='ApiLog') {
+module.exports = function (p = 'ApiLog') {
 
     const prefix = p;
 

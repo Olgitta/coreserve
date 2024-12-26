@@ -49,6 +49,7 @@ class ResponseBuilder {
     /**
      *
      * @param pagination
+     * @param pagination.total
      * @param pagination.totalPages
      * @param pagination.prevPage
      * @param pagination.nextPage
@@ -60,13 +61,7 @@ class ResponseBuilder {
             return this;
         }
 
-        const {totalPages, nextPage, prevPage} = pagination;
-
-        this.response.pagination = {
-            totalPages,
-            ...(prevPage && {prevPage}),
-            ...(nextPage && {nextPage}),
-        };
+        this.response.pagination = pagination;
 
         return this;
     }
