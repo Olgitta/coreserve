@@ -107,7 +107,7 @@ async function deletePost(id, userId) {
         },
     });
 
-    debug('deletePost going to delete:', post);
+    debug('deletePost going to delete:', post.id);
 
     if (!post) {
         return {deleted: 0, post};

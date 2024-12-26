@@ -110,7 +110,7 @@ class PostsController {
                 .validate();
 
             if (errors) {
-                throw new ValidationError('Invalid input on get post by Id', ApiErrorCodes.BAD_REQUEST);
+                throw new ValidationError('Invalid input on get post by Id', ApiErrorCodes.BAD_REQUEST, errors);
             }
 
             const result = await getPostById(poi, userId);
@@ -139,7 +139,7 @@ class PostsController {
                 .validate();
 
             if (errors) {
-                throw new ValidationError('Invalid input on remove post', ApiErrorCodes.BAD_REQUEST);
+                throw new ValidationError('Invalid input on remove post', ApiErrorCodes.BAD_REQUEST, errors);
             }
 
             const {deleted, post} = await deletePost(poi, userId);
@@ -171,7 +171,7 @@ class PostsController {
                 .validate();
 
             if (errors) {
-                throw new ValidationError('Invalid input on update post', ApiErrorCodes.BAD_REQUEST);
+                throw new ValidationError('Invalid input on update post', ApiErrorCodes.BAD_REQUEST, errors);
             }
 
             const {updated, post} = await updatePost(poi, userId, {title, content});
