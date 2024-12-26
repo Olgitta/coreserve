@@ -7,11 +7,10 @@ const {
     deleteComment,
     getCommentsWithPagination,
     updateLikes
-} = require('../../../src/apis/comments/crud');
-const CommentsController = require('../../../src/apis/comments/controller');
+} = require('#apis/comments/crud.js');
+const CommentsController = require('#apis/comments/CommentsController.js');
 
-const {createCtx, getCtx, getTraceId, getUser, updateUser} = require('../../../src/core/execution-context/context');
-const getConfiguration = require('../../../src/config/configuration');
+const context = require('#core/execution-context/context.js');
 const {
     CREATE_201, CREATE_REPLY_201, CREATE_400,
     DELETE_200, DELETE_400,
@@ -19,14 +18,18 @@ const {
     LIKE_200, LIKE_UNLIKE_400, UNLIKE_200,
 } = require('./helpers');
 
-jest.mock('../../../src/apis/comments/crud', () => ({
+const getConfiguration = require('#config/configuration.js');
+
+jest.mock('#config/configuration.js', () => jest.fn());
+
+jest.mock('#apis/comments/crud.js', () => ({
     createComment: jest.fn(),
     deleteComment: jest.fn(),
     getCommentsWithPagination: jest.fn(),
     updateLikes: jest.fn(),
 }));
 
-jest.mock('../../../src/core/execution-context/context', () => {
+jest.mock('#core/execution-context/context.js', () => {
     const {USER_ID, CTX_PAYLOAD} = require('./helpers');
 
     return {
@@ -35,11 +38,24 @@ jest.mock('../../../src/core/execution-context/context', () => {
     }
 });
 
-jest.mock('../../../src/config/configuration', () => jest.fn());
-
 describe('CommentsController', () => {
     afterEach(() => {
         jest.clearAllMocks();
+    });
+
+    describe('getInstance', () => {
+        it('should return the singleton instance of CommentsController', () => {
+            const instance1 = CommentsController.getInstance();
+            const instance2 = CommentsController.getInstance();
+
+            expect(instance1).toBe(instance2);
+        });
+
+        it('should throw an error if the constructor is called directly', () => {
+            expect(() => new CommentsController()).toThrow(
+                'CommentsController is a singleton. Use CommentsController.getInstance() to access the instance.'
+            );
+        });
     });
 
     describe('create', () => {
@@ -77,7 +93,7 @@ describe('CommentsController', () => {
         it('should retrieve paginated comments with pagination metadata successfully', async () => {
             const {configMock, contextMock, crudReceives, crudReturns, expected, request} = GET_ALL_200();
 
-            getCtx.mockReturnValue(contextMock);
+            context.getCtx.mockReturnValue(contextMock);
             getConfiguration.mockReturnValue(configMock);
             getCommentsWithPagination.mockResolvedValue(crudReturns);
 
@@ -98,7 +114,7 @@ describe('CommentsController', () => {
                 request
             } = GET_ALL_200_NO_PAGINATION_PARAMS();
 
-            getCtx.mockReturnValue(contextMock);
+            context.getCtx.mockReturnValue(contextMock);
             getConfiguration.mockReturnValue(configMock);
             getCommentsWithPagination.mockResolvedValue(crudReturns);
 
@@ -119,7 +135,7 @@ describe('CommentsController', () => {
                 request
             } = GET_ALL_200_NO_RECORDS_FOUND();
 
-            getCtx.mockReturnValue(contextMock);
+            context.getCtx.mockReturnValue(contextMock);
             getConfiguration.mockReturnValue(configMock);
             getCommentsWithPagination.mockResolvedValue(crudReturns);
 
@@ -133,7 +149,7 @@ describe('CommentsController', () => {
         it('should return BAD_REQUEST when invalid input is provided', async () => {
             const {configMock, contextMock, expected, request} = GET_ALL_400();
 
-            getCtx.mockReturnValue(contextMock);
+            context.getCtx.mockReturnValue(contextMock);
             getConfiguration.mockReturnValue(configMock);
 
             const actual = await CommentsController.getAll(request);

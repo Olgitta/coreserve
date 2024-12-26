@@ -2,12 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
-const {
-    create,
-    getAll,
-    likeUnlike,
-    remove,
-} = require('./controller');
+const CommentsController = require('./CommentsController');
 const ResponseBuilder = require('../ResponseBuilder');
 const {getTraceId} = require('../../core/execution-context/context');
 const LikeOps = require('./LikeOps');
@@ -44,27 +39,27 @@ function handleResult(result) {
 }
 
 router.post('/', async (req, res) => {
-    const result = await create(req.body);
+    const result = await CommentsController.create(req.body);
     res.status(result.statusCode).send(handleResult(result));
 });
 
 router.post('/like/:id', async (req, res) => {
-    const result = await likeUnlike({...req.params, op: LikeOps.LIKE});
+    const result = await CommentsController.likeUnlike({...req.params, op: LikeOps.LIKE});
     res.status(result.statusCode).send(handleResult(result));
 });
 
 router.post('/unlike/:id', async (req, res) => {
-    const result = await likeUnlike({...req.params, op: LikeOps.UNLIKE});
+    const result = await CommentsController.likeUnlike({...req.params, op: LikeOps.UNLIKE});
     res.status(result.statusCode).send(handleResult(result));
 });
 
 router.get('/', async (req, res) => {
-    const result = await getAll(req.query);
+    const result = await CommentsController.getAll(req.query);
     res.status(result.statusCode).send(handleResult(result));
 });
 
 router.delete('/:id', async (req, res) => {
-    const result = await remove(req.params);
+    const result = await CommentsController.remove(req.params);
     res.status(result.statusCode).send(handleResult(result));
 });
 

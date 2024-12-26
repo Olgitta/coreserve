@@ -47,6 +47,21 @@ describe('PostsController', () => {
         jest.clearAllMocks();
     });
 
+    describe('getInstance', () => {
+        it('should return the singleton instance of PostsController', () => {
+            const instance1 = PostsController.getInstance();
+            const instance2 = PostsController.getInstance();
+
+            expect(instance1).toBe(instance2);
+        });
+
+        it('should throw an error if the constructor is called directly', () => {
+            expect(() => new PostsController()).toThrow(
+                'PostsController is a singleton. Use PostsController.getInstance() to access the instance.'
+            );
+        });
+    });
+
     describe('create', () => {
         it('should return CREATED and include the created post resource', async () => {
             const {crudReceives, crudReturns, expected, request} = CREATE_201();
