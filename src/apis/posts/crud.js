@@ -1,7 +1,7 @@
 'use strict';
 
 const debug = require('debug')('coreserve:posts:crud');
-const Post = require('./Post');
+const Post = require('./PostModel');
 const {Sequelize} = require('sequelize');
 
 module.exports = {

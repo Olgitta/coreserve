@@ -1,7 +1,7 @@
 'use strict';
 
 const debug = require('debug')('coreserve:comments:crud');
-const Comment = require('./Comment');
+const Comment = require('./CommentModel');
 const {Sequelize} = require('sequelize');
 
 module.exports = {

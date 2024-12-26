@@ -1,6 +1,6 @@
 const { StatusCodes } = require('http-status-codes');
 const { ApiError, ValidationError, ApiErrorCodes } = require('../../src/core/errors');
-const ErrorHandler = require('../../src/apis/ErrorHandler');
+const ErrorHandler = require('#apis/ErrorHandler.js');
 
 describe('ErrorHandler', () => {
     beforeEach(() => {

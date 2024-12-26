@@ -1,5 +1,7 @@
 'use strict';
 
+require('../../mocks');
+
 const {
     createComment,
     deleteComment,
@@ -7,7 +9,7 @@ const {
     updateLikes
 } = require('../../../src/apis/comments/crud');
 const CommentsController = require('../../../src/apis/comments/controller');
-const log = require('../../../src/core/logger')();
+
 const {createCtx, getCtx, getTraceId, getUser, updateUser} = require('../../../src/core/execution-context/context');
 const getConfiguration = require('../../../src/config/configuration');
 const {
@@ -23,14 +25,6 @@ jest.mock('../../../src/apis/comments/crud', () => ({
     getCommentsWithPagination: jest.fn(),
     updateLikes: jest.fn(),
 }));
-
-jest.mock('../../../src/core/logger', () => {
-    return jest.fn(() => ({
-        info: jest.fn(),
-        warn: jest.fn(),
-        error: jest.fn(),
-    }));
-});
 
 jest.mock('../../../src/core/execution-context/context', () => {
     const {USER_ID, CTX_PAYLOAD} = require('./helpers');

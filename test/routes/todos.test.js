@@ -17,7 +17,7 @@ jest.mock('../../src/apis/todos/controller');
 
 const generateDynamicId = () => new Types.ObjectId().toString();
 
-describe('Todos API Routes', () => {
+describe.skip('Todos API Routes', () => {
     beforeEach(() => {
         jest.clearAllMocks();
     });

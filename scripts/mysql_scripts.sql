@@ -17,6 +17,9 @@ CREATE TABLE users
     updated_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+insert into users (name, email, password)
+values ('main', 'main@mail', 'mainpassword');
+
 CREATE TABLE posts
 (
     id          INT AUTO_INCREMENT PRIMARY KEY,

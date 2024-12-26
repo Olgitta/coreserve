@@ -1,5 +1,7 @@
 'use strict';
 
+require('../../mocks');
+
 const {
     CREATE_201, CREATE_400, GET_ALL_200, GET_ALL_400, GET_ALL_200_NO_PAGINATION_PARAMS,
     GET_BY_ID_200, GET_BY_ID_400,
@@ -19,15 +21,6 @@ const {
 const PostsController = require('../../../src/apis/posts/controller');
 const {createCtx, getCtx, getTraceId, getUser, updateUser} = require('../../../src/core/execution-context/context');
 const getConfiguration = require('../../../src/config/configuration');
-const log = require('../../../src/core/logger')();
-
-jest.mock('../../../src/core/logger', () => {
-    return jest.fn(() => ({
-        info: jest.fn(),
-        warn: jest.fn(),
-        error: jest.fn(),
-    }));
-});
 
 jest.mock('../../../src/apis/posts/crud', () => ({
     createPost: jest.fn(),

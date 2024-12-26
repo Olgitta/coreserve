@@ -3,7 +3,7 @@
 const {DataTypes} = require('sequelize');
 const {createModel} = require('../../infra/db/mysql/connection');
 
-const Comment = createModel('Comment', {
+const CommentModel = createModel('Comment', {
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
@@ -62,4 +62,4 @@ const Comment = createModel('Comment', {
         tableName: 'comments',
     });
 
-module.exports = Comment;
+module.exports = CommentModel;

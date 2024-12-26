@@ -9,12 +9,12 @@ const {
 } = require('./crud');
 const logger = require('#core/logger/index.js')('CommentsController');
 const debug = require('debug')('coreserve:CommentsController');
-const {getCtx} = require('../../core/execution-context/context');
+
 const getConfiguration = require('../../config/configuration');
 const PaginationBuilder = require('../PaginationBuilder');
-const {ApiError, ApiErrorCodes, ValidationError} = require('#core/errors/index.js');
-const Validator = require('../../core/utils/Validator');
-const context = require('../../core/execution-context/context');
+const {ApiErrorCodes, ValidationError} = require('#core/errors/index.js');
+const Validator = require('#core/utils/Validator.js');
+const context = require('#core/execution-context/context.js');
 const SuccessHandler = require('../SuccessHandler');
 const ErrorHandler = require('../ErrorHandler');
 
@@ -79,7 +79,7 @@ async function create(request) {
 async function getAll(request) {
     debug('getAll called with:', request);
     try {
-        const ctx = getCtx();
+        const ctx = context.getCtx();
         const config = getConfiguration().comments;
         const {page = 1, limit = config.pagination.limit} = request;
 

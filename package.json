@@ -11,12 +11,14 @@
     "lintest": "eslint test/",
     "lintest:fix": "eslint test/ --fix",
     "lint:fix": "eslint src/ --fix",
-    "test": "jest ./test --coverage",
+    "test:coverage": "jest ./test --coverage",
+    "test": "jest ./test",
     "e2e3000": "cross-env E2EPORT=3000 jest ./e2e",
     "e2e5000": "cross-env E2EPORT=5000 jest ./e2e"
   },
   "imports": {
-    "#core/*.js": "./src/core/*.js"
+    "#core/*.js": "./src/core/*.js",
+    "#apis/*.js": "./src/apis/*.js"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
@@ -25,6 +27,7 @@
     "express": "5.0.0",
     "http-status-codes": "^2.3.0",
     "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.12.0",
     "mongoose": "^8.9.1",
     "mysql2": "^3.11.5",

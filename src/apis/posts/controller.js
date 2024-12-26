@@ -2,13 +2,13 @@
 
 const {StatusCodes} = require('http-status-codes');
 const {createPost, deletePost, getPostsWithPagination, getPostById, updatePost, updateLikes} = require('./crud');
-const logger = require('../../core/logger')('PostsController');
+const logger = require('#core/logger/index.js')('PostsController');
 const debug = require('debug')('coreserve:PostsController');
-const context = require('../../core/execution-context/context');
+const context = require('#core/execution-context/context.js');
 const getConfiguration = require('../../config/configuration');
 const PaginationBuilder = require('../PaginationBuilder');
-const Validator = require('../../core/utils/Validator');
-const {ValidationError, ApiErrorCodes} = require('../../core/errors');
+const Validator = require('#core/utils/Validator.js');
+const {ValidationError, ApiErrorCodes} = require('#core/errors/index.js');
 const ErrorHandler = require('../ErrorHandler');
 const SuccessHandler = require('../SuccessHandler');
 

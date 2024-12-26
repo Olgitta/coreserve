@@ -1,8 +1,11 @@
 'use strict';
 
 class ResponseBuilder {
+
+    #response;
+
     constructor() {
-        this.response = {
+        this.#response = {
             metadata: {
                 traceId: '',
             },
@@ -15,7 +18,7 @@ class ResponseBuilder {
      * @returns {ResponseBuilder}
      */
     setTraceId(id) {
-        this.response.metadata.traceId = id;
+        this.#response.metadata.traceId = id;
         return this;
     }
 
@@ -29,7 +32,7 @@ class ResponseBuilder {
             return this;
         }
 
-        this.response.metadata.error = error;
+        this.#response.metadata.error = error;
 
         return this;
     }
@@ -41,7 +44,7 @@ class ResponseBuilder {
      */
     setResources(resources) {
         if (resources !== null && resources !== undefined) {
-            this.response.resources = resources;
+            this.#response.resources = resources;
         }
         return this;
     }
@@ -61,7 +64,7 @@ class ResponseBuilder {
             return this;
         }
 
-        this.response.pagination = pagination;
+        this.#response.pagination = pagination;
 
         return this;
     }
@@ -72,7 +75,7 @@ class ResponseBuilder {
      * @returns {ResponseBuilder}
      */
     setMessage(message) {
-        this.response.metadata.message = message;
+        this.#response.metadata.message = message;
         return this;
     }
 
@@ -81,7 +84,7 @@ class ResponseBuilder {
      * @returns {object}
      */
     build() {
-        return this.response;
+        return this.#response;
     }
 
 }

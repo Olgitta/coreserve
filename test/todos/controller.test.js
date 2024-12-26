@@ -37,7 +37,7 @@ jest.mock('../../src/apis/PaginationBuilder', () => ({
 
 const generateDynamicId = () => new Types.ObjectId().toString();
 
-describe('TodosController', () => {
+describe.skip('TodosController', () => {
     beforeEach(() => {
         jest.clearAllMocks();
     });

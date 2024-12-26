@@ -1,13 +1,8 @@
 'use strict';
 
+require('../mocks');
 const PaginationBuilder = require('../../src/apis/PaginationBuilder');
 const { ValidationError } = require('#core/errors/index.js');
-
-jest.mock('#core/logger/index.js', () => {
-    return jest.fn().mockImplementation(() => jest.fn());
-});
-
-const logger = require('#core/logger/index.js');
 
 describe('PaginationBuilder', () => {
     beforeEach(() => {
