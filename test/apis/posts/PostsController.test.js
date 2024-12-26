@@ -17,12 +17,12 @@ const {
     getPostById,
     updatePost,
     updateLikes,
-} = require('../../../src/apis/posts/crud');
-const PostsController = require('../../../src/apis/posts/controller');
-const {createCtx, getCtx, getTraceId, getUser, updateUser} = require('../../../src/core/execution-context/context');
-const getConfiguration = require('../../../src/config/configuration');
+} = require('#apis/posts/crud.js');
+const PostsController = require('#apis/posts/PostsController.js');
+const context = require('#core/execution-context/context.js');
+const getConfiguration = require('#config/configuration.js');
 
-jest.mock('../../../src/apis/posts/crud', () => ({
+jest.mock('#apis/posts/crud.js', () => ({
     createPost: jest.fn(),
     deletePost: jest.fn(),
     getPostsWithPagination: jest.fn(),
@@ -31,7 +31,7 @@ jest.mock('../../../src/apis/posts/crud', () => ({
     updateLikes: jest.fn(),
 }));
 
-jest.mock('../../../src/core/execution-context/context', () => {
+jest.mock('#core/execution-context/context.js', () => {
     const {USER_ID, CTX_PAYLOAD} = require('./helpers');
 
     return {
@@ -40,7 +40,7 @@ jest.mock('../../../src/core/execution-context/context', () => {
     }
 });
 
-jest.mock('../../../src/config/configuration', () => jest.fn());
+jest.mock('#config/configuration.js', () => jest.fn());
 
 describe('PostsController', () => {
     afterEach(() => {
@@ -72,7 +72,7 @@ describe('PostsController', () => {
         it('should return OK with paginated posts and pagination metadata', async () => {
             const {configMock, contextMock, crudReceives, crudReturns, expected, request} = GET_ALL_200();
 
-            getCtx.mockReturnValue(contextMock);
+            context.getCtx.mockReturnValue(contextMock);
             getConfiguration.mockReturnValue(configMock);
             getPostsWithPagination.mockResolvedValue(crudReturns);
 
@@ -93,7 +93,7 @@ describe('PostsController', () => {
                 request
             } = GET_ALL_200_NO_PAGINATION_PARAMS();
 
-            getCtx.mockReturnValue(contextMock);
+            context.getCtx.mockReturnValue(contextMock);
             getConfiguration.mockReturnValue(configMock);
             getPostsWithPagination.mockResolvedValue(crudReturns);
 
@@ -114,7 +114,7 @@ describe('PostsController', () => {
                 request
             } = GET_ALL_200_NO_RECORDS_FOUND();
 
-            getCtx.mockReturnValue(contextMock);
+            context.getCtx.mockReturnValue(contextMock);
             getConfiguration.mockReturnValue(configMock);
             getPostsWithPagination.mockResolvedValue(crudReturns);
 
@@ -128,7 +128,7 @@ describe('PostsController', () => {
         it('should return BAD_REQUEST when input is invalid', async () => {
             const {configMock, contextMock, expected, request} = GET_ALL_400();
 
-            getCtx.mockReturnValue(contextMock);
+            context.getCtx.mockReturnValue(contextMock);
             getConfiguration.mockReturnValue(configMock);
 
             const actual = await PostsController.getAll(request);

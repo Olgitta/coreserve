@@ -18,7 +18,8 @@
   },
   "imports": {
     "#core/*.js": "./src/core/*.js",
-    "#apis/*.js": "./src/apis/*.js"
+    "#apis/*.js": "./src/apis/*.js",
+    "#config/*.js": "./src/config/*.js"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",

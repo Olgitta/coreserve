@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 const log = require('#core/logger/index.js')();
 
