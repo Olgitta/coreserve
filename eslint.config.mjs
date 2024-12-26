@@ -3,7 +3,7 @@ import pluginJs from "@eslint/js";
 
 export default [
     {
-        files: ["src/**/*.js"], // Only lint JavaScript files in `src/`
+        files: ["src/**/*.js", "test/**/*.js"], // Only lint JavaScript files in `src/`
         languageOptions: {
             sourceType: "commonjs", // Use CommonJS
             globals: globals.node,  // Node.js global variables

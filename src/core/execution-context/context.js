@@ -1,7 +1,7 @@
 'use strict';
 
 const { AsyncLocalStorage } = require('node:async_hooks');
-const {getGuid} = require('../utils/guidUtil');
+const {getGuid} = require('../utils/uuidUtils');
 const debug = require('debug')('coreserve:context');
 
 const asyncLocalStorage = new AsyncLocalStorage();
@@ -21,6 +21,16 @@ module.exports.getCtx = () => {
 module.exports.getTraceId = () => {
     return getContext().traceId;
 };
+
+module.exports.updateUser = (updates) => {
+    debug('updateUser with:', updates);
+    const context = getContext();
+    Object.assign(context, {user: updates});
+}
+
+module.exports.getUser = () => {
+    return getContext().user;
+}
 
 function getContext() {
     const context = asyncLocalStorage.getStore();

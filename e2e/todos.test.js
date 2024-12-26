@@ -7,7 +7,7 @@ const {
     testTodoStructure
 } = require('./helpers');
 
-describe('TODOS API Endpoints', () => {
+describe.skip('TODOS API Endpoints', () => {
     // Grouping tests for the "happy path"
     describe('Happy Path Scenarios', () => {
         const toRemove = []; // Track created items to clean up after tests

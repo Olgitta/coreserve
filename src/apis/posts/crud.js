@@ -1,7 +1,7 @@
 'use strict';
 
 const debug = require('debug')('coreserve:posts:crud');
-const Post = require('./Post');
+const Post = require('./PostModel');
 const {Sequelize} = require('sequelize');
 
 module.exports = {
@@ -13,96 +13,136 @@ module.exports = {
     updateLikes
 }
 
+/**
+ *
+ * @param payload
+ * @param payload.userId
+ * @param payload.title
+ * @param payload.content
+ * @returns {Promise<*>}
+ */
 async function createPost(payload) {
-    const post = await Post.create(payload);
+    debug('createPost called with:', payload);
 
-    debug('createPost', post);
-    return post;
+    return await Post.create(payload);
 }
 
-async function getPosts() {
-    const posts = Post.findAll();
-
-    debug('getPosts', posts);
-    return posts;
-}
-
-async function getPostsWithPagination(skip, limit) {
+/**
+ *
+ * @param userId
+ * @param skip
+ * @param limit
+ * @returns {Promise<{posts: *, total: *}>}
+ */
+async function  getPostsWithPagination(userId, skip, limit) {
+    debug('getPostsWithPagination called with:', {userId, skip, limit});
     const {count, rows: posts} = await Post.findAndCountAll({
+        where: {userId: userId},
         offset: skip,
         limit,
         order: [['updatedAt', 'DESC']],
     });
 
-    debug('getPostsWithPagination', posts);
     return {
         posts,
         total: count,
     }
 }
 
-async function getPostById(id) {
-    const post = await Post.findByPk(id);
+/**
+ *
+ * @param id
+ * @param userId
+ * @returns {Promise<*>}
+ */
+async function getPostById(id, userId) {
+    debug('getPostById called with:', {id, userId});
 
-    if (!post) {
-        debug(`getPostById:${id} not found`);
-        return null;
-    }
-
-    debug(`getPostById:${id}`, post);
-    return post;
+    return await Post.findOne({
+        where: {
+            id: id,
+            userId: userId
+        },
+    });
 }
 
-async function updatePost(id, payload) {
+/**
+ *
+ * @param id
+ * @param userId
+ * @param payload
+ * @returns {Promise<{updated: number}|{updated: *, post: *}>}
+ */
+async function updatePost(id, userId, payload) {
+    debug('updatePost called with:', {id, userId, ...payload});
     const [affectedRows] = await Post.update(payload, {
-        where: {id: id},
+        where: {
+            id: id,
+            userId: userId
+        },
     });
 
     if (affectedRows === 0) {
-        debug(`updatePost:${id} not found or no changes made.`);
-        return null;
+        return {
+            updated: 0
+        }
     }
 
     const post = await Post.findByPk(id);
-
-    debug(`updatePost:${id}:`, post);
-    return post;
+    return {updated: affectedRows, post};
 }
 
-async function deletePost(id) {
-    const post = await Post.findByPk(id);
-    const destroyed = await Post.destroy({
-        where: {id: id},
+/**
+ *
+ * @param id
+ * @param userId
+ * @returns {Promise<{deleted: *, post: *}|{deleted: number, post: *}>}
+ */
+async function deletePost(id, userId) {
+    debug('deletePost called with:', {id, userId});
+    const post = await Post.findOne({
+        where: {
+            id: id,
+            userId: userId
+        },
     });
-    if (destroyed === 0) {
-        debug(`deletePost:${id} not found or no changes made.`);
-        return null;
+
+    debug('deletePost going to delete:', post.id);
+
+    if (!post) {
+        return {deleted: 0, post};
     }
-    debug(`deletePost:${id}:`, destroyed);
-    return post;
+
+    const destroyed = await Post.destroy({
+        where: {
+            id: id,
+            userId: userId
+        },
+    });
+
+    return {deleted: destroyed, post};
 }
 
-async function updateLikes(id, like = null) {
-    if (like === null) {
-        return null;
-    }
+/**
+ *
+ * @param id
+ * @param userId
+ * @param like
+ * @returns {Promise<*>}
+ */
+async function updateLikes(id, userId, like) {
+    debug('updateLikes called with:', {id, userId, like});
 
     const operation = like ? 'increment' : 'decrement';
     const where = like
-        ? { id: id }
-        : { id: id, likes: { [Sequelize.Op.gt]: 0 } };
+        ? {id: id, userId: userId}
+        : {id: id, userId: userId, likes: {[Sequelize.Op.gt]: 0}};
 
     const [[noop, affectedRows]] = await Post[operation]('likes', {
         by: 1,
         where: where,
     });
 
-    if (affectedRows === 0) {
-        debug(`updateLikes: id=${id}, operation=${operation} - not found or no changes made.`);
-        return null;
-    }
-
-    debug(`updateLikes: id=${id}, operation=${operation} - affectedRows=${affectedRows}`);
     return affectedRows;
 }
 

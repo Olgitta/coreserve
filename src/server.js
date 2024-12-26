@@ -2,6 +2,7 @@
 
 const debug = require('debug')('coreserve:server');
 const http = require('node:http');
+const logger = require('./core/logger')('SERVER');
 const {getShutdownCallbacks} = require('./core/shutdown-manager');
 const getConfiguration = require('./config/configuration');
 const mongoDbSetup = require('./infra/db/mongodb');
@@ -37,7 +38,7 @@ module.exports = async function start() {
         const bind = typeof addr === 'string'
             ? 'pipe ' + addr
             : 'port ' + addr.port;
-        debug('Listening on ' + bind);
+        logger.info(`Listening on ${bind}`);
     });
 
     process.on('SIGINT', async () => {

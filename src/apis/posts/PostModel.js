@@ -3,11 +3,20 @@
 const {DataTypes} = require('sequelize');
 const {createModel} = require('../../infra/db/mysql/connection');
 
-const Post = createModel('Post', {
+const PostModel = createModel('Post', {
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
             primaryKey: true,
+        },
+        userId: {
+            type: DataTypes.INTEGER,
+            field: 'user_id',
+            references: {
+                model: 'users', // Name of the target table
+                key: 'id',      // Key in the target table
+            },
+            onDelete: 'CASCADE', // Define behavior on delete
         },
         title: {
             type: DataTypes.STRING,
@@ -35,4 +44,4 @@ const Post = createModel('Post', {
         tableName: 'posts',
     });
 
-module.exports = Post;
+module.exports = PostModel;

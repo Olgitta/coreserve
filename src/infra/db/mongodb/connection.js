@@ -1,8 +1,7 @@
 'use strict';
 
 const mongoose = require('mongoose');
-const debug = require('debug')('coreserve:mongodb');
-const log = require('../../../core/logger');
+const logger = require('#core/logger/index.js')('MongoDbConnection');
 
 /**
  *
@@ -16,9 +15,9 @@ async function connectToDatabase(config) {
             dbName: database,
             autoCreate: false
         });
-        debug(`Connected to MongoDB: ${url}/${database}`);
+        logger.info(`Connected to MongoDB: ${url}/${database}`);
     } catch (error) {
-        log.error(`Error connecting to MongoDB: ${url}/${database}: ${error.message}`);
+        logger.error(`Error connecting to MongoDB: ${url}/${database}`, error);
         throw error;
     }
 }
@@ -30,9 +29,9 @@ async function connectToDatabase(config) {
 async function closeDatabaseConnection() {
     try {
         await mongoose.connection.close();
-        debug('Disconnected from MongoDB.');
+        logger.info('Disconnected from MongoDB.');
     } catch (error) {
-        log.error('Error disconnecting from MongoDB:', error);
+        logger.error('Error disconnecting from MongoDB:', error);
     }
 }
 

@@ -1,6 +1,6 @@
 'use strict';
 
-const {getCtx} = require('../execution-context/context');
+const {getCtx, getTraceId} = require('../execution-context/context');
 const {createLogger, format, transports} = require('winston');
 
 const devFormat = format.combine(
@@ -22,26 +22,41 @@ const logger = createLogger({
     format: process.env.NODE_ENV === 'production' ? prodFormat : devFormat,
     transports: [
         new transports.Console(),
-        new transports.File({filename: 'combined.log'}),
-        new transports.File({filename: 'errors.log', level: 'error'}),
-
+        // new transports.File({filename: 'combined.log'}),
+        // new transports.File({filename: 'errors.log', level: 'error'}),
     ]
 });
 
-const log = {
-    info(msg, args = {}) {
-        const context = getCtx() || {};
-        logger.info(msg, {...args, ...context});
-    },
-    warn(msg, args = {}) {
-        const context = getCtx() || {};
-        logger.warn(msg, {...args, ...context});
-    },
-    error(msg, error) {
-        const context = getCtx() || {};
-        const {message, stack} = error || {};
-        logger.error(msg, {message, stack, ...context});
+const buildMeta = function (additional) {
+    const context = getCtx() || {};
+    return {
+        traceId: getTraceId() || 'notraceid',
+        payload: {
+            context,
+            ...additional,
+        }
     }
 };
 
-module.exports = log;
+module.exports = function (p = 'ApiLog') {
+
+    const prefix = p;
+
+    return {
+        info(msg, payload = {}) {
+
+            logger.info(`${prefix}:${msg}`, buildMeta(payload));
+        },
+        warn(msg, payload = {}) {
+
+            logger.warn(`${prefix}:${msg}`, buildMeta(payload));
+        },
+        error(msg, error = {}, payload = {}) {
+
+            logger.error(`${prefix}:${msg}`, buildMeta({
+                ...payload,
+                error: error
+            }));
+        }
+    };
+};

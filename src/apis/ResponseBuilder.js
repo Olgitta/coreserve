@@ -1,8 +1,11 @@
 'use strict';
 
 class ResponseBuilder {
+
+    #response;
+
     constructor() {
-        this.response = {
+        this.#response = {
             metadata: {
                 traceId: '',
             },
@@ -15,7 +18,7 @@ class ResponseBuilder {
      * @returns {ResponseBuilder}
      */
     setTraceId(id) {
-        this.response.metadata.traceId = id;
+        this.#response.metadata.traceId = id;
         return this;
     }
 
@@ -28,9 +31,8 @@ class ResponseBuilder {
         if (!error) {
             return this;
         }
-        if (process.env.NODE_ENV !== 'production') {
-            this.response.metadata.error = error;
-        }
+
+        this.#response.metadata.error = error;
 
         return this;
     }
@@ -42,25 +44,27 @@ class ResponseBuilder {
      */
     setResources(resources) {
         if (resources !== null && resources !== undefined) {
-            this.response.resources = resources;
+            this.#response.resources = resources;
         }
         return this;
     }
 
     /**
      *
-     * @param totalPages
-     * @param nextPage
-     * @param prevPage
+     * @param pagination
+     * @param pagination.total
+     * @param pagination.totalPages
+     * @param pagination.prevPage
+     * @param pagination.nextPage
      * @returns {ResponseBuilder}
      */
-    setPagination(totalPages, nextPage, prevPage) {
+    setPagination(pagination) {
 
-        this.response.pagination = {
-            totalPages,
-            ...(prevPage && {prevPage}),
-            ...(nextPage && {nextPage}),
-        };
+        if(!pagination) {
+            return this;
+        }
+
+        this.#response.pagination = pagination;
 
         return this;
     }
@@ -71,7 +75,7 @@ class ResponseBuilder {
      * @returns {ResponseBuilder}
      */
     setMessage(message) {
-        this.response.metadata.message = message;
+        this.#response.metadata.message = message;
         return this;
     }
 
@@ -80,7 +84,7 @@ class ResponseBuilder {
      * @returns {object}
      */
     build() {
-        return this.response;
+        return this.#response;
     }
 
 }

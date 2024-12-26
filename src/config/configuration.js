@@ -4,7 +4,7 @@ const Joi = require('joi');
 const fs = require('node:fs');
 const path = require('node:path');
 const dotenv = require('dotenv');
-const log = require('../core/logger');
+const logger = require('../core/logger')('Configuration');
 const debug = require('debug')('coreserve:configuration');
 
 const mongodbSchema = Joi.object({
@@ -31,11 +31,18 @@ const postsSchema = Joi.object({
     }).required(),
 });
 
+const commentsSchema = Joi.object({
+    pagination: Joi.object({
+        limit: Joi.number().integer().min(1).required(),
+    }).required(),
+});
+
 const configSchema = Joi.object({
     mongodb: mongodbSchema.required(),
     mysql: mysqlSchema.required(),
     todos: todosSchema.required(),
     posts: postsSchema.required(),
+    comments: commentsSchema.required(),
 });
 
 const NODE_ENV = process.env.NODE_ENV || 'development';
@@ -75,13 +82,19 @@ function loadConfig() {
 
     config.todos = {
         pagination: {
-            limit: Number.parseInt(process.env.TODOS_PAGINATION_LIMIT, 10),
+            limit: Number(process.env.TODOS_PAGINATION_LIMIT),
         }
     }
 
     config.posts = {
         pagination: {
-            limit: Number.parseInt(process.env.POSTS_PAGINATION_LIMIT, 10),
+            limit: Number(process.env.POSTS_PAGINATION_LIMIT),
+        }
+    }
+
+    config.comments = {
+        pagination: {
+            limit: Number(process.env.COMMENTS_PAGINATION_LIMIT),
         }
     }
 }
@@ -98,7 +111,7 @@ module.exports = function getConfiguration() {
     if (error) {
         const e = new Error('Config validation error');
         e.details = error.details;
-        log.error('Config validation error', error);
+        logger.error('Config validation error', error);
 
         throw e;
     } else {

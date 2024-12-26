@@ -3,8 +3,8 @@
 const express = require('express');
 const router = express.Router();
 
-const getHealthCheckController = require('../health/controller');
-const ResponseBuilder = require('../builders/ResponseBuilder');
+const getHealthCheckController = require('../apis/health/controller');
+const ResponseBuilder = require('../apis/ResponseBuilder');
 const {getTraceId} = require('../core/execution-context/context');
 
 router.get('/health', async function (req, res) {

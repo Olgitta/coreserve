@@ -1,4 +1,3 @@
-version: '3.8'
 
 services:
     coreserve-app:
@@ -13,12 +12,12 @@ services:
             - redis
             - mongodb
             - mysql
-        healthcheck:
-          test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
-          interval: 30s    # Check every 30 seconds
-          timeout: 10s     # Timeout for each health check
-          retries: 1       # Number of retries before marking as unhealthy
-          start_period: 5s # Grace period before starting health checks
+#        healthcheck:
+#          test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+#          interval: 30s    # Check every 30 seconds
+#          timeout: 10s     # Timeout for each health check
+#          retries: 1       # Number of retries before marking as unhealthy
+#          start_period: 5s # Grace period before starting health checks
 
     mongodb:
         image: mongo:6.0

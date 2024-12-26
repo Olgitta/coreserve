@@ -2,9 +2,9 @@
 
 const express = require('express');
 const {create, update, remove, getById, getAll} = require('../apis/todos/controller');
-const ResponseBuilder = require('../builders/ResponseBuilder');
+const ResponseBuilder = require('../apis/ResponseBuilder');
 const {getTraceId} = require('../core/execution-context/context');
-const {isNonEmptyObject} = require('../core/utils/validators');
+const Validator = require('../core/utils/Validator');
 const router = express.Router();
 
 function handleResult(result) {
@@ -15,7 +15,11 @@ function handleResult(result) {
         .setError(result.error)
         .setTraceId(getTraceId());
 
-    if(isNonEmptyObject(result.pagination)) {
+    const {errors} = new Validator()
+        .isNonEmptyObject(result.pagination)
+        .validate();
+
+    if(!errors) {
         const {totalPages, nextPage, prevPage} = result.pagination;
         builder.setPagination(totalPages, nextPage, prevPage);
     }
