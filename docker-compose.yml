@@ -7,6 +7,7 @@ services:
             - "5000:5000"
         environment:
             NODE_ENV: dockerized
+#            NODE_ENV: production
             DEBUG: coreserve.*
             PORT: 5000
         depends_on:
@@ -19,19 +20,6 @@ services:
 #          timeout: 10s     # Timeout for each health check
 #          retries: 1       # Number of retries before marking as unhealthy
 #          start_period: 5s # Grace period before starting health checks
-
-    coreserve-app-prod:
-      image: coreserve:1.0.0
-      container_name: coreserve-app-prod
-      ports:
-        - "5001:5001"
-      environment:
-        NODE_ENV: production
-        PORT: 5001
-      depends_on:
-        - redis
-        - mongodb
-        - mysql
 
     mongodb:
         image: mongo:6.0

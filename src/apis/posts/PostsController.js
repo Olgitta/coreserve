@@ -76,10 +76,9 @@ class PostsController {
             const {userId} = context.getUser();
 
             const {posts, total} = await getPostsWithPagination(userId, paginationBuilder.skip, paginationBuilder.limit);
-            const cleanUrl = ctx?.request?.url.split('?')[0];
 
             paginationBuilder
-                .setUrl(cleanUrl)
+                .setUrl(ctx?.request?.url)
                 .setTotal(total);
 
             return SuccessHandler.handleWithPagination(

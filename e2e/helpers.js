@@ -31,7 +31,7 @@ const postSchema = Joi.object({
 const commentSchema = Joi.object({
     id: Joi.number().required(),
     postId: Joi.number().required(),
-    parentId: Joi.number().required().default(null),
+    parentId: Joi.number().required().allow(null),
     userId: Joi.number().required(),
     content: Joi.string().required(),
     likes: Joi.number().required(),
@@ -71,6 +71,11 @@ module.exports.testTodoStructure = function (source) {
 
 module.exports.testPostStructure = function (source) {
     const {error, value} = postSchema.validate(source);
+    expect(error).toBeUndefined();
+}
+
+module.exports.testCommentStructure = function (source) {
+    const {error, value} = commentSchema.validate(source);
     expect(error).toBeUndefined();
 }
 

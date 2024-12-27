@@ -4,6 +4,7 @@ const Joi = require('joi');
 const debug = require('debug')('coreserve:PaginationBuilder');
 const Validator = require('#core/utils/Validator.js');
 const {ValidationError, ApiErrorCodes} = require('#core/errors/index.js');
+const {updateQueryParams} = require('#core/utils/urlUtils.js');
 
 const builderSchema = Joi.object({
     url: Joi.string().required(),
@@ -91,11 +92,17 @@ class PaginationBuilder {
         };
 
         if(hasNextPage) {
-            result.nextPage = `${url}?page=${page + 1}&limit=${limit}`;
+            result.nextPage = updateQueryParams(url, {
+                page: page+1,
+                limit
+            });
         }
 
         if (hasPrevPage) {
-            result.prevPage = `${url}?page=${page - 1}&limit=${limit}`;
+            result.prevPage = updateQueryParams(url, {
+                page:page-1,
+                limit
+            });
         }
 
         debug('built successfully:', result);

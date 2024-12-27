@@ -9,11 +9,12 @@ const helpers = require('./helpers');
 describe('POSTS API Endpoints', () => {
 
     const jwtToken = helpers.createTestToken();
-    const auth = ['Authorization', `Bearer ${jwtToken}`]
+    const auth = ['Authorization', `Bearer ${jwtToken}`];
+    const toRemove = [];
 
-    const createPost = async () => {
+    const createResource = async () => {
 
-        return await request(helpers.BASE_URL)
+        const rs = await request(helpers.BASE_URL)
             .post('/posts')
             .send({
                 title: faker.lorem.sentence(),
@@ -21,17 +22,19 @@ describe('POSTS API Endpoints', () => {
             })
             .set(...auth)
             .set('Content-Type', 'application/json');
+
+        toRemove.push(rs.body.resources.id);
+
+        return rs;
     }
 
     // Happy Path Tests
     describe('Happy Path Tests', () => {
 
-        const toRemove = []; // Track IDs for cleanup after tests
-
         test('POST /posts - Create a new post', async () => {
 
             // Act
-            const response = await createPost();
+            const response = await createResource();
             const actual = response.body;
             debug('Create a new post', actual);
 
@@ -40,13 +43,11 @@ describe('POSTS API Endpoints', () => {
             helpers.testPostStructure(actual.resources);
             helpers.testOKMetadataStructure(actual.metadata);
 
-            // Track the created post for cleanup
-            toRemove.push(actual.resources.id);
         });
 
         test('POST /posts/like/:id - Increment post likes', async () => {
 
-            const created = await createPost();
+            const created = await createResource();
             const id = created.body.resources.id;
 
             // Act: Increment likes
@@ -60,13 +61,11 @@ describe('POSTS API Endpoints', () => {
             const verify = await request(helpers.BASE_URL).get(`/posts/${id}`).set(...auth);
             expect(verify.body.resources.likes).toEqual(1);
 
-            // Track the created post for cleanup
-            toRemove.push(id);
         });
 
         test('POST /posts/unlike/:id - Decrement post likes', async () => {
 
-            const created = await createPost();
+            const created = await createResource();
             const id = created.body.resources.id;
 
             // Act: Increment likes
@@ -83,13 +82,11 @@ describe('POSTS API Endpoints', () => {
             const verify = await request(helpers.BASE_URL).get(`/posts/${id}`).set(...auth);
             expect(verify.body.resources.likes).toEqual(0);
 
-            // Track the created post for cleanup
-            toRemove.push(id);
         });
 
         test('PUT /posts/:id - Update an existing post', async () => {
 
-            const created = await createPost();
+            const created = await createResource();
             const id = created.body.resources.id;
 
             // Act: Update the post
@@ -108,15 +105,12 @@ describe('POSTS API Endpoints', () => {
             helpers.testPostStructure(actual.resources);
             helpers.testOKMetadataStructure(actual.metadata);
 
-            // Track the updated post for cleanup
-            toRemove.push(id);
         });
 
         test('GET /posts - Fetch paginated posts', async () => {
             // Arrange: Populate the posts
             for (let i = 0; i <= 5; i++) {
-                const response = await createPost();
-                toRemove.push(response.body.resources.id);
+                await createResource();
             }
 
             // Act: Fetch the posts
@@ -143,7 +137,7 @@ describe('POSTS API Endpoints', () => {
 
         test('GET /posts/:id - Fetch post by ID', async () => {
 
-            const created = await createPost();
+            const created = await createResource();
             const id = created.body.resources.id;
             const createdResource = created.body.resources;
 
@@ -156,9 +150,6 @@ describe('POSTS API Endpoints', () => {
             helpers.testStatusCode(response.status, 200);
             helpers.testPostStructure(actual.resources);
             helpers.testOKMetadataStructure(actual.metadata);
-
-            // Track the fetched post for cleanup
-            toRemove.push(id);
         });
 
         test('DELETE /posts/:id - Delete posts by ID', async () => {

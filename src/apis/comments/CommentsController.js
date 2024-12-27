@@ -111,10 +111,9 @@ class CommentsController {
             }
 
             const {comments, total} = await getCommentsWithPagination(poi, pai, userId, paginationBuilder.skip, paginationBuilder.limit);
-            const cleanUrl = ctx?.request?.url.split('?')[0];
 
             paginationBuilder
-                .setUrl(cleanUrl)
+                .setUrl(ctx?.request?.url)
                 .setTotal(total);
 
             return SuccessHandler.handleWithPagination(
@@ -144,7 +143,7 @@ class CommentsController {
                 .validate();
 
             if (errors) {
-                throw new ValidationError('Invalid input on remove comment', ApiErrorCodes.BAD_REQUEST);
+                throw new ValidationError('Invalid input on remove comment', ApiErrorCodes.BAD_REQUEST, errors);
             }
 
             const {deleted, comment} = await deleteComment(coi, userId);
