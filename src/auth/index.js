@@ -1,9 +1,10 @@
 'use strict';
 
 const {updateUser} = require('../core/execution-context/context');
-const logger = require('../core/logger')('authMiddleware');
+const logger = require('../core/logger')('AuthMiddleware');
+const getConfiguration = require('#config/configuration.js');
 const jwt = require('jsonwebtoken');
-const secret = 'your_secret_key';
+const secret = getConfiguration().auth.secret;
 
 module.exports.authMiddleware = (req, res, next) => {
     const authHeader = req.headers['authorization'];
