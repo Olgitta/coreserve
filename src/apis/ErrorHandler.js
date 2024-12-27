@@ -27,14 +27,14 @@ class ErrorHandler {
      *
      * @param err
      * @param statusCode
-     * @returns {{statusCode: StatusCodes.INTERNAL_SERVER_ERROR, error: ApiError}|{statusCode: StatusCodes.INTERNAL_SERVER_ERROR, error}}
+     * @returns {{statusCode: StatusCodes, error: ApiError}}
      */
     static handleError(err, statusCode = StatusCodes.INTERNAL_SERVER_ERROR) {
-
+//todo: rename to handle
         if (err instanceof ValidationError) {
             statusCode = StatusCodes.BAD_REQUEST;
         }
-
+//todo: delete ApiErrorCodes and use StatusCodes
         if (process.env.NODE_ENV === 'production') {
             return {
                 statusCode: statusCode,

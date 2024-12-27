@@ -1,5 +1,5 @@
 'use strict';
-
+//todo: remove
 module.exports.ApiErrorCodes = {
     GENERAL_ERROR: 'general_error',
     BAD_REQUEST: 'bad_request',
@@ -17,11 +17,11 @@ class ApiError extends Error {
             message: this.message,
             code: this.code,
             details: this.details,
-            // stack: this.stack, // Optional: include stack for debugging
         };
     }
 }
 
+//todo: delete ValidationError and use ApiError with StatusCodes
 class ValidationError extends ApiError {
     /**
      *

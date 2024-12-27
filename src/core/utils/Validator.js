@@ -69,6 +69,23 @@ class Validator {
      * @param k
      * @returns {Validator}
      */
+    isValidBoolean(v, k) {
+        const sym = Symbol(`${k} value is invalid boolean`);
+
+        if (typeof v !== 'boolean') {
+            this.#errorsSet.add(sym);
+            return this;
+        }
+
+        return this;
+    }
+
+    /**
+     *
+     * @param v
+     * @param k
+     * @returns {Validator}
+     */
     isValidNumberOrNull(v, k) {
         const sym = Symbol(`${k} value is invalid number`);
 

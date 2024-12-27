@@ -3,24 +3,24 @@
 const {Types} = require('mongoose');
 const {create, getAll, getById, update, remove} = require('../../src/apis/todos/controller');
 const {StatusCodes} = require('http-status-codes');
-const {createTodo, getTodoById, updateTodo, deleteTodo, getTodosWithPagination} = require('../../src/apis/todos/crud');
-const log = require('../../src/core/logger')();
-const {getCtx, getTraceId} = require('../../src/core/execution-context/context');
-const getConfiguration = require('../../src/config/configuration');
-const {PaginationBuilder, normalizePaginationParams} = require('../../src/apis/PaginationBuilder');
+const {createTodo, getTodoById, updateTodo, deleteTodo, getTodosWithPagination} = require('#apis/todos/crud.js.js');
+const log = require('#core/logger.js')();
+const {getCtx, getTraceId} = require('#core/execution-context/context.js.js');
+const getConfiguration = require('#config/configuration.js.js');
+const {PaginationBuilder, normalizePaginationParams} = require('#apis/PaginationBuilder.js.js');
 
-jest.mock('../../src/apis/todos/crud');
-jest.mock('../../src/core/logger', () => {
+jest.mock('#apis/todos/crud.js.js');
+jest.mock('#core/logger.js', () => {
     return jest.fn(() => ({
         info: jest.fn(),
         warn: jest.fn(),
         error: jest.fn(),
     }));
 });
-jest.mock('../../src/core/execution-context/context');
-jest.mock('../../src/config/configuration');
+jest.mock('#core/execution-context/context.js.js');
+jest.mock('#config/configuration.js.js');
 
-jest.mock('../../src/apis/PaginationBuilder', () => ({
+jest.mock('#apis/PaginationBuilder.js.js', () => ({
     PaginationBuilder: jest.fn().mockImplementation(() => ({
         setUrl: jest.fn().mockReturnThis(),
         setTotal: jest.fn().mockReturnThis(),

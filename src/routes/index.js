@@ -5,9 +5,9 @@ const {join} = require('node:path');
 const router = express.Router();
 
 const healthRouter = require('./health');
-const todosRouter = require('./todos');
-const postsRouter = require('../apis/posts/routes');
-const commentsRouter = require('../apis/comments/routes');
+const todosRouter = require('#apis/todos/routes.js');
+const postsRouter = require('#apis/posts/routes.js');
+const commentsRouter = require('#apis/comments/routes.js');
 
 router.get('/', function (req, res) {
     res.sendFile(join(__dirname, '..', '..', 'public', 'index.html'));
