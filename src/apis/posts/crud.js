@@ -23,8 +23,8 @@ module.exports = {
  */
 async function createPost(payload) {
     debug('createPost called with:', payload);
-// todo: check this: new Post(payload);
-    return await Post.create(payload);
+
+    return Post.create(payload);
 }
 
 /**
@@ -63,7 +63,7 @@ async function  getPosts(payload, filter) {
 async function getPostById(filter) {
     debug('getPostById called with:', {filter});
 
-    return await Post.findOne({
+    return Post.findOne({
         where: filter,
     });
 }
@@ -89,7 +89,7 @@ async function updatePost(payload, filter) {
         }
     }
 
-    const post = await Post.findByPk(id);
+    const post = await Post.findByPk(filter.id);
     return {updated: affectedRows, post};
 }
 
@@ -113,10 +113,7 @@ async function deletePost(filter) {
     }
 
     const destroyed = await Post.destroy({
-        where: {
-            id: id,
-            userId: userId
-        },
+        where: filter,
     });
 
     return {deleted: destroyed, post};

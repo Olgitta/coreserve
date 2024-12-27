@@ -137,10 +137,6 @@ describe('COMMENTS API Endpoints', () => {
             debug('Increment comment likes', actual);
             helpers.testStatusCode(response.status, 200);
             helpers.testOKMetadataStructure(actual.metadata);
-
-            // todo: Assert: Verify the updated likes count
-            // const verify = await request(helpers.BASE_URL).get(`${requestPath}/${id}`).set(...auth);
-            // expect(verify.body.resources.likes).toEqual(1);
         });
 
         test('POST /comments/unlike/:id - Decrement comment likes', async () => {
