@@ -70,7 +70,7 @@ module.exports = {
             configMock: {posts: {pagination: {limit: configLimit}}},
             contextMock: {request: {url: REQUEST_URL}},
             crudReturns: {posts: [], total: 10},
-            crudReceives: [USER_ID, skip, limit],
+            crudReceives: [{skip, limit}, {userId: USER_ID}],
             expected: {
                 statusCode: StatusCodes.OK,
                 pagination: {
@@ -93,7 +93,7 @@ module.exports = {
             configMock: {posts: {pagination: {limit: configLimit}}},
             contextMock: {request: {url: REQUEST_URL}},
             crudReturns: {posts: [], total: 10},
-            crudReceives: [USER_ID, skip, configLimit],
+            crudReceives: [{skip, limit: configLimit}, {userId: USER_ID}],
             expected: {
                 statusCode: StatusCodes.OK,
                 pagination: {
@@ -115,7 +115,7 @@ module.exports = {
             configMock: {posts: {pagination: {limit: configLimit}}},
             contextMock: {request: {url: REQUEST_URL}},
             crudReturns: {posts: [], total: 0},
-            crudReceives: [USER_ID, skip, configLimit],
+            crudReceives: [{skip, limit: configLimit}, {userId: USER_ID}],
             expected: {
                 statusCode: StatusCodes.OK,
                 pagination: {
@@ -153,7 +153,7 @@ module.exports = {
                 title: TITLE,
                 content: CONTENT,
             },
-            crudReceives: [POST_ID, USER_ID],
+            crudReceives: {id: POST_ID, userId: USER_ID},
             expected: {
                 statusCode: StatusCodes.OK,
             }
@@ -175,7 +175,7 @@ module.exports = {
         return {
             request: {id: POST_ID},
             crudReturns: {deleted: 1, post: {/*deleted post*/}},
-            crudReceives: [POST_ID, USER_ID],
+            crudReceives: {id: POST_ID, userId: USER_ID},
             expected: {statusCode: StatusCodes.OK},
         }
     },
@@ -196,11 +196,13 @@ module.exports = {
                 content: CONTENT,
             },
             crudReceives: [
-                POST_ID,
-                USER_ID,
                 {
                     title: TITLE,
                     content: CONTENT,
+                },
+                {
+                    id: POST_ID,
+                    userId: USER_ID,
                 }
             ],
             crudReturns: {
@@ -241,7 +243,8 @@ module.exports = {
                 op: LikeOps.LIKE
             },
             crudReceives: [
-                POST_ID, USER_ID, LikeOps.LIKE
+                {like: LikeOps.LIKE},
+                {id: POST_ID, userId: USER_ID, }
             ],
             crudReturns: 1,
             expected: {statusCode: StatusCodes.OK},
@@ -256,7 +259,8 @@ module.exports = {
                 op: LikeOps.UNLIKE
             },
             crudReceives: [
-                POST_ID, USER_ID, LikeOps.UNLIKE
+                {like: LikeOps.UNLIKE},
+                {id: POST_ID, userId: USER_ID, }
             ],
             crudReturns: 1,
             expected: {statusCode: StatusCodes.OK},

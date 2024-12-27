@@ -13,7 +13,7 @@ const {
 const {
     createPost,
     deletePost,
-    getPostsWithPagination,
+    getPosts,
     getPostById,
     updatePost,
     updateLikes,
@@ -25,7 +25,7 @@ const getConfiguration = require('#config/configuration.js');
 jest.mock('#apis/posts/crud.js', () => ({
     createPost: jest.fn(),
     deletePost: jest.fn(),
-    getPostsWithPagination: jest.fn(),
+    getPosts: jest.fn(),
     getPostById: jest.fn(),
     updatePost: jest.fn(),
     updateLikes: jest.fn(),
@@ -37,6 +37,7 @@ jest.mock('#core/execution-context/context.js', () => {
     return {
         getUser: jest.fn().mockReturnValue({userId: USER_ID}),
         getCtx: jest.fn().mockReturnValue(CTX_PAYLOAD),
+        getRequestUrl: jest.fn().mockReturnValue(CTX_PAYLOAD.request.url),
     }
 });
 
@@ -57,7 +58,7 @@ describe('PostsController', () => {
 
         it('should throw an error if the constructor is called directly', () => {
             expect(() => new PostsController()).toThrow(
-                'PostsController is a singleton. Use PostsController.getInstance() to access the instance.'
+                'PostsController is a singleton class. Please use PostsController.getInstance() to access the instance.'
             );
         });
     });
@@ -85,15 +86,19 @@ describe('PostsController', () => {
 
     describe('getAll', () => {
         it('should return OK with paginated posts and pagination metadata', async () => {
-            const {configMock, contextMock, crudReceives, crudReturns, expected, request} = GET_ALL_200();
+            const {
+                configMock,
+                crudReceives,
+                crudReturns,
+                expected,
+                request} = GET_ALL_200();
 
-            context.getCtx.mockReturnValue(contextMock);
             getConfiguration.mockReturnValue(configMock);
-            getPostsWithPagination.mockResolvedValue(crudReturns);
+            getPosts.mockResolvedValue(crudReturns);
 
             const actual = await PostsController.getAll(request);
 
-            expect(getPostsWithPagination).toHaveBeenCalledWith(...crudReceives);
+            expect(getPosts).toHaveBeenCalledWith(...crudReceives);
             expect(actual.statusCode).toEqual(expected.statusCode);
             expect(actual.pagination).toEqual(expected.pagination);
         });
@@ -101,20 +106,18 @@ describe('PostsController', () => {
         it('should return OK with paginated posts and default to first page when pagination parameters are not provided', async () => {
             const {
                 configMock,
-                contextMock,
                 crudReceives,
                 crudReturns,
                 expected,
                 request
             } = GET_ALL_200_NO_PAGINATION_PARAMS();
 
-            context.getCtx.mockReturnValue(contextMock);
             getConfiguration.mockReturnValue(configMock);
-            getPostsWithPagination.mockResolvedValue(crudReturns);
+            getPosts.mockResolvedValue(crudReturns);
 
             const actual = await PostsController.getAll(request);
 
-            expect(getPostsWithPagination).toHaveBeenCalledWith(...crudReceives);
+            expect(getPosts).toHaveBeenCalledWith(...crudReceives);
             expect(actual.statusCode).toEqual(expected.statusCode);
             expect(actual.pagination).toEqual(expected.pagination);
         });
@@ -122,33 +125,30 @@ describe('PostsController', () => {
         it('should respond OK when no records found', async () => {
             const {
                 configMock,
-                contextMock,
                 crudReceives,
                 crudReturns,
                 expected,
                 request
             } = GET_ALL_200_NO_RECORDS_FOUND();
 
-            context.getCtx.mockReturnValue(contextMock);
             getConfiguration.mockReturnValue(configMock);
-            getPostsWithPagination.mockResolvedValue(crudReturns);
+            getPosts.mockResolvedValue(crudReturns);
 
             const actual = await PostsController.getAll(request);
 
-            expect(getPostsWithPagination).toHaveBeenCalledWith(...crudReceives);
+            expect(getPosts).toHaveBeenCalledWith(...crudReceives);
             expect(actual.statusCode).toEqual(expected.statusCode);
             expect(actual.pagination).toEqual(expected.pagination);
         });
 
         it('should return BAD_REQUEST when input is invalid', async () => {
-            const {configMock, contextMock, expected, request} = GET_ALL_400();
+            const {configMock, expected, request} = GET_ALL_400();
 
-            context.getCtx.mockReturnValue(contextMock);
             getConfiguration.mockReturnValue(configMock);
 
             const actual = await PostsController.getAll(request);
 
-            expect(getPostsWithPagination).not.toHaveBeenCalled();
+            expect(getPosts).not.toHaveBeenCalled();
             expect(actual.statusCode).toEqual(expected.statusCode);
             expect(actual.pagination).toBeUndefined();
         });
@@ -162,7 +162,7 @@ describe('PostsController', () => {
 
             const actual = await PostsController.getById(request);
 
-            expect(getPostById).toHaveBeenCalledWith(...crudReceives);
+            expect(getPostById).toHaveBeenCalledWith(crudReceives);
             expect(actual.statusCode).toEqual(expected.statusCode);
         });
 
@@ -184,7 +184,7 @@ describe('PostsController', () => {
 
             const actual = await PostsController.remove(request);
 
-            expect(deletePost).toHaveBeenCalledWith(...crudReceives);
+            expect(deletePost).toHaveBeenCalledWith(crudReceives);
             expect(actual.statusCode).toEqual(expected.statusCode);
         });
 
