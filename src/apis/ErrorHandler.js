@@ -29,8 +29,8 @@ class ErrorHandler {
      * @param statusCode
      * @returns {{statusCode: StatusCodes, error: ApiError}}
      */
-    static handleError(err, statusCode = StatusCodes.INTERNAL_SERVER_ERROR) {
-//todo: rename to handle
+    static handle(err, statusCode = StatusCodes.INTERNAL_SERVER_ERROR) {
+
         if (err instanceof ValidationError) {
             statusCode = StatusCodes.BAD_REQUEST;
         }

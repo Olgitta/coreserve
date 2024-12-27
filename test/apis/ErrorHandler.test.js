@@ -19,14 +19,14 @@ describe('ErrorHandler', () => {
 
     test('should handle ValidationError with BAD_REQUEST status code', () => {
         const error = new ValidationError('Invalid input');
-        const result = ErrorHandler.handleError(error);
+        const result = ErrorHandler.handle(error);
         expect(result.statusCode).toBe(StatusCodes.BAD_REQUEST);
         expect(result.error).toBe(error);
     });
 
     test('should handle generic error with INTERNAL_SERVER_ERROR status code', () => {
         const error = new Error('Generic error');
-        const result = ErrorHandler.handleError(error);
+        const result = ErrorHandler.handle(error);
         expect(result.statusCode).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
         expect(result.error).toBe(error);
     });
@@ -34,7 +34,7 @@ describe('ErrorHandler', () => {
     test('should return generic ApiError in production mode', () => {
         process.env.NODE_ENV = 'production';
         const error = new Error('Sensitive error');
-        const result = ErrorHandler.handleError(error);
+        const result = ErrorHandler.handle(error);
         expect(result.statusCode).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
         expect(result.error).toBeInstanceOf(ApiError);
         expect(result.error.message).toBe('Something went wrong, try again later...');
@@ -44,7 +44,7 @@ describe('ErrorHandler', () => {
     test('should return the original error in non-production mode', () => {
         process.env.NODE_ENV = 'development';
         const error = new Error('Development error');
-        const result = ErrorHandler.handleError(error);
+        const result = ErrorHandler.handle(error);
         expect(result.statusCode).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
         expect(result.error).toBe(error);
     });
