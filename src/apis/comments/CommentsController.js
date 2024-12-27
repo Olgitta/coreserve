@@ -1,15 +1,10 @@
 'use strict';
 
 const {StatusCodes} = require('http-status-codes');
-const {
-    createComment,
-    deleteComment,
-    getCommentsWithPagination,
-    updateLikes
-} = require('./crud');
+const crud = require('./crud');
 const logger = require('#core/logger/index.js')('CommentsController');
 const debug = require('debug')('coreserve:CommentsController');
-
+const {ResponseMessages} = require('../consts');
 const getConfiguration = require('#config/configuration.js');
 const {ApiErrorCodes, ValidationError} = require('#core/errors/index.js');
 const Validator = require('#core/utils/Validator.js');
@@ -21,7 +16,9 @@ class CommentsController {
 
     constructor() {
         if (new.target === CommentsController) {
-            throw new Error('CommentsController is a singleton. Use CommentsController.getInstance() to access the instance.');
+            throw new Error(
+                'Initialization Error: CommentsController is a singleton. Use CommentsController.getInstance() to access the instance.'
+            );
         }
     }
 
@@ -36,57 +33,56 @@ class CommentsController {
      *
      * @param request
      * @param request.postId
-     * @param request.parentId {optional}
+     * @param request.parentId
      * @param request.content
-     * @returns {Promise<{statusCode: StatusCodes.INTERNAL_SERVER_ERROR, error: ApiError}|{statusCode: StatusCodes.INTERNAL_SERVER_ERROR, error}|{statusCode: StatusCodes.OK, resources, message}>}
+     * @returns {Promise<{statusCode: StatusCodes, error: ApiError}|{statusCode: StatusCodes.OK, resources, message}>}
      */
     static async create(request) {
         debug('create called with:', request);
         try {
             const {postId, parentId, content} = request;
             const {userId} = context.getUser();
-            const poi = Number(postId);
-            let pai = Number(parentId);
+
+            const postIdNumber = Number(postId);
+            let parentIdNumber = Number(parentId);
             if (parentId === null || parentId === undefined) {
-                // valid parentId for first level comment
-                pai = null;
+                parentIdNumber = null;
             }
 
             const errors = new Validator()
-                .isValidNumber(poi, 'postId')
-                .isValidNumberOrNull(pai, 'parentId')
+                .isValidNumber(postIdNumber, 'postId')
+                .isValidNumberOrNull(parentIdNumber, 'parentId')
                 .isNonEmptyString(content, 'content')
                 .validate();
 
             if (errors !== null) {
-                throw new ValidationError('Invalid input on comment creation', ApiErrorCodes.BAD_REQUEST, errors);
+                throw new ValidationError(
+                    'Validation Error: Invalid input while creating a comment',
+                    ApiErrorCodes.BAD_REQUEST,
+                    errors
+                );
             }
 
-            const result = await createComment({postId: poi, parentId: pai, userId, content});
-            return SuccessHandler.handle(
-                StatusCodes.CREATED,
-                result,
-                'created'
-            );
+            const result = await crud.createComment({postId: postIdNumber, parentId: parentIdNumber, userId, content});
+            return SuccessHandler.handle(StatusCodes.CREATED, result, ResponseMessages.RESOURCE_CREATED);
         } catch (err) {
-            logger.error('Error on comment creation', err);
-            return ErrorHandler.handleError(err);
+            logger.error('Execution Error: Failed to create comment', err);
+            return ErrorHandler.handle(err);
         }
     }
 
     /**
      *
      * @param request
+     * @param request.page
+     * @param request.limit
      * @param request.postId
-     * @param request.parentId {optional}
-     * @param request.page {optional}
-     * @param request.limit {optional}
-     * @returns {Promise<{statusCode: StatusCodes.INTERNAL_SERVER_ERROR, error: ApiError}|{statusCode: StatusCodes.INTERNAL_SERVER_ERROR, error}|*>}
+     * @param request.parentId
+     * @returns {Promise<{statusCode: StatusCodes, error: ApiError}|*>}
      */
     static async getAll(request) {
         debug('getAll called with:', request);
         try {
-            const ctx = context.getCtx();
             const config = getConfiguration().comments;
             const {page = 1, limit = config.pagination.limit} = request;
 
@@ -94,97 +90,101 @@ class CommentsController {
 
             const {userId} = context.getUser();
             const {postId, parentId} = request;
-            const poi = Number(postId);
-            let pai = Number(parentId);
+
+            const postIdNumber = Number(postId);
+            let parentIdNumber = Number(parentId);
             if (parentId === null || parentId === undefined) {
-                // valid parentId for first level comment
-                pai = null;
+                parentIdNumber = null;
             }
 
             const errors = new Validator()
-                .isValidNumber(poi, 'postId')
-                .isValidNumberOrNull(pai, 'parentId')
+                .isValidNumber(postIdNumber, 'postId')
+                .isValidNumberOrNull(parentIdNumber, 'parentId')
                 .validate();
 
             if (errors !== null) {
-                throw new ValidationError('Invalid input on get all comments', ApiErrorCodes.BAD_REQUEST, errors);
+                throw new ValidationError(
+                    'Validation Error: Invalid input while fetching comments',
+                    ApiErrorCodes.BAD_REQUEST,
+                    errors
+                );
             }
 
-            const {comments, total} = await getCommentsWithPagination(poi, pai, userId, paginationBuilder.skip, paginationBuilder.limit);
+            const {comments, total} = await crud.getComments(
+                {
+                    skip: paginationBuilder.skip,
+                    limit: paginationBuilder.limit
+                },
+                {
+                    postId: postIdNumber,
+                    parentId: parentIdNumber,
+                    userId
+                }
+            );
 
-            paginationBuilder
-                .setUrl(ctx?.request?.url)
-                .setTotal(total);
+            paginationBuilder.setUrl(context.getRequestUrl()).setTotal(total);
 
             return SuccessHandler.handleWithPagination(
                 StatusCodes.OK,
                 comments,
-                'proceeded',
-                paginationBuilder.build());
+                ResponseMessages.RESOURCE_FETCHED,
+                paginationBuilder.build()
+            );
         } catch (err) {
-            logger.error('Error on get all comments', err);
-            return ErrorHandler.handleError(err);
+            logger.error('Execution Error: Failed to fetch comments', err);
+            return ErrorHandler.handle(err);
         }
     }
 
-    /**
-     *
-     * @param request
-     * @returns {Promise<{statusCode: StatusCodes.INTERNAL_SERVER_ERROR, error: ApiError}|{statusCode: StatusCodes.INTERNAL_SERVER_ERROR, error}|{statusCode: StatusCodes.OK, resources, message}>}
-     */
     static async remove(request) {
         debug('remove called with:', request);
         try {
             const {id} = request;
-            const coi = Number(id);
+            const idNumber = Number(id);
             const {userId} = context.getUser();
-            const errors = new Validator()
-                .isValidNumber(coi, 'id')
-                .validate();
+            const errors = new Validator().isValidNumber(idNumber, 'id').validate();
 
             if (errors) {
-                throw new ValidationError('Invalid input on remove comment', ApiErrorCodes.BAD_REQUEST, errors);
+                throw new ValidationError(
+                    'Validation Error: Invalid input while removing a comment',
+                    ApiErrorCodes.BAD_REQUEST,
+                    errors
+                );
             }
 
-            const {deleted, comment} = await deleteComment(coi, userId);
+            const {deleted, comment} = await crud.deleteComment({id: idNumber, userId});
 
-            return SuccessHandler.handle(StatusCodes.OK, comment, `deleted:${deleted}`);
+            return SuccessHandler.handle(StatusCodes.OK, comment, ResponseMessages.RESOURCE_DELETED);
         } catch (err) {
-            logger.error('Error on remove comment', err);
-            return ErrorHandler.handleError(err);
+            logger.error('Execution Error: Failed to delete comment', err);
+            return ErrorHandler.handle(err);
         }
     }
 
-    /**
-     *
-     * @param request
-     * @param request.id
-     * @param request.op
-     * @returns {Promise<{statusCode: StatusCodes.INTERNAL_SERVER_ERROR, error: ApiError}|{statusCode: StatusCodes.INTERNAL_SERVER_ERROR, error}|{statusCode: StatusCodes.OK, resources, message}>}
-     */
     static async likeUnlike(request) {
         debug('likeUnlike called with:', request);
         try {
             const {id, op} = request;
-            const coi = Number(id);
+            const idNumber = Number(id);
             const {userId} = context.getUser();
-            const errors = new Validator()
-                .isValidNumber(coi, 'id')
-                .validate();
+            const errors = new Validator().isValidNumber(idNumber, 'id').validate();
 
             if (errors) {
-                throw new ValidationError('Invalid input on likeUnlike', ApiErrorCodes.BAD_REQUEST, errors);
+                throw new ValidationError(
+                    'Validation Error: Invalid input while liking/unliking a comment',
+                    ApiErrorCodes.BAD_REQUEST,
+                    errors
+                );
             }
 
-            const result = await updateLikes(coi, userId, op);
+            const result = await crud.updateLikes({like: op}, {id: idNumber, userId});
 
-            return SuccessHandler.handle(StatusCodes.OK, {}, `proceeded:${result}`);
+            return SuccessHandler.handle(StatusCodes.OK, {}, `${ResponseMessages.RESOURCE_PROCEEDED}: ${result}`);
         } catch (err) {
-            logger.error('Error on likeUnlike', err);
-            return ErrorHandler.handleError(err);
+            logger.error('Execution Error: Failed to process like/unlike', err);
+            return ErrorHandler.handle(err);
         }
     }
-
 }
 
 module.exports = CommentsController;
