@@ -1,7 +1,7 @@
 const Joi = require('joi');
 const jwt = require('jsonwebtoken');
 
-const BASE_URL = `http://localhost:${process.env.E2EPORT}/api`;
+const BASE_URL = `http://localhost:${process.env.PORT}/api`;
 const guidRegex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
 
 module.exports.BASE_URL = BASE_URL;
@@ -16,6 +16,7 @@ const todoSchema = Joi.object({
     createdAt: Joi.date().iso().required(),
     updatedAt: Joi.date().iso().required(),
     id: Joi.string().length(24).required(),
+    userId: Joi.number().required(),
 });
 
 const postSchema = Joi.object({

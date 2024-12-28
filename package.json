@@ -13,8 +13,8 @@
     "lint:fix": "eslint src/ --fix",
     "test:coverage": "jest ./test --coverage",
     "test": "jest ./test",
-    "e2e3000": "cross-env E2EPORT=3000 jest ./e2e",
-    "e2e5000": "cross-env E2EPORT=5000 DEBUG=testing jest ./e2e"
+    "e2e3000": "cross-env PORT=3000 jest ./e2e",
+    "e2e5000": "cross-env PORT=5000 jest ./e2e"
   },
   "imports": {
     "#core/*.js": "./src/core/*.js",

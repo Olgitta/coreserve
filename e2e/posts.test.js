@@ -1,6 +1,6 @@
 'use strict';
 
-const debug = require('debug')('testing');
+const debug = require('debug')('testing:postsapi');
 
 const request = require('supertest');
 const {faker} = require('@faker-js/faker');
@@ -8,6 +8,7 @@ const helpers = require('./helpers');
 
 describe('POSTS API Endpoints', () => {
 
+    const requestPath = '/posts';
     const jwtToken = helpers.createTestToken();
     const auth = ['Authorization', `Bearer ${jwtToken}`];
     const toRemove = [];
@@ -15,7 +16,7 @@ describe('POSTS API Endpoints', () => {
     const createResource = async () => {
 
         const rs = await request(helpers.BASE_URL)
-            .post('/posts')
+            .post(requestPath)
             .send({
                 title: faker.lorem.sentence(),
                 content: faker.lorem.paragraph(),
@@ -51,14 +52,14 @@ describe('POSTS API Endpoints', () => {
             const id = created.body.resources.id;
 
             // Act: Increment likes
-            const response = await request(helpers.BASE_URL).post(`/posts/like/${id}`).set(...auth);
+            const response = await request(helpers.BASE_URL).post(`${requestPath}/like/${id}`).set(...auth);
             const actual = response.body;
             debug('Increment post likes', actual);
             helpers.testStatusCode(response.status, 200);
             helpers.testOKMetadataStructure(actual.metadata);
 
             // Assert: Verify the updated likes count
-            const verify = await request(helpers.BASE_URL).get(`/posts/${id}`).set(...auth);
+            const verify = await request(helpers.BASE_URL).get(`${requestPath}/${id}`).set(...auth);
             expect(verify.body.resources.likes).toEqual(1);
 
         });
@@ -69,17 +70,17 @@ describe('POSTS API Endpoints', () => {
             const id = created.body.resources.id;
 
             // Act: Increment likes
-            await request(helpers.BASE_URL).post(`/posts/like/${id}`).set(...auth);
+            await request(helpers.BASE_URL).post(`${requestPath}/like/${id}`).set(...auth);
 
             // Act: Decrement likes
-            const response = await request(helpers.BASE_URL).post(`/posts/unlike/${id}`).set(...auth);
+            const response = await request(helpers.BASE_URL).post(`${requestPath}/unlike/${id}`).set(...auth);
             const actual = response.body;
             debug('Decrement post likes', actual);
             helpers.testStatusCode(response.status, 200);
             helpers.testOKMetadataStructure(actual.metadata);
 
             // Assert: Verify decrement
-            const verify = await request(helpers.BASE_URL).get(`/posts/${id}`).set(...auth);
+            const verify = await request(helpers.BASE_URL).get(`${requestPath}/${id}`).set(...auth);
             expect(verify.body.resources.likes).toEqual(0);
 
         });
@@ -91,7 +92,7 @@ describe('POSTS API Endpoints', () => {
 
             // Act: Update the post
             const response = await request(helpers.BASE_URL)
-                .put(`/posts/${id}`)
+                .put(`${requestPath}/${id}`)
                 .send({
                     title: faker.lorem.sentence(),
                     content: faker.lorem.paragraph(),
@@ -114,7 +115,7 @@ describe('POSTS API Endpoints', () => {
             }
 
             // Act: Fetch the posts
-            const response = await request(helpers.BASE_URL).get('/posts').query({
+            const response = await request(helpers.BASE_URL).get(requestPath).query({
                 page: 2,
                 limit: 2
             }).set(...auth);
@@ -142,7 +143,7 @@ describe('POSTS API Endpoints', () => {
             const createdResource = created.body.resources;
 
             // Act: Fetch the post by ID
-            const response = await request(helpers.BASE_URL).get(`/posts/${id}`).set(...auth);
+            const response = await request(helpers.BASE_URL).get(`${requestPath}/${id}`).set(...auth);
             const actual = response.body;
             debug('Fetch post by ID', actual);
 
@@ -155,7 +156,7 @@ describe('POSTS API Endpoints', () => {
         test('DELETE /posts/:id - Delete posts by ID', async () => {
             // Act & Assert: Delete all tracked posts
             for (const id of toRemove) {
-                const response = await request(helpers.BASE_URL).delete(`/posts/${id}`).set(...auth);
+                const response = await request(helpers.BASE_URL).delete(`${requestPath}/${id}`).set(...auth);
                 debug('Delete post by ID', response.body);
                 helpers.testStatusCode(response.status, 200);
                 helpers.testOKMetadataStructure(response.body.metadata);
@@ -171,7 +172,7 @@ describe('POSTS API Endpoints', () => {
             test('POST /posts - Create a new post should respond with 400', async () => {
                 // Act: invalid title
                 const rs1 = await request(helpers.BASE_URL)
-                    .post('/posts')
+                    .post(requestPath)
                     .send({
                         title: '',
                         content: faker.lorem.paragraph(1),
@@ -183,7 +184,7 @@ describe('POSTS API Endpoints', () => {
 
                 // Act: invalid content
                 const rs2 = await request(helpers.BASE_URL)
-                    .post('/posts')
+                    .post(requestPath)
                     .send({
                         title: faker.lorem.sentence(2),
                         content: faker.number.int(),
@@ -202,7 +203,7 @@ describe('POSTS API Endpoints', () => {
 
             test('PUT /posts/:id - Update an existing post should respond with 400', async () => {
                 const response = await request(helpers.BASE_URL)
-                    .put(`/posts/100500`)
+                    .put(`${requestPath}/100500`)
                     .send({})
                     .set(...auth)
                     .set('Content-Type', 'application/json');
@@ -214,7 +215,7 @@ describe('POSTS API Endpoints', () => {
             });
 
             test('GET /posts - Fetch paginated posts should respond with 400', async () => {
-                const response = await request(helpers.BASE_URL).get('/posts').query({
+                const response = await request(helpers.BASE_URL).get(requestPath).query({
                     page: '210invalid',
                     limit: 2
                 }).set(...auth);
@@ -225,7 +226,7 @@ describe('POSTS API Endpoints', () => {
             });
 
             test('GET /posts/:id - Fetch post by ID should respond with 400', async () => {
-                const response = await request(helpers.BASE_URL).get(`/posts/777invalid`).set(...auth);
+                const response = await request(helpers.BASE_URL).get(`${requestPath}/777invalid`).set(...auth);
                 const actual = response.body;
                 debug('Invalid id', actual);
                 helpers.testStatusCode(response.status, 400);
@@ -233,7 +234,7 @@ describe('POSTS API Endpoints', () => {
             });
 
             test('DELETE /posts/:id - Delete posts by ID should respond with 400', async () => {
-                const response = await request(helpers.BASE_URL).delete(`/posts/invalidid`).set(...auth);
+                const response = await request(helpers.BASE_URL).delete(`${requestPath}/invalidid`).set(...auth);
                 const actual = response.body;
                 debug('Invalid id', actual);
                 helpers.testStatusCode(response.status, 400);
@@ -242,7 +243,7 @@ describe('POSTS API Endpoints', () => {
 
             test('POST /posts/like/:id - Increment post likes should respond with 400', async () => {
 
-                const response = await request(helpers.BASE_URL).post(`/posts/like/invalid_id`).set(...auth);
+                const response = await request(helpers.BASE_URL).post(`${requestPath}/like/invalid_id`).set(...auth);
                 const actual = response.body;
                 debug('Increment post likes', actual);
                 helpers.testStatusCode(response.status, 400);
@@ -252,7 +253,7 @@ describe('POSTS API Endpoints', () => {
 
             test('POST /posts/unlike/:id - Decrement post likes should respond with 400', async () => {
 
-                const response = await request(helpers.BASE_URL).post(`/posts/unlike/10invalid`).set(...auth);
+                const response = await request(helpers.BASE_URL).post(`${requestPath}/unlike/10invalid`).set(...auth);
                 const actual = response.body;
                 debug('Decrement post likes', actual);
                 helpers.testStatusCode(response.status, 400);

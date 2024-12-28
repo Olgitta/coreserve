@@ -1,6 +1,6 @@
 'use strict';
 
-const debug = require('debug')('testing');
+const debug = require('debug')('testing:commentsapi');
 
 const request = require('supertest');
 const {faker} = require('@faker-js/faker');
