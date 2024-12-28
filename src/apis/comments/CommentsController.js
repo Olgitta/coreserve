@@ -131,9 +131,9 @@ class CommentsController {
             const {userId} = context.getUser();
             new Validator().isValidNumber(idNumber, 'id').validate();
 
-            const {deleted, comment} = await crud.deleteComment({id: idNumber, userId});
+            const result = await crud.deleteComment({id: idNumber, userId});
 
-            return SuccessHandler.handle(StatusCodes.OK, comment, ResponseMessages.RESOURCE_DELETED);
+            return SuccessHandler.handle(StatusCodes.OK, null, `${ResponseMessages.RESOURCE_DELETED}:${result}`);
         } catch (err) {
             logger.error(err.message || 'Execution error.', err);
             return ErrorHandler.handle(err);
@@ -150,7 +150,7 @@ class CommentsController {
 
             const result = await crud.updateLikes({like: op}, {id: idNumber, userId});
 
-            return SuccessHandler.handle(StatusCodes.OK, {}, `${ResponseMessages.RESOURCE_PROCEEDED}: ${result}`);
+            return SuccessHandler.handle(StatusCodes.OK, null, `${ResponseMessages.RESOURCE_PROCEEDED}: ${result}`);
         } catch (err) {
             logger.error(err.message || 'Execution error.', err);
             return ErrorHandler.handle(err);

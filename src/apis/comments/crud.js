@@ -59,22 +59,14 @@ async function getComments(payload, filter) {
  * @param filter
  * @param filter.id
  * @param filter.userId
- * @returns {Promise<{deleted: *, comment: *}>}
+ * @returns {Promise<*>}
  */
 async function deleteComment(filter) {
     debug('deleteComment called with:', {filter});
 
-    const result = await Comment.findOne({
+    return await Comment.destroy({
         where: filter
     });
-
-    debug('deleteComment going to delete:', result);
-
-    const destroyed = await Comment.destroy({
-        where: filter
-    });
-
-    return {deleted: destroyed, comment: result};
 }
 
 /**

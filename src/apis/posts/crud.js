@@ -98,25 +98,14 @@ async function updatePost(payload, filter) {
  * @param filter
  * @param filter.id
  * @param filter.userId
- * @returns {Promise<{deleted: *, post: *}|{deleted: number, post: *}>}
+ * @returns {Promise<*>}
  */
 async function deletePost(filter) {
     debug('deletePost called with:', {filter});
-    const post = await Post.findOne({
+
+    return await Post.destroy({
         where: filter,
     });
-
-    debug('deletePost going to delete:', post.id);
-
-    if (!post) {
-        return {deleted: 0, post};
-    }
-
-    const destroyed = await Post.destroy({
-        where: filter,
-    });
-
-    return {deleted: destroyed, post};
 }
 
 /**

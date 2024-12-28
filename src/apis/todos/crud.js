@@ -79,5 +79,13 @@ async function updateTodo(payload, filter) {
 async function deleteTodo(filter) {
     debug('deleteTodo called with:', {filter});
 
-    return TodoModel.findOneAndDelete(filter);
+    const {id, userId} = filter;
+    return TodoModel.findOneAndDelete({
+        _id: id,
+        userId: userId
+    });
+    // return TodoModel.findOneAndDelete({
+    //     _id: id,
+    //     userId: userId
+    // }, { includeResultMetadata: true });
 }

@@ -142,9 +142,9 @@ class PostsController {
                 .isValidNumber(idNumber, 'id')
                 .validate();
 
-            const {deleted, post} = await crud.deletePost({id: idNumber, userId});
+            const result = await crud.deletePost({id: idNumber, userId});
 
-            return SuccessHandler.handle(StatusCodes.OK, post, `${ResponseMessages.RESOURCE_DELETED}:${deleted}`);
+            return SuccessHandler.handle(StatusCodes.OK, null, `${ResponseMessages.RESOURCE_DELETED}:${result}`);
         } catch (err) {
             logger.error(err.message || 'Execution error.', err);
             return ErrorHandler.handle(err);
@@ -201,7 +201,7 @@ class PostsController {
 
             const result = await crud.updateLikes({like: op}, {id: idNumber, userId});
 
-            return SuccessHandler.handle(StatusCodes.OK, {}, `${ResponseMessages.RESOURCE_PROCEEDED}:${result}`);
+            return SuccessHandler.handle(StatusCodes.OK, null, `${ResponseMessages.RESOURCE_PROCEEDED}:${result}`);
         } catch (err) {
             logger.error(err.message || 'Execution error.', err);
             return ErrorHandler.handle(err);

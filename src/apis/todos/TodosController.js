@@ -160,9 +160,9 @@ class TodosController {
                 .validate();
 
             const result = await crud.deleteTodo({id, userId});
-            debug('remove:result', result);
+            const deleted = result ? 1 : 0;
 
-            return SuccessHandler.handle(StatusCodes.OK, result, ResponseMessages.RESOURCE_DELETED);
+            return SuccessHandler.handle(StatusCodes.OK, null, `${ResponseMessages.RESOURCE_DELETED}:${deleted}`);
         } catch (err) {
             logger.error(err.message || 'Execution error.', err);
             return ErrorHandler.handle(err);
