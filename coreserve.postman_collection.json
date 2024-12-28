@@ -10,7 +10,27 @@
 			"name": "posts-api",
 			"item": [
 				{
-					"name": "Create post",
+					"name": "Create",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the JSON response body\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.collectionVariables.set(\"postId\", response.resources.id);\r",
+									"// pm.environment.set(\"postId\", response.resources.id);\r",
+									"\r",
+									"// Optional: Log to ensure it works\r",
+									"// console.log(\"postId saved:\", pm.environment.get(\"postId\"));\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -33,196 +53,15 @@
 							]
 						}
 					},
-					"response": [
-						{
-							"name": "201",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"title\": \"title 300400\",\r\n    \"content\": \"sasaasa sasdaasa kjshgkjfhgkjfh kgjhfj gkjfh gjfdhgk\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{base_url}}/posts",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"posts"
-									]
-								}
-							},
-							"status": "Created",
-							"code": 201,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "260"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"104-WlaWF1zhsgR9UDmfwwU7GqXti7o\""
-								},
-								{
-									"key": "Date",
-									"value": "Sat, 21 Dec 2024 18:26:33 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"metadata\": {\n        \"traceId\": \"92445f2f-da16-4371-8075-4040365d7d25\"\n    },\n    \"resources\": {\n        \"likes\": 0,\n        \"id\": 6,\n        \"title\": \"title 300400\",\n        \"content\": \"sasaasa sasdaasa kjshgkjfhgkjfh kgjhfj gkjfh gjfdhgk\",\n        \"updatedAt\": \"2024-12-21T18:26:32.951Z\",\n        \"createdAt\": \"2024-12-21T18:26:32.951Z\"\n    }\n}"
-						},
-						{
-							"name": "400",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"content\": \"kfjhg kjshgkjfhgkjfh kgjhfj gkjfh gjfdhgk\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{base_url}}/posts",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"posts"
-									]
-								}
-							},
-							"status": "Bad Request",
-							"code": 400,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "63"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"3f-1Ermep+im3QBtgtDJIaFibUNTnU\""
-								},
-								{
-									"key": "Date",
-									"value": "Sun, 22 Dec 2024 09:43:12 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"metadata\": {\n        \"traceId\": \"996e032e-f406-4edb-8c0e-85f265c1f641\"\n    }\n}"
-						},
-						{
-							"name": "500",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"title\": \"title 100100\",\r\n    \"content\": \"kfjhg kjshgkjfhgkjfh kgjhfj gkjfh gjfdhgk\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{base_url}}/posts",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"posts"
-									]
-								}
-							},
-							"status": "Internal Server Error",
-							"code": 500,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "208"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"d0-70EV9jRoAfCS3+bEHMCBEWpgtuo\""
-								},
-								{
-									"key": "Date",
-									"value": "Sun, 22 Dec 2024 09:44:16 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"metadata\": {\n        \"traceId\": \"ac1ecb57-420d-432d-b97d-b0b9c41b1c00\",\n        \"error\": {\n            \"name\": \"SequelizeConnectionRefusedError\",\n            \"parent\": {\n                \"code\": \"ECONNREFUSED\",\n                \"fatal\": true\n            },\n            \"original\": {\n                \"code\": \"ECONNREFUSED\",\n                \"fatal\": true\n            }\n        }\n    }\n}"
-						}
-					]
+					"response": []
 				},
 				{
-					"name": "Get posts",
+					"name": "Get All",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/posts?page=1&limit=20",
+							"raw": "{{base_url}}/posts?page=2&limit=1",
 							"host": [
 								"{{base_url}}"
 							],
@@ -232,142 +71,19 @@
 							"query": [
 								{
 									"key": "page",
-									"value": "1"
+									"value": "2"
 								},
 								{
 									"key": "limit",
-									"value": "20"
+									"value": "1"
 								}
 							]
 						}
 					},
-					"response": [
-						{
-							"name": "200",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{base_url}}/posts?page=2&limit=2",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"posts"
-									],
-									"query": [
-										{
-											"key": "page",
-											"value": "2"
-										},
-										{
-											"key": "limit",
-											"value": "2"
-										}
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "525"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"20d-QYfGOnDDFxA37qJHiHq2BsTx+B8\""
-								},
-								{
-									"key": "Date",
-									"value": "Sat, 21 Dec 2024 20:30:25 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"metadata\": {\n        \"traceId\": \"cd0f9af9-12e5-4744-b090-3f6ee707d94c\"\n    },\n    \"resources\": [\n        {\n            \"id\": 4,\n            \"title\": \"title 200300\",\n            \"content\": \"kfjhg kjshgkjfhgkjfh kgjhfj gkjfh gjfdhgk\",\n            \"likes\": 0,\n            \"createdAt\": \"2024-12-21T18:21:06.000Z\",\n            \"updatedAt\": \"2024-12-21T18:21:06.000Z\"\n        },\n        {\n            \"id\": 3,\n            \"title\": \"title 200300\",\n            \"content\": \"kfjhg kjshgkjfhgkjfh kgjhfj gkjfh gjfdhgk\",\n            \"likes\": 0,\n            \"createdAt\": \"2024-12-21T18:15:24.000Z\",\n            \"updatedAt\": \"2024-12-21T18:15:24.000Z\"\n        }\n    ],\n    \"pagination\": {\n        \"totalPages\": 3,\n        \"prevPage\": \"/posts?page=1&limit=2\",\n        \"nextPage\": \"/posts?page=3&limit=2\"\n    }\n}"
-						},
-						{
-							"name": "500",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{base_url}}/posts?page=1&limit=20",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"posts"
-									],
-									"query": [
-										{
-											"key": "page",
-											"value": "1"
-										},
-										{
-											"key": "limit",
-											"value": "20"
-										}
-									]
-								}
-							},
-							"status": "Internal Server Error",
-							"code": 500,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "208"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"d0-CUevOHwNxAoNcAufT0vlmNtvRLk\""
-								},
-								{
-									"key": "Date",
-									"value": "Sun, 22 Dec 2024 09:45:43 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"metadata\": {\n        \"traceId\": \"74a9a5a7-876e-4906-b44c-fbe88af2e83a\",\n        \"error\": {\n            \"name\": \"SequelizeConnectionRefusedError\",\n            \"parent\": {\n                \"code\": \"ECONNREFUSED\",\n                \"fatal\": true\n            },\n            \"original\": {\n                \"code\": \"ECONNREFUSED\",\n                \"fatal\": true\n            }\n        }\n    }\n}"
-						}
-					]
+					"response": []
 				},
 				{
-					"name": "Get post by id",
+					"name": "Get",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -383,132 +99,15 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "5"
+									"value": "{{postId}}"
 								}
 							]
 						}
 					},
-					"response": [
-						{
-							"name": "404",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{base_url}}/posts/:id",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"posts",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "55453453453"
-										}
-									]
-								}
-							},
-							"status": "Not Found",
-							"code": 404,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "63"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"3f-5y7sAAvR598pu5Kf/vad3xSHOJc\""
-								},
-								{
-									"key": "Date",
-									"value": "Sat, 21 Dec 2024 21:45:22 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"metadata\": {\n        \"traceId\": \"fcea64a4-eeca-4aaf-ad8b-e21b05220805\"\n    }\n}"
-						},
-						{
-							"name": "200",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{base_url}}/posts/:id",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"posts",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "2"
-										}
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "249"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"f9-4PaSWHYGSnotRGd5DxEQ/aL4uUM\""
-								},
-								{
-									"key": "Date",
-									"value": "Sat, 21 Dec 2024 21:45:46 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"metadata\": {\n        \"traceId\": \"78d9961e-ba6e-4f5d-a65a-1e4f3cc7323f\"\n    },\n    \"resources\": {\n        \"id\": 2,\n        \"title\": \"title 100100\",\n        \"content\": \"kfjhg kjshgkjfhgkjfh kgjhfj gkjfh gjfdhgk\",\n        \"likes\": 0,\n        \"createdAt\": \"2024-12-21T18:07:56.000Z\",\n        \"updatedAt\": \"2024-12-21T18:07:56.000Z\"\n    }\n}"
-						}
-					]
+					"response": []
 				},
 				{
-					"name": "Update post",
+					"name": "Update",
 					"request": {
 						"method": "PUT",
 						"header": [],
@@ -533,224 +132,15 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "1"
+									"value": "{{postId}}"
 								}
 							]
 						}
 					},
-					"response": [
-						{
-							"name": "200",
-							"originalRequest": {
-								"method": "PUT",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n            \"title\": \"Mauris ac rhoncus velit.\",\r\n            \"content\": \"Vestibulum egestas non turpis sit amet condimentum. Cras eget tempus nulla. Duis porta ipsum eu urna imperdiet, in feugiat velit dignissim. Vivamus tempus tortor vel elit elementum dignissim. Etiam non dolor et ante accumsan accumsan nec non velit. Donec in ipsum semper, tempus metus et, eleifend est. Maecenas mi tortor, tincidunt id ultricies eget, dignissim vitae lorem. Aliquam nisi magna, aliquam at odio fringilla, sollicitudin fermentum felis. Donec vehicula vel massa a faucibus. Quisque tincidunt porttitor lorem, id hendrerit ligula consequat et.\"\r\n        }",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{base_url}}/posts/:id",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"posts",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "5"
-										}
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "777"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"309-myc/1891refC2KO/ZK7fO7GVCtc\""
-								},
-								{
-									"key": "Date",
-									"value": "Sun, 22 Dec 2024 09:41:13 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"metadata\": {\n        \"traceId\": \"f7778401-b875-4edb-bbfc-ce8be04b262f\"\n    },\n    \"resources\": {\n        \"id\": 5,\n        \"title\": \"Mauris ac rhoncus velit.\",\n        \"content\": \"Vestibulum egestas non turpis sit amet condimentum. Cras eget tempus nulla. Duis porta ipsum eu urna imperdiet, in feugiat velit dignissim. Vivamus tempus tortor vel elit elementum dignissim. Etiam non dolor et ante accumsan accumsan nec non velit. Donec in ipsum semper, tempus metus et, eleifend est. Maecenas mi tortor, tincidunt id ultricies eget, dignissim vitae lorem. Aliquam nisi magna, aliquam at odio fringilla, sollicitudin fermentum felis. Donec vehicula vel massa a faucibus. Quisque tincidunt porttitor lorem, id hendrerit ligula consequat et.\",\n        \"likes\": 5,\n        \"createdAt\": \"2024-12-21T18:23:00.000Z\",\n        \"updatedAt\": \"2024-12-22T09:41:13.000Z\"\n    }\n}"
-						}
-					]
+					"response": []
 				},
 				{
-					"name": "Delete post",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/posts/:id",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"posts",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "5"
-								}
-							]
-						}
-					},
-					"response": [
-						{
-							"name": "200",
-							"originalRequest": {
-								"method": "DELETE",
-								"header": [],
-								"url": {
-									"raw": "{{base_url}}/posts/:id",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"posts",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "3"
-										}
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "250"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"fa-XlTY8ExKPGCSiEz8eR1PNY6JaVE\""
-								},
-								{
-									"key": "Date",
-									"value": "Sun, 22 Dec 2024 09:41:41 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"metadata\": {\n        \"traceId\": \"9a05f9f9-cec1-4708-a528-f2fc6bbb6a54\"\n    },\n    \"resources\": {\n        \"id\": 3,\n        \"title\": \"title 200300\",\n        \"content\": \"kfjhg kjshgkjfhgkjfh kgjhfj gkjfh gjfdhgk\",\n        \"likes\": -1,\n        \"createdAt\": \"2024-12-21T18:15:24.000Z\",\n        \"updatedAt\": \"2024-12-22T09:11:20.000Z\"\n    }\n}"
-						},
-						{
-							"name": "404",
-							"originalRequest": {
-								"method": "DELETE",
-								"header": [],
-								"url": {
-									"raw": "{{base_url}}/posts/:id",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"posts",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "3"
-										}
-									]
-								}
-							},
-							"status": "Not Found",
-							"code": 404,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "63"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"3f-4gmUiVQqFJO9uqBtbkAm2iLvlPY\""
-								},
-								{
-									"key": "Date",
-									"value": "Sun, 22 Dec 2024 09:41:57 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"metadata\": {\n        \"traceId\": \"aff043fe-8aca-4580-a90e-cd8e6480eb24\"\n    }\n}"
-						}
-					]
-				},
-				{
-					"name": "Like post",
+					"name": "Like",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -767,134 +157,15 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "3"
+									"value": "{{postId}}"
 								}
 							]
 						}
 					},
-					"response": [
-						{
-							"name": "200",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"url": {
-									"raw": "{{base_url}}/posts/like/:id",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"posts",
-										"like",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "5"
-										}
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "63"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"3f-2+pWGLxpGghIbGjKRIgdgY0okrQ\""
-								},
-								{
-									"key": "Date",
-									"value": "Sun, 22 Dec 2024 09:21:35 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"metadata\": {\n        \"traceId\": \"fb350370-4fed-4262-9ce9-54fb8adfd5cd\"\n    }\n}"
-						},
-						{
-							"name": "404",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"url": {
-									"raw": "{{base_url}}/posts/like/:id",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"posts",
-										"like",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "3"
-										}
-									]
-								}
-							},
-							"status": "Not Found",
-							"code": 404,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "63"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"3f-fWMwa81itQxmQAsQ7UtoJM8KO1o\""
-								},
-								{
-									"key": "Date",
-									"value": "Sun, 22 Dec 2024 09:42:28 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"metadata\": {\n        \"traceId\": \"66d89327-ed7c-40fe-8d28-8b16e94bbcc4\"\n    }\n}"
-						}
-					]
+					"response": []
 				},
 				{
-					"name": "Unlike post",
+					"name": "Unlike",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -911,147 +182,58 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "5"
+									"value": "{{postId}}"
 								}
 							]
 						}
 					},
-					"response": [
-						{
-							"name": "404",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"url": {
-									"raw": "{{base_url}}/posts/unlike/:id",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"posts",
-										"unlike",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "3"
-										}
-									]
-								}
-							},
-							"status": "Not Found",
-							"code": 404,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "63"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"3f-nxiOusOAafgCf0izEy7yBrgDupU\""
-								},
-								{
-									"key": "Date",
-									"value": "Sun, 22 Dec 2024 09:38:35 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/posts/:id",
+							"host": [
+								"{{base_url}}"
 							],
-							"cookie": [],
-							"body": "{\n    \"metadata\": {\n        \"traceId\": \"6258656d-f092-4736-b3bb-ecc345c34bd5\"\n    }\n}"
-						},
-						{
-							"name": "200",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"url": {
-									"raw": "{{base_url}}/posts/unlike/:id",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"posts",
-										"unlike",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "5"
-										}
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "77"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"4d-n8OtBhmrGctvFRsd0ZlLS9F4j7g\""
-								},
-								{
-									"key": "Date",
-									"value": "Sun, 22 Dec 2024 09:42:42 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
+							"path": [
+								"posts",
+								":id"
 							],
-							"cookie": [],
-							"body": "{\n    \"metadata\": {\n        \"traceId\": \"61319eb5-5e28-4100-bed5-2f65e7438804\"\n    },\n    \"resources\": 1\n}"
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{postId}}"
+								}
+							]
 						}
-					]
+					},
+					"response": []
 				}
 			]
 		},
 		{
-			"name": "todos-api",
+			"name": "comments-api",
 			"item": [
 				{
-					"name": "Get todos with pagination",
+					"name": "Create",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});"
+									"// Parse the JSON response body\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.collectionVariables.set(\"commentId\", response.resources.id);\r",
+									"// pm.environment.set(\"commentId\", response.resources.id);\r",
+									"\r",
+									"// Optional: Log to ensure it works\r",
+									"// console.log(\"commentId saved:\", pm.environment.get(\"commentId\"));\r",
+									""
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -1059,15 +241,79 @@
 						}
 					],
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"content\": \"Nunc at tellus interdum est euismod aliquet a interdum tortor. Aenean in dictum sem. Sed quis risus quis lectus scelerisque mollis.\",\r\n    \"postId\": {{postId}}\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "{{base_url}}/todos?page=1&limit=5",
+							"raw": "{{base_url}}/comments",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
-								"todos"
+								"comments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Reply",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"content\": \"Nunc at tellus interdum est euismod aliquet a interdum tortor. Aenean in dictum sem. Sed quis risus quis lectus scelerisque mollis.\",\r\n    \"postId\": {{postId}},\r\n    \"parentId\": {{commentId}}\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/comments",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"comments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/comments?page=1&limit=5&postId={{postId}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"comments"
 							],
 							"query": [
 								{
@@ -1077,146 +323,157 @@
 								{
 									"key": "limit",
 									"value": "5"
+								},
+								{
+									"key": "postId",
+									"value": "{{postId}}"
+								},
+								{
+									"key": "parentId",
+									"value": "{{commentId}}",
+									"description": "ommit if its first level",
+									"disabled": true
 								}
 							]
-						},
-						"description": "Get todos with pagination"
-					},
-					"response": [
-						{
-							"name": "200",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{base_url}}/todos?page=2&limit=1",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"todos"
-									],
-									"query": [
-										{
-											"key": "page",
-											"value": "2"
-										},
-										{
-											"key": "limit",
-											"value": "1"
-										}
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "354"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"162-IHeI+9cEmrMUdidbzOQLOAmUq1Y\""
-								},
-								{
-									"key": "Date",
-									"value": "Fri, 20 Dec 2024 10:49:31 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"metadata\": {\n        \"traceId\": \"e240894b-a848-4183-9825-87c512818102\"\n    },\n    \"resources\": [\n        {\n            \"title\": \"bbb i fkjgdfkjglfkjglkdfjglkfjd uoi \",\n            \"completed\": false,\n            \"createdAt\": \"2024-12-19T16:18:05.982Z\",\n            \"updatedAt\": \"2024-12-19T16:18:05.982Z\",\n            \"id\": \"6764473d12467b2009a3cdff\"\n        }\n    ],\n    \"pagination\": {\n        \"totalPages\": 4,\n        \"prevPage\": \"/todos?page=1&limit=1\",\n        \"nextPage\": \"/todos?page=3&limit=1\"\n    }\n}"
-						},
-						{
-							"name": "500",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{base_url}}/todos?page=2&limit=1",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"todos"
-									],
-									"query": [
-										{
-											"key": "page",
-											"value": "2"
-										},
-										{
-											"key": "limit",
-											"value": "1"
-										}
-									]
-								}
-							},
-							"status": "Internal Server Error",
-							"code": 500,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "63"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"3f-sxS5OoIC7NgggfBEeM5PZvDrmPM\""
-								},
-								{
-									"key": "Date",
-									"value": "Fri, 20 Dec 2024 18:29:48 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"metadata\": {\n        \"traceId\": \"a3deaef6-4daf-4ae6-b5eb-30e27f1aa128\"\n    }\n}"
 						}
-					]
+					},
+					"response": []
 				},
 				{
-					"name": "Get todo by id",
+					"name": "Like",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/comments/like/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"comments",
+								"like",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{commentId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unlike",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/comments/unlike/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"comments",
+								"unlike",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{commentId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/comments/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"comments",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{commentId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "todos-api",
+			"item": [
+				{
+					"name": "Create",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});"
+									"// Parse the JSON response body",
+									"const response = pm.response.json();",
+									"",
+									"pm.collectionVariables.set(\"todoId\", response.resources.id);",
+									"",
+									"// pm.environment.set(\"todoId\", response.resources.id);",
+									"",
+									"// Optional: Log to ensure it works",
+									"// console.log(\"todoId saved:\", pm.environment.get(\"todoId\"));",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"title\": \"Lorem ipsum dolor sit amet.\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/todos",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"todos"
+							]
+						},
+						"description": "Create todo"
+					},
+					"response": []
+				},
+				{
+					"name": "Get",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -1245,199 +502,21 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "6764473d12467b2009a3cdff"
+									"value": "{{todoId}}"
 								}
 							]
 						},
 						"description": "Get todo by id"
 					},
-					"response": [
-						{
-							"name": "500",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{base_url}}/todos/:id",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"todos",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "6764473d12467b2009a3cdff"
-										}
-									]
-								}
-							},
-							"status": "Internal Server Error",
-							"code": 500,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "63"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"3f-sxS5OoIC7NgggfBEeM5PZvDrmPM\""
-								},
-								{
-									"key": "Date",
-									"value": "Fri, 20 Dec 2024 18:29:48 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"metadata\": {\n        \"traceId\": \"a3deaef6-4daf-4ae6-b5eb-30e27f1aa128\"\n    }\n}"
-						},
-						{
-							"name": "404",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{base_url}}/todos/:id",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"todos",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "6764473d12467b2009a3cdff"
-										}
-									]
-								}
-							},
-							"status": "Not Found",
-							"code": 404,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "63"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"3f-qZGCizo12QxerkHYl1nIM4UGN/Q\""
-								},
-								{
-									"key": "Date",
-									"value": "Fri, 20 Dec 2024 18:40:46 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"metadata\": {\n        \"traceId\": \"b1121a96-2211-42ee-b6b6-15773d8bd563\"\n    }\n}"
-						},
-						{
-							"name": "200",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{base_url}}/todos/:id",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"todos",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "6764473d12467b2009a3cdff"
-										}
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "252"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"fc-v5/MO9zhXJ7HXBeWtYgM416jlqI\""
-								},
-								{
-									"key": "Date",
-									"value": "Fri, 20 Dec 2024 18:41:37 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"metadata\": {\n        \"traceId\": \"d5810ac9-87f5-43f6-be74-d3542d205bbe\"\n    },\n    \"resources\": {\n        \"title\": \"bbb i fkjgdfkjglfkjglkdfjglkfjd uoi \",\n        \"completed\": false,\n        \"createdAt\": \"2024-12-19T16:18:05.982Z\",\n        \"updatedAt\": \"2024-12-19T16:18:05.982Z\",\n        \"id\": \"6764473d12467b2009a3cdff\"\n    }\n}"
-						}
-					]
+					"response": []
 				},
 				{
-					"name": "Create todo",
+					"name": "Get All",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Successful POST request\", function () {",
-									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
-									"});",
 									""
 								],
 								"type": "text/javascript",
@@ -1446,163 +525,39 @@
 						}
 					],
 					"request": {
-						"method": "POST",
+						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\t\"title\": \"todo title\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
 						"url": {
-							"raw": "{{base_url}}/todos",
+							"raw": "{{base_url}}/todos?page=2&limit=2",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"todos"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "limit",
+									"value": "2"
+								}
 							]
 						},
-						"description": "Create todo"
+						"description": "Get todos with pagination"
 					},
-					"response": [
-						{
-							"name": "400",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n\t\"name\": \"Add your name in the body\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "http://localhost:5000/todos",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "5000",
-									"path": [
-										"todos"
-									]
-								}
-							},
-							"status": "Bad Request",
-							"code": 400,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "63"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"3f-+UYdGuoX1OA2lQ2gu+NYIB+ZXTo\""
-								},
-								{
-									"key": "Date",
-									"value": "Fri, 20 Dec 2024 18:32:18 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"metadata\": {\n        \"traceId\": \"9aa90d28-bade-4c98-9c89-47836c2d440f\"\n    }\n}"
-						},
-						{
-							"name": "201",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n\t\"title\": \"todo title\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{base_url}}/todos",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"todos"
-									]
-								}
-							},
-							"status": "Created",
-							"code": 201,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "226"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"e2-AkIQRjdkTn950LiiI9AEMnV8wB8\""
-								},
-								{
-									"key": "Date",
-									"value": "Fri, 20 Dec 2024 18:33:16 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"metadata\": {\n        \"traceId\": \"4b0cf6a2-400f-40ce-98f7-a977a64135d8\"\n    },\n    \"resources\": {\n        \"title\": \"todo title\",\n        \"completed\": false,\n        \"createdAt\": \"2024-12-20T18:33:16.007Z\",\n        \"updatedAt\": \"2024-12-20T18:33:16.007Z\",\n        \"id\": \"6765b86cb7e1d374bfb59d98\"\n    }\n}"
-						}
-					]
+					"response": []
 				},
 				{
-					"name": "Update todo",
+					"name": "Update",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Successful PUT request\", function () {",
-									"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 204]);",
-									"});",
+									"",
 									""
 								],
 								"type": "text/javascript",
@@ -1615,7 +570,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"todo title\",\n    \"completed\": true\n}",
+							"raw": "{\n    \"completed\": true\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1634,159 +589,21 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "6764474412467b2009a3ce01"
+									"value": "{{todoId}}"
 								}
 							]
 						},
 						"description": "Update todo"
 					},
-					"response": [
-						{
-							"name": "200",
-							"originalRequest": {
-								"method": "PUT",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n\t\"name\": \"todo title\",\n    \"completed\": true\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{base_url}}/todos/:id",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"todos",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "6765b86cb7e1d374bfb59d98"
-										}
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "225"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"e1-AeCH7CAXfYJjYTzsKpHwe9kw0FA\""
-								},
-								{
-									"key": "Date",
-									"value": "Fri, 20 Dec 2024 18:35:17 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"metadata\": {\n        \"traceId\": \"eb204a27-b8a5-4ca1-aaa2-85cbf2f8d78c\"\n    },\n    \"resources\": {\n        \"title\": \"todo title\",\n        \"completed\": true,\n        \"createdAt\": \"2024-12-20T18:33:16.007Z\",\n        \"updatedAt\": \"2024-12-20T18:35:17.193Z\",\n        \"id\": \"6765b86cb7e1d374bfb59d98\"\n    }\n}"
-						},
-						{
-							"name": "404",
-							"originalRequest": {
-								"method": "PUT",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n\t\"name\": \"todo title\",\n    \"completed\": true\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{base_url}}/todos/:id",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"todos",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "6764474412467b2009a3ce01"
-										}
-									]
-								}
-							},
-							"status": "Not Found",
-							"code": 404,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "63"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"3f-J+G4s+XZMSBqs2b8FRLF+dWGgwE\""
-								},
-								{
-									"key": "Date",
-									"value": "Fri, 20 Dec 2024 18:37:41 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"metadata\": {\n        \"traceId\": \"023b2407-980e-40f0-abff-6d4c915e980b\"\n    }\n}"
-						}
-					]
+					"response": []
 				},
 				{
-					"name": "Delete todo",
+					"name": "Delete",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Successful DELETE request\", function () {",
-									"    pm.expect(pm.response.code).to.be.oneOf([200, 202, 204]);",
-									"});",
 									""
 								],
 								"type": "text/javascript",
@@ -1809,1220 +626,90 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "6764474412467b2009a3ce01"
+									"value": "{{todoId}}"
 								}
 							]
 						},
 						"description": "Delete todo"
 					},
-					"response": [
-						{
-							"name": "200",
-							"originalRequest": {
-								"method": "DELETE",
-								"header": [],
-								"url": {
-									"raw": "{{base_url}}/todos/:id",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"todos",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "6764474412467b2009a3ce01"
-										}
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "252"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"fc-UMerYYQW/4LzaAbhwWxcm8vPFA0\""
-								},
-								{
-									"key": "Date",
-									"value": "Fri, 20 Dec 2024 18:36:46 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"metadata\": {\n        \"traceId\": \"6dc71c56-a94f-4f65-b77b-26e65ae6bf98\"\n    },\n    \"resources\": {\n        \"title\": \"ccc i fkjgdfkjglfkjglkdfjglkfjd uoi \",\n        \"completed\": false,\n        \"createdAt\": \"2024-12-19T16:18:12.137Z\",\n        \"updatedAt\": \"2024-12-19T16:18:12.137Z\",\n        \"id\": \"6764474412467b2009a3ce01\"\n    }\n}"
-						},
-						{
-							"name": "404",
-							"originalRequest": {
-								"method": "DELETE",
-								"header": [],
-								"url": {
-									"raw": "{{base_url}}/todos/:id",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"todos",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "6764474412467b2009a3ce01"
-										}
-									]
-								}
-							},
-							"status": "Not Found",
-							"code": 404,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "63"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"3f-CVNcsTOrk8DkW7abL0zo23dgzDI\""
-								},
-								{
-									"key": "Date",
-									"value": "Fri, 20 Dec 2024 18:37:15 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"metadata\": {\n        \"traceId\": \"add1da98-6f9e-43c1-ab02-1a595018ab7a\"\n    }\n}"
-						}
-					]
-				}
-			]
-		},
-		{
-			"name": "comments-api",
-			"item": [
-				{
-					"name": "Create comment",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"content\": \"Phasellus interdum vehicula mattis. Mauris id rhoncus diam, vel luctus augue. Praesent aliquam risus at convallis pulvinar. Vestibulum vel lacus augue. Nunc at tellus interdum est euismod aliquet a interdum tortor. Aenean in dictum sem. Sed quis risus quis lectus scelerisque mollis.\",\r\n    \"postId\": 1,\r\n    \"parentId\": 3\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/comments",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"comments"
-							]
-						}
-					},
-					"response": [
-						{
-							"name": "201",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"content\":\"Phasellus interdum vehicula mattis. Mauris id rhoncus diam, vel luctus augue. Praesent aliquam risus at convallis pulvinar. Vestibulum vel lacus augue. Nunc at tellus interdum est euismod aliquet a interdum tortor. Aenean in dictum sem. Sed quis risus quis lectus scelerisque mollis.\",\r\n    \"postId\": 5,\r\n    \"parentId\": 3\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{base_url}}/comments",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"comments"
-									]
-								}
-							},
-							"status": "Created",
-							"code": 201,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "492"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"1ec-vaUgXJaPw2Q/OYztO+PT4hyASy4\""
-								},
-								{
-									"key": "Date",
-									"value": "Sun, 22 Dec 2024 20:00:41 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"metadata\": {\n        \"traceId\": \"cbc9ef31-9c70-4f87-99c2-d962b957f792\"\n    },\n    \"resources\": {\n        \"likes\": 0,\n        \"id\": 5,\n        \"postId\": 5,\n        \"content\": \"Phasellus interdum vehicula mattis. Mauris id rhoncus diam, vel luctus augue. Praesent aliquam risus at convallis pulvinar. Vestibulum vel lacus augue. Nunc at tellus interdum est euismod aliquet a interdum tortor. Aenean in dictum sem. Sed quis risus quis lectus scelerisque mollis.\",\n        \"parentId\": 3,\n        \"updatedAt\": \"2024-12-22T20:00:41.140Z\",\n        \"createdAt\": \"2024-12-22T20:00:41.140Z\"\n    }\n}"
-						},
-						{
-							"name": "400",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"content\": \"Phasellus interdum vehicula mattis. Mauris id rhoncus diam, vel luctus augue. Praesent aliquam risus at convallis pulvinar. Vestibulum vel lacus augue. Nunc at tellus interdum est euismod aliquet a interdum tortor. Aenean in dictum sem. Sed quis risus quis lectus scelerisque mollis.\",\r\n    \"postId\": 5,\r\n    \"parentId\": 12\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{base_url}}/comments",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"comments"
-									]
-								}
-							},
-							"status": "Bad Request",
-							"code": 400,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "150"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"96-o4TLU8R0m12zjqu/Z95aapk7Hr0\""
-								},
-								{
-									"key": "Date",
-									"value": "Sun, 22 Dec 2024 22:30:31 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"metadata\": {\n        \"traceId\": \"e236d437-82d6-43da-8a38-1fab83683247\",\n        \"error\": {\n            \"code\": 100,\n            \"message\": \"Mismatch: parent comment belongs to post ID 1, not 5.\"\n        }\n    }\n}"
-						},
-						{
-							"name": "500",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"content\": \"Phasellus interdum vehicula mattis. Mauris id rhoncus diam, vel luctus augue. Praesent aliquam risus at convallis pulvinar. Vestibulum vel lacus augue. Nunc at tellus interdum est euismod aliquet a interdum tortor. Aenean in dictum sem. Sed quis risus quis lectus scelerisque mollis.\",\r\n    \"postId\": 7,\r\n    \"parentId\": \"kjkjlkjlkjlkjlkljk\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{base_url}}/comments",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"comments"
-									]
-								}
-							},
-							"status": "Internal Server Error",
-							"code": 500,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "292"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"124-9woGJJeiO6+THsV6BGn22JLSFeU\""
-								},
-								{
-									"key": "Date",
-									"value": "Mon, 23 Dec 2024 14:09:42 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"metadata\": {\n        \"traceId\": \"dd611991-fa86-4a13-808b-2c19b2fb7019\",\n        \"error\": {\n            \"code\": \"\",\n            \"message\": \"Cannot add or update a child row: a foreign key constraint fails (`devel`.`comments`, CONSTRAINT `comments_ibfk_2` FOREIGN KEY (`parent_comment_id`) REFERENCES `comments` (`id`) ON DELETE CASCADE)\"\n        }\n    }\n}"
-						}
-					]
-				},
-				{
-					"name": "Get comments",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/comments?page=1&limit=5&postId=1&parentId=3",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"comments"
-							],
-							"query": [
-								{
-									"key": "page",
-									"value": "1"
-								},
-								{
-									"key": "limit",
-									"value": "5"
-								},
-								{
-									"key": "postId",
-									"value": "1"
-								},
-								{
-									"key": "parentId",
-									"value": "3",
-									"description": "ommit if its first level"
-								}
-							]
-						}
-					},
-					"response": [
-						{
-							"name": "200",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{base_url}}/comments?page=2&limit=1",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"comments"
-									],
-									"query": [
-										{
-											"key": "page",
-											"value": "2"
-										},
-										{
-											"key": "limit",
-											"value": "1"
-										}
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "611"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"263-jK7oWeURc1Munm7T3bSsW+uj6Ck\""
-								},
-								{
-									"key": "Date",
-									"value": "Sun, 22 Dec 2024 22:38:31 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"metadata\": {\n        \"traceId\": \"3b9201e2-aa61-423b-95b1-7924f2f2bdb9\"\n    },\n    \"resources\": [\n        {\n            \"id\": 15,\n            \"postId\": 1,\n            \"parentId\": 12,\n            \"content\": \"Phasellus interdum vehicula mattis. Mauris id rhoncus diam, vel luctus augue. Praesent aliquam risus at convallis pulvinar. Vestibulum vel lacus augue. Nunc at tellus interdum est euismod aliquet a interdum tortor. Aenean in dictum sem. Sed quis risus quis lectus scelerisque mollis.\",\n            \"likes\": 0,\n            \"createdAt\": \"2024-12-22T22:31:58.000Z\",\n            \"updatedAt\": \"2024-12-22T22:31:58.000Z\"\n        }\n    ],\n    \"pagination\": {\n        \"totalPages\": 11,\n        \"prevPage\": \"/api/comments?page=1&limit=1\",\n        \"nextPage\": \"/api/comments?page=3&limit=1\"\n    }\n}"
-						},
-						{
-							"name": "400",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{base_url}}/comments?page=1&limit=5&postId=5",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"comments"
-									],
-									"query": [
-										{
-											"key": "page",
-											"value": "1"
-										},
-										{
-											"key": "limit",
-											"value": "5"
-										},
-										{
-											"key": "postId",
-											"value": "5"
-										},
-										{
-											"key": "parentId",
-											"value": "5",
-											"description": "ommit if its first level",
-											"disabled": true
-										}
-									]
-								}
-							},
-							"status": "Bad Request",
-							"code": 400,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "63"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"3f-R2Xa3b+HTSxoQyL9WL/9+MGAkis\""
-								},
-								{
-									"key": "Date",
-									"value": "Mon, 23 Dec 2024 13:39:42 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"metadata\": {\n        \"traceId\": \"593ea823-2115-44a8-b94d-d5b9e3e6d56d\"\n    }\n}"
-						},
-						{
-							"name": "500",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{base_url}}/comments?page=1&limit=5&postId=1",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"comments"
-									],
-									"query": [
-										{
-											"key": "page",
-											"value": "1"
-										},
-										{
-											"key": "limit",
-											"value": "5"
-										},
-										{
-											"key": "postId",
-											"value": "1"
-										},
-										{
-											"key": "parentId",
-											"value": "3",
-											"description": "ommit if its first level",
-											"disabled": true
-										}
-									]
-								}
-							},
-							"status": "Internal Server Error",
-							"code": 500,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "157"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"9d-X7TSVq1uugHv5ACoq8g5ZQecr/w\""
-								},
-								{
-									"key": "Date",
-									"value": "Mon, 23 Dec 2024 19:17:14 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"metadata\": {\n        \"traceId\": \"f90e86bf-5e94-4a30-8423-5f557f606b7d\",\n        \"error\": {\n            \"code\": \"\",\n            \"message\": \"WHERE parameter \\\"parent_id\\\" has invalid \\\"undefined\\\" value\"\n        }\n    }\n}"
-						}
-					]
-				},
-				{
-					"name": "like",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/comments/like/:id",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"comments",
-								"like",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1"
-								}
-							]
-						}
-					},
-					"response": [
-						{
-							"name": "200",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"url": {
-									"raw": "{{base_url}}/comments/like/:id",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"comments",
-										"like",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "8"
-										}
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "77"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"4d-3EizGIqtYrq2/2iL0BNKue7RIUw\""
-								},
-								{
-									"key": "Date",
-									"value": "Mon, 23 Dec 2024 17:26:24 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"metadata\": {\n        \"traceId\": \"449a49ef-7018-4940-bac5-87f853d557eb\"\n    },\n    \"resources\": 1\n}"
-						},
-						{
-							"name": "500",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"url": {
-									"raw": "{{base_url}}/comments/like/:id",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"comments",
-										"like",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "mnbmnmnbmn"
-										}
-									]
-								}
-							},
-							"status": "Internal Server Error",
-							"code": 500,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "142"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"8e-gDS/dao6qUbhNl0MtaYrVWu2gKE\""
-								},
-								{
-									"key": "Date",
-									"value": "Mon, 23 Dec 2024 17:26:45 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"metadata\": {\n        \"traceId\": \"a3c70820-d7d9-465f-8497-30081e43e7ed\",\n        \"error\": {\n            \"code\": \"\",\n            \"message\": \"Truncated incorrect DOUBLE value: 'mnbmnmnbmn'\"\n        }\n    }\n}"
-						},
-						{
-							"name": "400",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"url": {
-									"raw": "{{base_url}}/comments/like/:id",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"comments",
-										"like",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "khkjhkjhkjh"
-										}
-									]
-								}
-							},
-							"status": "Bad Request",
-							"code": 400,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "63"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"3f-QKcyfTeEzNjmTbjDP3JUb+l9qeQ\""
-								},
-								{
-									"key": "Date",
-									"value": "Mon, 23 Dec 2024 17:30:10 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"metadata\": {\n        \"traceId\": \"8f5b5f5d-517e-4e77-806f-8ecf9db12b17\"\n    }\n}"
-						}
-					]
-				},
-				{
-					"name": "Unlike comment",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/comments/unlike/:id",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"comments",
-								"unlike",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1"
-								}
-							]
-						}
-					},
-					"response": [
-						{
-							"name": "200",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"url": {
-									"raw": "{{base_url}}/comments/unlike/:id",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"comments",
-										"unlike",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "8"
-										}
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "77"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"4d-Q23zWlYm79VbCuykTgS7o+SoPGI\""
-								},
-								{
-									"key": "Date",
-									"value": "Mon, 23 Dec 2024 17:38:34 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"metadata\": {\n        \"traceId\": \"f79ec016-c2f1-4980-a718-32733983c813\"\n    },\n    \"resources\": 1\n}"
-						}
-					]
-				},
-				{
-					"name": "Get comment by id",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/comments/:id",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"comments",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "3"
-								}
-							]
-						}
-					},
-					"response": [
-						{
-							"name": "400",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{base_url}}/comments/:id",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"comments",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": ""
-										}
-									]
-								}
-							},
-							"status": "Bad Request",
-							"code": 400,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "63"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"3f-s51DgMsF4NOVCmPxe3+nNsWxdnQ\""
-								},
-								{
-									"key": "Date",
-									"value": "Mon, 23 Dec 2024 19:46:07 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"metadata\": {\n        \"traceId\": \"7672bc37-3d50-4d36-8a96-7ccf5110f860\"\n    }\n}"
-						},
-						{
-							"name": "200",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{base_url}}/comments/:id",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"comments",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "1"
-										}
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "495"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"1ef-DGGRB8RaX5C1edRY+oegh5GPUCU\""
-								},
-								{
-									"key": "Date",
-									"value": "Mon, 23 Dec 2024 19:46:31 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"metadata\": {\n        \"traceId\": \"74a064bf-7ee1-4de8-9785-04ef1243bb4c\"\n    },\n    \"resources\": {\n        \"id\": 1,\n        \"postId\": 1,\n        \"parentId\": null,\n        \"content\": \"Phasellus interdum vehicula mattis. Mauris id rhoncus diam, vel luctus augue. Praesent aliquam risus at convallis pulvinar. Vestibulum vel lacus augue. Nunc at tellus interdum est euismod aliquet a interdum tortor. Aenean in dictum sem. Sed quis risus quis lectus scelerisque mollis.\",\n        \"likes\": 0,\n        \"createdAt\": \"2024-12-23T19:06:07.000Z\",\n        \"updatedAt\": \"2024-12-23T19:31:47.000Z\"\n    }\n}"
-						}
-					]
-				},
-				{
-					"name": "Delete comment",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/comments/:id",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"comments",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1"
-								}
-							]
-						}
-					},
-					"response": [
-						{
-							"name": "400",
-							"originalRequest": {
-								"method": "DELETE",
-								"header": [],
-								"url": {
-									"raw": "{{base_url}}/comments/:id",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"comments",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": ""
-										}
-									]
-								}
-							},
-							"status": "Bad Request",
-							"code": 400,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "63"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"3f-VLNaP/rK26YJ/TxuClAyVzEATO4\""
-								},
-								{
-									"key": "Date",
-									"value": "Mon, 23 Dec 2024 19:48:44 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"metadata\": {\n        \"traceId\": \"62c6b10e-c121-4718-8631-527531f7025c\"\n    }\n}"
-						},
-						{
-							"name": "200",
-							"originalRequest": {
-								"method": "DELETE",
-								"header": [],
-								"url": {
-									"raw": "{{base_url}}/comments/:id",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"comments",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "1"
-										}
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "495"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"1ef-0QUBmPsEHXzW9ZnPBOqNsgaEb44\""
-								},
-								{
-									"key": "Date",
-									"value": "Mon, 23 Dec 2024 19:49:01 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"metadata\": {\n        \"traceId\": \"5efc125b-41fc-439d-a7fa-cfcb5af2c5b3\"\n    },\n    \"resources\": {\n        \"id\": 1,\n        \"postId\": 1,\n        \"parentId\": null,\n        \"content\": \"Phasellus interdum vehicula mattis. Mauris id rhoncus diam, vel luctus augue. Praesent aliquam risus at convallis pulvinar. Vestibulum vel lacus augue. Nunc at tellus interdum est euismod aliquet a interdum tortor. Aenean in dictum sem. Sed quis risus quis lectus scelerisque mollis.\",\n        \"likes\": 0,\n        \"createdAt\": \"2024-12-23T19:06:07.000Z\",\n        \"updatedAt\": \"2024-12-23T19:31:47.000Z\"\n    }\n}"
-						},
-						{
-							"name": "404",
-							"originalRequest": {
-								"method": "DELETE",
-								"header": [],
-								"url": {
-									"raw": "{{base_url}}/comments/:id",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"comments",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "1"
-										}
-									]
-								}
-							},
-							"status": "Not Found",
-							"code": 404,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "63"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"3f-acLnlKXuXzIw4qqPbnqkP6ech+c\""
-								},
-								{
-									"key": "Date",
-									"value": "Mon, 23 Dec 2024 19:49:18 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"metadata\": {\n        \"traceId\": \"043eb659-ad12-4ea3-8693-7e563813b0ee\"\n    }\n}"
-						}
-					]
+					"response": []
 				}
 			]
 		}
 	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{jwtToken}}",
+				"type": "string"
+			}
+		]
+	},
 	"event": [
 		{
 			"listen": "prerequest",
 			"script": {
 				"type": "text/javascript",
 				"exec": [
+					"const header = {\r",
+					"    alg: \"HS256\",\r",
+					"    typ: \"JWT\"\r",
+					"};\r",
+					"\r",
+					"const payload = {\r",
+					"    userId: 1,\r",
+					"    name: \"Test User\",\r",
+					"    exp: Math.floor(Date.now() / 1000) + (60 * 60), // Token expires in 1 hour\r",
+					"};\r",
+					"\r",
+					"const jwtSecret = \"your_secret_key\"; // Replace with your actual secret key\r",
+					"\r",
+					"\r",
+					"function base64url(source) {\r",
+					"    // Encode in classical base64\r",
+					"    encodedSource = CryptoJS.enc.Base64.stringify(source)\r",
+					"    \r",
+					"    // Remove padding equal characters\r",
+					"    encodedSource = encodedSource.replace(/=+$/, '')\r",
+					"    \r",
+					"    // Replace characters according to base64url specifications\r",
+					"    encodedSource = encodedSource.replace(/\\+/g, '-')\r",
+					"    encodedSource = encodedSource.replace(/\\//g, '_')\r",
+					"    \r",
+					"    return encodedSource\r",
+					"}\r",
+					"\r",
+					"\r",
+					"// encode header\r",
+					"var stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(header))\r",
+					"var encodedHeader = base64url(stringifiedHeader)\r",
+					"\r",
+					"// encode data\r",
+					"var stringifiedData = CryptoJS.enc.Utf8.parse(JSON.stringify(payload))\r",
+					"var encodedData = base64url(stringifiedData)\r",
+					"\r",
+					"// build token\r",
+					"var token = `${encodedHeader}.${encodedData}`\r",
+					"\r",
+					"// sign token\r",
+					"var signature = CryptoJS.HmacSHA256(token, jwtSecret)\r",
+					"signature = base64url(signature)\r",
+					"var signedToken = `${token}.${signature}`\r",
+					"\r",
+					"pm.collectionVariables.set('jwt_signed', signedToken);\r",
+					"\r",
+					"pm.environment.set('jwt_signed', signedToken)\r",
+					"console.log('Signed and encoded JWT', signedToken)\r",
+					"\r",
+					"// Save the token as an environment variable\r",
+					"pm.collectionVariables.set('jwtToken', signedToken);\r",
+					"\r",
+					"pm.environment.set(\"jwtToken\", signedToken);\r",
+					"\r",
+					"// Log the token for debugging\r",
+					"console.log(\"Generated JWT Token:\", signedToken);\r",
 					""
 				]
 			}
@@ -3042,6 +729,26 @@
 			"key": "base_url",
 			"value": "http://localhost:3000/api",
 			"type": "string"
+		},
+		{
+			"key": "postId",
+			"value": ""
+		},
+		{
+			"key": "commentId",
+			"value": ""
+		},
+		{
+			"key": "todoId",
+			"value": ""
+		},
+		{
+			"key": "jwt_signed",
+			"value": ""
+		},
+		{
+			"key": "jwtToken",
+			"value": ""
 		}
 	]
 }

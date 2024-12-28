@@ -1,1255 +1,828 @@
 {
-    "openapi": "3.0.0",
-    "info": {
-        "title": "CORESERVE",
-        "version": "1.0.0"
+  "openapi": "3.0.0",
+  "info": {
+    "title": "CORESERVE",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000"
     },
-    "servers": [
-        {
-            "url": "http://localhost:3000"
-        }
-    ],
-    "tags": [
-        {
-            "name": "posts-api"
-        },
-        {
-            "name": "todos-api"
-        },
-        {
-            "name": "comments-api"
-        }
-    ],
-    "paths": {
-        "/api/posts": {
-            "post": {
-                "tags": [
-                    "posts-api"
-                ],
-                "summary": "Create post",
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "example": {
-                                    "title": "Lorem ipsum dolor sit amet.",
-                                    "content": "Nunc ut vestibulum libero. Nulla facilisi. Integer quis maximus erat, at malesuada augue. Fusce ultricies mauris eu orci viverra, et dictum orci ultrices. Sed cursus rhoncus elementum. Integer metus arcu, consectetur in viverra ut, ultrices id ipsum. Phasellus venenatis, lectus sit amet imperdiet aliquam, augue dui imperdiet odio, sit amet aliquam lacus purus in nulla."
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                },
-                                "example": {
-                                    "metadata": {
-                                        "traceId": "92445f2f-da16-4371-8075-4040365d7d25"
-                                    },
-                                    "resources": {
-                                        "likes": 0,
-                                        "id": 6,
-                                        "title": "title 300400",
-                                        "content": "sasaasa sasdaasa kjshgkjfhgkjfh kgjhfj gkjfh gjfdhgk",
-                                        "updatedAt": "2024-12-21T18:26:32.951Z",
-                                        "createdAt": "2024-12-21T18:26:32.951Z"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                },
-                                "example": {
-                                    "metadata": {
-                                        "traceId": "996e032e-f406-4edb-8c0e-85f265c1f641"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                },
-                                "example": {
-                                    "metadata": {
-                                        "traceId": "ac1ecb57-420d-432d-b97d-b0b9c41b1c00",
-                                        "error": {
-                                            "name": "SequelizeConnectionRefusedError",
-                                            "parent": {
-                                                "code": "ECONNREFUSED",
-                                                "fatal": true
-                                            },
-                                            "original": {
-                                                "code": "ECONNREFUSED",
-                                                "fatal": true
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "posts-api"
-                ],
-                "summary": "Get posts",
-                "parameters": [
-                    {
-                        "name": "page",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
-                    },
-                    {
-                        "name": "limit",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "20"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                },
-                                "example": {
-                                    "metadata": {
-                                        "traceId": "cd0f9af9-12e5-4744-b090-3f6ee707d94c"
-                                    },
-                                    "resources": [
-                                        {
-                                            "id": 4,
-                                            "title": "title 200300",
-                                            "content": "kfjhg kjshgkjfhgkjfh kgjhfj gkjfh gjfdhgk",
-                                            "likes": 0,
-                                            "createdAt": "2024-12-21T18:21:06.000Z",
-                                            "updatedAt": "2024-12-21T18:21:06.000Z"
-                                        },
-                                        {
-                                            "id": 3,
-                                            "title": "title 200300",
-                                            "content": "kfjhg kjshgkjfhgkjfh kgjhfj gkjfh gjfdhgk",
-                                            "likes": 0,
-                                            "createdAt": "2024-12-21T18:15:24.000Z",
-                                            "updatedAt": "2024-12-21T18:15:24.000Z"
-                                        }
-                                    ],
-                                    "pagination": {
-                                        "totalPages": 3,
-                                        "prevPage": "/posts?page=1&limit=2",
-                                        "nextPage": "/posts?page=3&limit=2"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                },
-                                "example": {
-                                    "metadata": {
-                                        "traceId": "74a9a5a7-876e-4906-b44c-fbe88af2e83a",
-                                        "error": {
-                                            "name": "SequelizeConnectionRefusedError",
-                                            "parent": {
-                                                "code": "ECONNREFUSED",
-                                                "fatal": true
-                                            },
-                                            "original": {
-                                                "code": "ECONNREFUSED",
-                                                "fatal": true
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/posts/{id}": {
-            "get": {
-                "tags": [
-                    "posts-api"
-                ],
-                "summary": "Get post by id",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "required": true,
-                        "example": "5"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                },
-                                "example": {
-                                    "metadata": {
-                                        "traceId": "78d9961e-ba6e-4f5d-a65a-1e4f3cc7323f"
-                                    },
-                                    "resources": {
-                                        "id": 2,
-                                        "title": "title 100100",
-                                        "content": "kfjhg kjshgkjfhgkjfh kgjhfj gkjfh gjfdhgk",
-                                        "likes": 0,
-                                        "createdAt": "2024-12-21T18:07:56.000Z",
-                                        "updatedAt": "2024-12-21T18:07:56.000Z"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                },
-                                "example": {
-                                    "metadata": {
-                                        "traceId": "fcea64a4-eeca-4aaf-ad8b-e21b05220805"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "put": {
-                "tags": [
-                    "posts-api"
-                ],
-                "summary": "Update post",
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "example": {
-                                    "title": "Mauris ac rhoncus velit.",
-                                    "content": "Vestibulum egestas non turpis sit amet condimentum. Cras eget tempus nulla. Duis porta ipsum eu urna imperdiet, in feugiat velit dignissim. Vivamus tempus tortor vel elit elementum dignissim. Etiam non dolor et ante accumsan accumsan nec non velit. Donec in ipsum semper, tempus metus et, eleifend est. Maecenas mi tortor, tincidunt id ultricies eget, dignissim vitae lorem. Aliquam nisi magna, aliquam at odio fringilla, sollicitudin fermentum felis. Donec vehicula vel massa a faucibus. Quisque tincidunt porttitor lorem, id hendrerit ligula consequat et."
-                                }
-                            }
-                        }
-                    }
-                },
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "required": true,
-                        "example": "1"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                },
-                                "example": {
-                                    "metadata": {
-                                        "traceId": "f7778401-b875-4edb-bbfc-ce8be04b262f"
-                                    },
-                                    "resources": {
-                                        "id": 5,
-                                        "title": "Mauris ac rhoncus velit.",
-                                        "content": "Vestibulum egestas non turpis sit amet condimentum. Cras eget tempus nulla. Duis porta ipsum eu urna imperdiet, in feugiat velit dignissim. Vivamus tempus tortor vel elit elementum dignissim. Etiam non dolor et ante accumsan accumsan nec non velit. Donec in ipsum semper, tempus metus et, eleifend est. Maecenas mi tortor, tincidunt id ultricies eget, dignissim vitae lorem. Aliquam nisi magna, aliquam at odio fringilla, sollicitudin fermentum felis. Donec vehicula vel massa a faucibus. Quisque tincidunt porttitor lorem, id hendrerit ligula consequat et.",
-                                        "likes": 5,
-                                        "createdAt": "2024-12-21T18:23:00.000Z",
-                                        "updatedAt": "2024-12-22T09:41:13.000Z"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "posts-api"
-                ],
-                "summary": "Delete post",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "required": true,
-                        "example": "5"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                },
-                                "example": {
-                                    "metadata": {
-                                        "traceId": "9a05f9f9-cec1-4708-a528-f2fc6bbb6a54"
-                                    },
-                                    "resources": {
-                                        "id": 3,
-                                        "title": "title 200300",
-                                        "content": "kfjhg kjshgkjfhgkjfh kgjhfj gkjfh gjfdhgk",
-                                        "likes": -1,
-                                        "createdAt": "2024-12-21T18:15:24.000Z",
-                                        "updatedAt": "2024-12-22T09:11:20.000Z"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                },
-                                "example": {
-                                    "metadata": {
-                                        "traceId": "aff043fe-8aca-4580-a90e-cd8e6480eb24"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/posts/like/{id}": {
-            "post": {
-                "tags": [
-                    "posts-api"
-                ],
-                "summary": "Like post",
-                "requestBody": {
-                    "content": {}
-                },
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "required": true,
-                        "example": "3"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                },
-                                "example": {
-                                    "metadata": {
-                                        "traceId": "fb350370-4fed-4262-9ce9-54fb8adfd5cd"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                },
-                                "example": {
-                                    "metadata": {
-                                        "traceId": "66d89327-ed7c-40fe-8d28-8b16e94bbcc4"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/posts/unlike/{id}": {
-            "post": {
-                "tags": [
-                    "posts-api"
-                ],
-                "summary": "Unlike post",
-                "requestBody": {
-                    "content": {}
-                },
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "required": true,
-                        "example": "5"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                },
-                                "example": {
-                                    "metadata": {
-                                        "traceId": "61319eb5-5e28-4100-bed5-2f65e7438804"
-                                    },
-                                    "resources": 1
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                },
-                                "example": {
-                                    "metadata": {
-                                        "traceId": "6258656d-f092-4736-b3bb-ecc345c34bd5"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/todos": {
-            "get": {
-                "tags": [
-                    "todos-api"
-                ],
-                "summary": "Get todos with pagination",
-                "description": "Get todos with pagination",
-                "parameters": [
-                    {
-                        "name": "page",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
-                    },
-                    {
-                        "name": "limit",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "5"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                },
-                                "example": {
-                                    "metadata": {
-                                        "traceId": "e240894b-a848-4183-9825-87c512818102"
-                                    },
-                                    "resources": [
-                                        {
-                                            "title": "bbb i fkjgdfkjglfkjglkdfjglkfjd uoi ",
-                                            "completed": false,
-                                            "createdAt": "2024-12-19T16:18:05.982Z",
-                                            "updatedAt": "2024-12-19T16:18:05.982Z",
-                                            "id": "6764473d12467b2009a3cdff"
-                                        }
-                                    ],
-                                    "pagination": {
-                                        "totalPages": 4,
-                                        "prevPage": "/todos?page=1&limit=1",
-                                        "nextPage": "/todos?page=3&limit=1"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                },
-                                "example": {
-                                    "metadata": {
-                                        "traceId": "a3deaef6-4daf-4ae6-b5eb-30e27f1aa128"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "post": {
-                "tags": [
-                    "todos-api"
-                ],
-                "summary": "Create todo",
-                "description": "Create todo",
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "example": {
-                                    "title": "todo title"
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                },
-                                "example": {
-                                    "metadata": {
-                                        "traceId": "4b0cf6a2-400f-40ce-98f7-a977a64135d8"
-                                    },
-                                    "resources": {
-                                        "title": "todo title",
-                                        "completed": false,
-                                        "createdAt": "2024-12-20T18:33:16.007Z",
-                                        "updatedAt": "2024-12-20T18:33:16.007Z",
-                                        "id": "6765b86cb7e1d374bfb59d98"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                },
-                                "example": {
-                                    "metadata": {
-                                        "traceId": "9aa90d28-bade-4c98-9c89-47836c2d440f"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/todos/{id}": {
-            "get": {
-                "tags": [
-                    "todos-api"
-                ],
-                "summary": "Get todo by id",
-                "description": "Get todo by id",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "schema": {
-                            "type": "string"
-                        },
-                        "required": true,
-                        "example": "6764473d12467b2009a3cdff"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                },
-                                "example": {
-                                    "metadata": {
-                                        "traceId": "d5810ac9-87f5-43f6-be74-d3542d205bbe"
-                                    },
-                                    "resources": {
-                                        "title": "bbb i fkjgdfkjglfkjglkdfjglkfjd uoi ",
-                                        "completed": false,
-                                        "createdAt": "2024-12-19T16:18:05.982Z",
-                                        "updatedAt": "2024-12-19T16:18:05.982Z",
-                                        "id": "6764473d12467b2009a3cdff"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                },
-                                "example": {
-                                    "metadata": {
-                                        "traceId": "b1121a96-2211-42ee-b6b6-15773d8bd563"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                },
-                                "example": {
-                                    "metadata": {
-                                        "traceId": "a3deaef6-4daf-4ae6-b5eb-30e27f1aa128"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "put": {
-                "tags": [
-                    "todos-api"
-                ],
-                "summary": "Update todo",
-                "description": "Update todo",
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "example": {
-                                    "name": "todo title",
-                                    "completed": true
-                                }
-                            }
-                        }
-                    }
-                },
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "schema": {
-                            "type": "string"
-                        },
-                        "required": true,
-                        "example": "6764474412467b2009a3ce01"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                },
-                                "example": {
-                                    "metadata": {
-                                        "traceId": "eb204a27-b8a5-4ca1-aaa2-85cbf2f8d78c"
-                                    },
-                                    "resources": {
-                                        "title": "todo title",
-                                        "completed": true,
-                                        "createdAt": "2024-12-20T18:33:16.007Z",
-                                        "updatedAt": "2024-12-20T18:35:17.193Z",
-                                        "id": "6765b86cb7e1d374bfb59d98"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                },
-                                "example": {
-                                    "metadata": {
-                                        "traceId": "023b2407-980e-40f0-abff-6d4c915e980b"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "todos-api"
-                ],
-                "summary": "Delete todo",
-                "description": "Delete todo",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "schema": {
-                            "type": "string"
-                        },
-                        "required": true,
-                        "example": "6764474412467b2009a3ce01"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                },
-                                "example": {
-                                    "metadata": {
-                                        "traceId": "6dc71c56-a94f-4f65-b77b-26e65ae6bf98"
-                                    },
-                                    "resources": {
-                                        "title": "ccc i fkjgdfkjglfkjglkdfjglkfjd uoi ",
-                                        "completed": false,
-                                        "createdAt": "2024-12-19T16:18:12.137Z",
-                                        "updatedAt": "2024-12-19T16:18:12.137Z",
-                                        "id": "6764474412467b2009a3ce01"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                },
-                                "example": {
-                                    "metadata": {
-                                        "traceId": "add1da98-6f9e-43c1-ab02-1a595018ab7a"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/comments": {
-            "post": {
-                "tags": [
-                    "comments-api"
-                ],
-                "summary": "Create comment",
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "example": {
-                                    "content": "Phasellus interdum vehicula mattis. Mauris id rhoncus diam, vel luctus augue. Praesent aliquam risus at convallis pulvinar. Vestibulum vel lacus augue. Nunc at tellus interdum est euismod aliquet a interdum tortor. Aenean in dictum sem. Sed quis risus quis lectus scelerisque mollis.",
-                                    "postId": 1,
-                                    "parentId": 3
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                },
-                                "example": {
-                                    "metadata": {
-                                        "traceId": "cbc9ef31-9c70-4f87-99c2-d962b957f792"
-                                    },
-                                    "resources": {
-                                        "likes": 0,
-                                        "id": 5,
-                                        "postId": 5,
-                                        "content": "Phasellus interdum vehicula mattis. Mauris id rhoncus diam, vel luctus augue. Praesent aliquam risus at convallis pulvinar. Vestibulum vel lacus augue. Nunc at tellus interdum est euismod aliquet a interdum tortor. Aenean in dictum sem. Sed quis risus quis lectus scelerisque mollis.",
-                                        "parentId": 3,
-                                        "updatedAt": "2024-12-22T20:00:41.140Z",
-                                        "createdAt": "2024-12-22T20:00:41.140Z"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                },
-                                "example": {
-                                    "metadata": {
-                                        "traceId": "e236d437-82d6-43da-8a38-1fab83683247",
-                                        "error": {
-                                            "code": 100,
-                                            "message": "Mismatch: parent comment belongs to post ID 1, not 5."
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                },
-                                "example": {
-                                    "metadata": {
-                                        "traceId": "dd611991-fa86-4a13-808b-2c19b2fb7019",
-                                        "error": {
-                                            "code": "",
-                                            "message": "Cannot add or update a child row: a foreign key constraint fails (`devel`.`comments`, CONSTRAINT `comments_ibfk_2` FOREIGN KEY (`parent_comment_id`) REFERENCES `comments` (`id`) ON DELETE CASCADE)"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "comments-api"
-                ],
-                "summary": "Get comments",
-                "parameters": [
-                    {
-                        "name": "page",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
-                    },
-                    {
-                        "name": "limit",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "5"
-                    },
-                    {
-                        "name": "postId",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
-                    },
-                    {
-                        "name": "parentId",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "description": "ommit if its first level",
-                        "example": "3"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                },
-                                "example": {
-                                    "metadata": {
-                                        "traceId": "3b9201e2-aa61-423b-95b1-7924f2f2bdb9"
-                                    },
-                                    "resources": [
-                                        {
-                                            "id": 15,
-                                            "postId": 1,
-                                            "parentId": 12,
-                                            "content": "Phasellus interdum vehicula mattis. Mauris id rhoncus diam, vel luctus augue. Praesent aliquam risus at convallis pulvinar. Vestibulum vel lacus augue. Nunc at tellus interdum est euismod aliquet a interdum tortor. Aenean in dictum sem. Sed quis risus quis lectus scelerisque mollis.",
-                                            "likes": 0,
-                                            "createdAt": "2024-12-22T22:31:58.000Z",
-                                            "updatedAt": "2024-12-22T22:31:58.000Z"
-                                        }
-                                    ],
-                                    "pagination": {
-                                        "totalPages": 11,
-                                        "prevPage": "/api/comments?page=1&limit=1",
-                                        "nextPage": "/api/comments?page=3&limit=1"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                },
-                                "example": {
-                                    "metadata": {
-                                        "traceId": "593ea823-2115-44a8-b94d-d5b9e3e6d56d"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                },
-                                "example": {
-                                    "metadata": {
-                                        "traceId": "f90e86bf-5e94-4a30-8423-5f557f606b7d",
-                                        "error": {
-                                            "code": "",
-                                            "message": "WHERE parameter \"parent_id\" has invalid \"undefined\" value"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/comments/like/{id}": {
-            "post": {
-                "tags": [
-                    "comments-api"
-                ],
-                "summary": "like",
-                "requestBody": {
-                    "content": {}
-                },
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "required": true,
-                        "example": "1"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                },
-                                "example": {
-                                    "metadata": {
-                                        "traceId": "449a49ef-7018-4940-bac5-87f853d557eb"
-                                    },
-                                    "resources": 1
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                },
-                                "example": {
-                                    "metadata": {
-                                        "traceId": "8f5b5f5d-517e-4e77-806f-8ecf9db12b17"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                },
-                                "example": {
-                                    "metadata": {
-                                        "traceId": "a3c70820-d7d9-465f-8497-30081e43e7ed",
-                                        "error": {
-                                            "code": "",
-                                            "message": "Truncated incorrect DOUBLE value: 'mnbmnmnbmn'"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/comments/unlike/{id}": {
-            "post": {
-                "tags": [
-                    "comments-api"
-                ],
-                "summary": "Unlike comment",
-                "requestBody": {
-                    "content": {}
-                },
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "required": true,
-                        "example": "1"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                },
-                                "example": {
-                                    "metadata": {
-                                        "traceId": "f79ec016-c2f1-4980-a718-32733983c813"
-                                    },
-                                    "resources": 1
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/comments/{id}": {
-            "get": {
-                "tags": [
-                    "comments-api"
-                ],
-                "summary": "Get comment by id",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "required": true,
-                        "example": "3"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                },
-                                "example": {
-                                    "metadata": {
-                                        "traceId": "74a064bf-7ee1-4de8-9785-04ef1243bb4c"
-                                    },
-                                    "resources": {
-                                        "id": 1,
-                                        "postId": 1,
-                                        "parentId": null,
-                                        "content": "Phasellus interdum vehicula mattis. Mauris id rhoncus diam, vel luctus augue. Praesent aliquam risus at convallis pulvinar. Vestibulum vel lacus augue. Nunc at tellus interdum est euismod aliquet a interdum tortor. Aenean in dictum sem. Sed quis risus quis lectus scelerisque mollis.",
-                                        "likes": 0,
-                                        "createdAt": "2024-12-23T19:06:07.000Z",
-                                        "updatedAt": "2024-12-23T19:31:47.000Z"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                },
-                                "example": {
-                                    "metadata": {
-                                        "traceId": "7672bc37-3d50-4d36-8a96-7ccf5110f860"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "comments-api"
-                ],
-                "summary": "Delete comment",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "required": true,
-                        "example": "1"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                },
-                                "example": {
-                                    "metadata": {
-                                        "traceId": "5efc125b-41fc-439d-a7fa-cfcb5af2c5b3"
-                                    },
-                                    "resources": {
-                                        "id": 1,
-                                        "postId": 1,
-                                        "parentId": null,
-                                        "content": "Phasellus interdum vehicula mattis. Mauris id rhoncus diam, vel luctus augue. Praesent aliquam risus at convallis pulvinar. Vestibulum vel lacus augue. Nunc at tellus interdum est euismod aliquet a interdum tortor. Aenean in dictum sem. Sed quis risus quis lectus scelerisque mollis.",
-                                        "likes": 0,
-                                        "createdAt": "2024-12-23T19:06:07.000Z",
-                                        "updatedAt": "2024-12-23T19:31:47.000Z"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                },
-                                "example": {
-                                    "metadata": {
-                                        "traceId": "62c6b10e-c121-4718-8631-527531f7025c"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                },
-                                "example": {
-                                    "metadata": {
-                                        "traceId": "043eb659-ad12-4ea3-8693-7e563813b0ee"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+    {
+      "url": "http://localhost:5000"
     }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "posts-api"
+    },
+    {
+      "name": "comments-api"
+    },
+    {
+      "name": "todos-api"
+    }
+  ],
+  "paths": {
+    "/api/posts": {
+      "post": {
+        "tags": [
+          "posts-api"
+        ],
+        "summary": "Create",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/postRQ"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/postRS"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "posts-api"
+        ],
+        "summary": "Get All",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/postGetAllRS"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/posts/{id}": {
+      "get": {
+        "tags": [
+          "posts-api"
+        ],
+        "summary": "Get",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "number"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/postRS"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "posts-api"
+        ],
+        "summary": "Update",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/postRQ"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "number"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/postRS"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "posts-api"
+        ],
+        "summary": "Delete",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "number"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/metadata"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/posts/like/{id}": {
+      "post": {
+        "tags": [
+          "posts-api"
+        ],
+        "summary": "Like",
+        "requestBody": {
+          "content": {}
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "number"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/metadata"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/posts/unlike/{id}": {
+      "post": {
+        "tags": [
+          "posts-api"
+        ],
+        "summary": "Unlike",
+        "requestBody": {
+          "content": {}
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "number"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/metadata"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/comments": {
+      "post": {
+        "tags": [
+          "comments-api"
+        ],
+        "summary": "Create",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/commentRQ"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/commentRS"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "comments-api"
+        ],
+        "summary": "Get All",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "postId",
+            "in": "query",
+            "schema": {
+              "type": "number"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/commentGetAllRS"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/comments/like/{id}": {
+      "post": {
+        "tags": [
+          "comments-api"
+        ],
+        "summary": "Like",
+        "requestBody": {
+          "content": {}
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "number"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/metadata"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/comments/unlike/{id}": {
+      "post": {
+        "tags": [
+          "comments-api"
+        ],
+        "summary": "Unlike",
+        "requestBody": {
+          "content": {}
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "number"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/metadata"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/comments/{id}": {
+      "delete": {
+        "tags": [
+          "comments-api"
+        ],
+        "summary": "Delete",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "number"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/metadata"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/todos": {
+      "post": {
+        "tags": [
+          "todos-api"
+        ],
+        "summary": "Create",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/todoCreateRQ"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/todoRS"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "todos-api"
+        ],
+        "summary": "Get All",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/todoGetAllRS"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/todos/{id}": {
+      "get": {
+        "tags": [
+          "todos-api"
+        ],
+        "summary": "Get",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/todoRS"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "todos-api"
+        ],
+        "summary": "Update",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/todoUpdateRQ"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/todoRS"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "todos-api"
+        ],
+        "summary": "Delete",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/metadata"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "postRS": {
+        "type": "object",
+        "properties": {
+          "metadata": {
+            "$ref": "#/components/schemas/metadata"
+          },
+          "resources": {
+            "$ref": "#/components/schemas/postResource"
+          }
+        }
+      },
+      "postGetAllRS": {
+        "type": "object",
+        "properties": {
+          "metadata": {
+            "$ref": "#/components/schemas/metadata"
+          },
+          "resources": {
+            "type": "object",
+            "items": {
+              "$ref": "#/components/schemas/postResource"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/pagination"
+          }
+        }
+      },
+      "postRQ": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          }
+        }
+      },
+      "postResource": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "userId": {
+            "type": "number"
+          },
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "likes": {
+            "type": "number"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "commentRS": {
+        "type": "object",
+        "properties": {
+          "metadata": {
+            "$ref": "#/components/schemas/metadata"
+          },
+          "resources": {
+            "$ref": "#/components/schemas/commentResource"
+          }
+        }
+      },
+      "commentRQ": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string"
+          },
+          "postId": {
+            "type": "number"
+          }
+        }
+      },
+      "commentResource": {
+        "type": "object",
+        "properties": {
+          "likes": {
+            "type": "number"
+          },
+          "id": {
+            "type": "number"
+          },
+          "postId": {
+            "type": "number"
+          },
+          "parentId": {
+            "type": "number",
+            "format": "nullable"
+          },
+          "userId": {
+            "type": "number"
+          },
+          "content": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "commentGetAllRS": {
+        "type": "object",
+        "properties": {
+          "metadata": {
+            "$ref": "#/components/schemas/metadata"
+          },
+          "resources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/commentResource"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/pagination"
+          }
+        }
+      },
+      "todoResource": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "number"
+          },
+          "title": {
+            "type": "string"
+          },
+          "completed": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "todoCreateRQ": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          }
+        }
+      },
+      "todoUpdateRQ": {
+        "type": "object",
+        "properties": {
+          "completed": {
+            "type": "boolean"
+          }
+        }
+      },
+      "todoRS": {
+        "type": "object",
+        "properties": {
+          "metadata": {
+            "$ref": "#/components/schemas/metadata"
+          },
+          "resources": {
+            "$ref": "#/components/schemas/todoResource"
+          }
+        }
+      },
+      "todoGetAllRS": {
+        "type": "object",
+        "properties": {
+          "metadata": {
+            "$ref": "#/components/schemas/metadata"
+          },
+          "resources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/todoResource"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/pagination"
+          }
+        }
+      },
+      "metadata": {
+        "type": "object",
+        "properties": {
+          "traceId": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "pagination": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "number"
+          },
+          "totalPages": {
+            "type": "number"
+          },
+          "nextPage": {
+            "type": "string"
+          },
+          "prevPage": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
 }
