@@ -7,7 +7,6 @@ const debug = require('debug')('coreserve:PostsController');
 const context = require('#core/execution-context/context.js');
 const getConfiguration = require('#config/configuration.js');
 const Validator = require('#core/utils/Validator.js');
-const {ValidationError, ApiErrorCodes} = require('#core/errors/index.js');
 const {PaginationBuilder, ErrorHandler, SuccessHandler} = require('#apis/index.js');
 const {ResponseMessages} = require("#apis/consts/index.js");
 
@@ -27,19 +26,22 @@ class PostsController {
         return PostsController.#instance;
     }
 
+    /**
+     *
+     * @param request
+     * @param request.title
+     * @param request.content
+     * @returns {Promise<{statusCode: StatusCodes, error: ApiError}|{statusCode: StatusCodes.OK, resources, message}>}
+     */
     static async create(request) {
         debug('create called with:', request);
         try {
             const {title, content} = request;
             const {userId} = context.getUser();
-            const errors = new Validator()
+            new Validator()
                 .isNonEmptyString(title, 'title')
                 .isNonEmptyString(content, 'content')
                 .validate();
-
-            if (errors !== null) {
-                throw new ValidationError('Failed to create post due to invalid input. Ensure title and content are valid strings.', ApiErrorCodes.BAD_REQUEST, errors);
-            }
 
             const result = await crud.createPost({userId, title, content});
             return SuccessHandler.handle(
@@ -48,17 +50,32 @@ class PostsController {
                 ResponseMessages.RESOURCE_CREATED
             );
         } catch (err) {
-            logger.error('An error occurred during post creation.', err);
+            logger.error(err.message || 'Execution error.', err);
             return ErrorHandler.handle(err);
         }
     }
 
+    /**
+     *
+     * @param request
+     * @param request.page
+     * @param request.limit
+     * @returns {Promise<{statusCode: StatusCodes, error: ApiError}|*>}
+     */
     static async getAll(request) {
         debug('getAll called with:', request);
         try {
             const config = getConfiguration().posts;
             const {page = 1, limit = config.pagination.limit} = request;
-            const paginationBuilder = new PaginationBuilder(page, limit);
+            const pageNumber = Number(page);
+            const limitNumber = Number(limit);
+
+            new Validator()
+                .isValidNumber(pageNumber, 'page')
+                .isValidNumber(limitNumber, 'limit')
+                .validate();
+
+            const paginationBuilder = new PaginationBuilder(pageNumber, limitNumber);
             const {userId} = context.getUser();
 
             const {posts, total} = await crud.getPosts({
@@ -77,101 +94,116 @@ class PostsController {
                 ResponseMessages.RESOURCE_FETCHED,
                 paginationBuilder.build());
         } catch (err) {
-            logger.error('Failed to fetch posts due to an unexpected error.', err);
+            logger.error(err.message || 'Execution error.', err);
             return ErrorHandler.handle(err);
         }
     }
 
+    /**
+     *
+     * @param request
+     * @param request.id
+     * @returns {Promise<{statusCode: StatusCodes, error: ApiError}|{statusCode: StatusCodes.OK, resources, message}>}
+     */
     static async getById(request) {
         debug('getById called with:', request);
         try {
             const {id} = request;
             const idNumber = Number(id);
             const {userId} = context.getUser();
-            const errors = new Validator()
+
+            new Validator()
                 .isValidNumber(idNumber, 'id')
                 .validate();
-
-            if (errors) {
-                throw new ValidationError('Invalid input for fetching post by ID. Ensure the ID is a valid number.', ApiErrorCodes.BAD_REQUEST, errors);
-            }
 
             const result = await crud.getPostById({id: idNumber, userId});
 
             return SuccessHandler.handle(StatusCodes.OK, result || {}, ResponseMessages.RESOURCE_FETCHED);
         } catch (err) {
-            logger.error('An error occurred while fetching post by ID.', err);
+            logger.error(err.message || 'Execution error.', err);
             return ErrorHandler.handle(err);
         }
     }
 
+    /**
+     *
+     * @param request
+     * @param request.id
+     * @returns {Promise<{statusCode: StatusCodes, error: ApiError}|{statusCode: StatusCodes.OK, resources, message}>}
+     */
     static async remove(request) {
         debug('remove called with:', request);
         try {
             const {id} = request;
             const idNumber = Number(id);
             const {userId} = context.getUser();
-            const errors = new Validator()
+
+            new Validator()
                 .isValidNumber(idNumber, 'id')
                 .validate();
-
-            if (errors) {
-                throw new ValidationError('Failed to remove post due to invalid input. Ensure the ID is a valid number.', ApiErrorCodes.BAD_REQUEST, errors);
-            }
 
             const {deleted, post} = await crud.deletePost({id: idNumber, userId});
 
             return SuccessHandler.handle(StatusCodes.OK, post, `${ResponseMessages.RESOURCE_DELETED}:${deleted}`);
         } catch (err) {
-            logger.error('An error occurred while trying to remove the post.', err);
+            logger.error(err.message || 'Execution error.', err);
             return ErrorHandler.handle(err);
         }
     }
 
+    /**
+     *
+     * @param request
+     * @param request.id
+     * @param request.title
+     * @param request.content
+     * @returns {Promise<{statusCode: StatusCodes, error: ApiError}|{statusCode: StatusCodes.OK, resources, message}>}
+     */
     static async update(request) {
         debug('update called with:', request);
         try {
             const {id, title, content} = request;
             const {userId} = context.getUser();
             const idNumber = Number(id);
-            const errors = new Validator()
+
+            new Validator()
                 .isValidNumber(idNumber, 'id')
                 .isNonEmptyString(title, 'title')
                 .isNonEmptyString(content, 'content')
                 .validate();
 
-            if (errors) {
-                throw new ValidationError('Invalid input for updating the post. Ensure all fields are correctly formatted.', ApiErrorCodes.BAD_REQUEST, errors);
-            }
-
             const {updated, post} = await crud.updatePost({title, content}, {id: idNumber, userId});
 
             return SuccessHandler.handle(StatusCodes.OK, post, `${ResponseMessages.RESOURCE_UPDATED}:${updated}`);
         } catch (err) {
-            logger.error('An error occurred during the update operation for the post.', err);
+            logger.error(err.message || 'Execution error.', err);
             return ErrorHandler.handle(err);
         }
     }
 
+    /**
+     *
+     * @param request
+     * @param request.id
+     * @param request.op
+     * @returns {Promise<{statusCode: StatusCodes, error: ApiError}|{statusCode: StatusCodes.OK, resources, message}>}
+     */
     static async likeUnlike(request) {
         debug('likeUnlike called with:', request);
         try {
             const {id, op} = request;
             const idNumber = Number(id);
             const {userId} = context.getUser();
-            const errors = new Validator()
+
+            new Validator()
                 .isValidNumber(idNumber, 'id')
                 .validate();
-
-            if (errors) {
-                throw new ValidationError('Failed to process like/unlike operation due to invalid input. Ensure the ID is valid.', ApiErrorCodes.BAD_REQUEST, errors);
-            }
 
             const result = await crud.updateLikes({like: op}, {id: idNumber, userId});
 
             return SuccessHandler.handle(StatusCodes.OK, {}, `${ResponseMessages.RESOURCE_PROCEEDED}:${result}`);
         } catch (err) {
-            logger.error('An error occurred while processing like/unlike operation.', err);
+            logger.error(err.message || 'Execution error.', err);
             return ErrorHandler.handle(err);
         }
     }

@@ -6,7 +6,6 @@ const logger = require('#core/logger/index.js')('CommentsController');
 const debug = require('debug')('coreserve:CommentsController');
 const {ResponseMessages} = require('../consts');
 const getConfiguration = require('#config/configuration.js');
-const {ApiErrorCodes, ValidationError} = require('#core/errors/index.js');
 const Validator = require('#core/utils/Validator.js');
 const context = require('#core/execution-context/context.js');
 const {ErrorHandler, PaginationBuilder, SuccessHandler} = require('#apis/index.js')
@@ -49,24 +48,16 @@ class CommentsController {
                 parentIdNumber = null;
             }
 
-            const errors = new Validator()
+            new Validator()
                 .isValidNumber(postIdNumber, 'postId')
                 .isValidNumberOrNull(parentIdNumber, 'parentId')
                 .isNonEmptyString(content, 'content')
                 .validate();
 
-            if (errors !== null) {
-                throw new ValidationError(
-                    'Validation Error: Invalid input while creating a comment',
-                    ApiErrorCodes.BAD_REQUEST,
-                    errors
-                );
-            }
-
             const result = await crud.createComment({postId: postIdNumber, parentId: parentIdNumber, userId, content});
             return SuccessHandler.handle(StatusCodes.CREATED, result, ResponseMessages.RESOURCE_CREATED);
         } catch (err) {
-            logger.error('Execution Error: Failed to create comment', err);
+            logger.error(err.message || 'Execution error.', err);
             return ErrorHandler.handle(err);
         }
     }
@@ -84,9 +75,6 @@ class CommentsController {
         debug('getAll called with:', request);
         try {
             const config = getConfiguration().comments;
-            const {page = 1, limit = config.pagination.limit} = request;
-
-            const paginationBuilder = new PaginationBuilder(page, limit);
 
             const {userId} = context.getUser();
             const {postId, parentId} = request;
@@ -97,18 +85,20 @@ class CommentsController {
                 parentIdNumber = null;
             }
 
-            const errors = new Validator()
+            const {page = 1, limit = config.pagination.limit} = request;
+
+            const pageNumber = Number(page);
+            const limitNumber = Number(limit);
+
+            new Validator()
                 .isValidNumber(postIdNumber, 'postId')
                 .isValidNumberOrNull(parentIdNumber, 'parentId')
+                .isValidNumber(pageNumber, 'page')
+                .isValidNumber(limitNumber, 'limit')
                 .validate();
 
-            if (errors !== null) {
-                throw new ValidationError(
-                    'Validation Error: Invalid input while fetching comments',
-                    ApiErrorCodes.BAD_REQUEST,
-                    errors
-                );
-            }
+            const paginationBuilder = new PaginationBuilder(pageNumber, limitNumber);
+
 
             const {comments, total} = await crud.getComments(
                 {
@@ -131,7 +121,7 @@ class CommentsController {
                 paginationBuilder.build()
             );
         } catch (err) {
-            logger.error('Execution Error: Failed to fetch comments', err);
+            logger.error(err.message || 'Execution error.', err);
             return ErrorHandler.handle(err);
         }
     }
@@ -142,21 +132,13 @@ class CommentsController {
             const {id} = request;
             const idNumber = Number(id);
             const {userId} = context.getUser();
-            const errors = new Validator().isValidNumber(idNumber, 'id').validate();
-
-            if (errors) {
-                throw new ValidationError(
-                    'Validation Error: Invalid input while removing a comment',
-                    ApiErrorCodes.BAD_REQUEST,
-                    errors
-                );
-            }
+            new Validator().isValidNumber(idNumber, 'id').validate();
 
             const {deleted, comment} = await crud.deleteComment({id: idNumber, userId});
 
             return SuccessHandler.handle(StatusCodes.OK, comment, ResponseMessages.RESOURCE_DELETED);
         } catch (err) {
-            logger.error('Execution Error: Failed to delete comment', err);
+            logger.error(err.message || 'Execution error.', err);
             return ErrorHandler.handle(err);
         }
     }
@@ -167,21 +149,13 @@ class CommentsController {
             const {id, op} = request;
             const idNumber = Number(id);
             const {userId} = context.getUser();
-            const errors = new Validator().isValidNumber(idNumber, 'id').validate();
-
-            if (errors) {
-                throw new ValidationError(
-                    'Validation Error: Invalid input while liking/unliking a comment',
-                    ApiErrorCodes.BAD_REQUEST,
-                    errors
-                );
-            }
+            new Validator().isValidNumber(idNumber, 'id').validate();
 
             const result = await crud.updateLikes({like: op}, {id: idNumber, userId});
 
             return SuccessHandler.handle(StatusCodes.OK, {}, `${ResponseMessages.RESOURCE_PROCEEDED}: ${result}`);
         } catch (err) {
-            logger.error('Execution Error: Failed to process like/unlike', err);
+            logger.error(err.message || 'Execution error.', err);
             return ErrorHandler.handle(err);
         }
     }

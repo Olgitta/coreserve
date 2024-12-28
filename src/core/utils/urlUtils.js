@@ -10,3 +10,13 @@ module.exports.updateQueryParams = function (url, payload = {}) {
 
     return urlObj.pathname + urlObj.search;
 }
+
+module.exports.getUrlPath = function (url) {
+    if (!url) {
+        return null;
+    }
+
+    const urlObj = new URL(url, 'http://dummy-base');
+
+    return urlObj.pathname;
+}

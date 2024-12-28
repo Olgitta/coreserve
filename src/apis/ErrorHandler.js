@@ -12,10 +12,6 @@ class ErrorHandler {
         }
     }
 
-    /**
-     * Get the singleton instance of the ErrorHandler class
-     * @returns {ErrorHandler} Singleton instance
-     */
     static getInstance() {
         if (!ErrorHandler.#instance) {
             ErrorHandler.#instance = this;
