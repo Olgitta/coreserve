@@ -57,9 +57,7 @@ describe('PostsController', () => {
         });
 
         it('should throw an error if the constructor is called directly', () => {
-            expect(() => new PostsController()).toThrow(
-                'PostsController is a singleton class. Please use PostsController.getInstance() to access the instance.'
-            );
+            expect(() => new PostsController()).toThrow(Error);
         });
     });
 

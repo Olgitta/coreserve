@@ -8,7 +8,7 @@ module.exports = {createTodo, updateTodo, deleteTodo, getTodoById, getTodos};
 /**
  *
  * @param payload
- * @returns {Promise<TodoModel>}
+ * @returns {Promise<Query<Document>>}
  */
 async function createTodo(payload) {
     debug('createTodo called with:', {payload});
@@ -20,21 +20,22 @@ async function createTodo(payload) {
 
 /**
  *
- * @param payload
- * @returns {Promise<{todos,total}>}
+ * @param options
+ * @param filter
+ * @returns {Promise<{todos: [Query<Document>]}, {total: Number}>}
  */
-async function getTodos(payload) {
-    debug('getTodos called with:', {payload});
+async function getTodos(options, filter) {
+    debug('getTodos called with:', {options, filter});
 
-    const {userId, skip, limit} = payload;
-    const todos = await TodoModel.find({userId})
+    const {skip, limit} = options;
+    const result = await TodoModel.find(filter)
         .skip(skip)
         .limit(limit)
         .sort({updatedAt: -1});
 
     const total = await TodoModel.countDocuments();
 
-    return {todos, total};
+    return {todos: result, total};
 }
 
 /**
@@ -45,7 +46,12 @@ async function getTodos(payload) {
 async function getTodoById(filter) {
     debug('getTodoById called with:', {filter});
 
-    return TodoModel.findOne(filter);
+    const {id, userId} = filter;
+
+    return TodoModel.findOne({
+        _id: id,
+        userId: userId
+    });
 }
 
 /**
@@ -57,7 +63,12 @@ async function getTodoById(filter) {
 async function updateTodo(payload, filter) {
     debug('updateTodo called with:', {payload, filter});
 
-    return TodoModel.findOneAndUpdate(filter, payload);
+    const {id, userId} = filter;
+
+    return TodoModel.findOneAndUpdate({
+        _id: id,
+        userId: userId
+    }, payload);
 }
 
 /**

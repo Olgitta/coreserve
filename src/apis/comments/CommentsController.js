@@ -15,9 +15,7 @@ class CommentsController {
 
     constructor() {
         if (new.target === CommentsController) {
-            throw new Error(
-                'Initialization Error: CommentsController is a singleton. Use CommentsController.getInstance() to access the instance.'
-            );
+            throw new Error('CommentsController is a singleton class. Please use CommentsController.getInstance() to access the instance.');
         }
     }
 
@@ -98,7 +96,6 @@ class CommentsController {
                 .validate();
 
             const paginationBuilder = new PaginationBuilder(pageNumber, limitNumber);
-
 
             const {comments, total} = await crud.getComments(
                 {

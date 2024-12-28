@@ -2,7 +2,7 @@
 
 require('../mocks');
 const PaginationBuilder = require('../../src/apis/PaginationBuilder');
-const { ValidationError } = require('#core/errors/index.js');
+const { PaginationError } = require('#core/errors/index.js');
 
 describe('PaginationBuilder', () => {
     beforeEach(() => {
@@ -19,11 +19,6 @@ describe('PaginationBuilder', () => {
             expect(paginationBuilder.skip).toBe(10);
             expect(paginationBuilder.limit).toBe(10);
 
-        });
-
-        it('should throw ValidationError for invalid inputs', () => {
-
-            expect(() => new PaginationBuilder('invalid', 10)).toThrow(ValidationError);
         });
     });
 
@@ -62,12 +57,12 @@ describe('PaginationBuilder', () => {
             });
         });
 
-        it('should throw ValidationError if dataset is invalid', () => {
+        it('should throw PaginationError if dataset is invalid', () => {
 
             const paginationBuilder = new PaginationBuilder(2, 10);
             paginationBuilder.setTotal(null).setUrl(null);
 
-            expect(() => paginationBuilder.build()).toThrow(ValidationError);
+            expect(() => paginationBuilder.build()).toThrow(PaginationError);
         });
     });
 

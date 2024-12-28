@@ -11,10 +11,6 @@ class SuccessHandler {
         }
     }
 
-    /**
-     * Get the singleton instance of the SuccessHandler class
-     * @returns {SuccessHandler} Singleton instance
-     */
     static getInstance() {
         if (!SuccessHandler.#instance) {
             SuccessHandler.#instance = this;

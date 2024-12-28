@@ -1,40 +1,48 @@
 'use strict';
-//todo: remove
-module.exports.ApiErrorCodes = {
-    GENERAL_ERROR: 'general_error',
-    BAD_REQUEST: 'bad_request',
-}
 
 class ApiError extends Error {
-    constructor(message, code, details) {
+    constructor(message, details) {
         super(message);
-        this.code = code;
         this.details = details;
     }
 
     toJSON() {
         return {
             message: this.message,
-            code: this.code,
             details: this.details,
         };
     }
 }
 
-//todo: delete ValidationError and use ApiError with StatusCodes
-class ValidationError extends ApiError {
-    /**
-     *
-     * @param message
-     * @param code
-     * @param details
-     */
-    constructor(message, code, details) {
+class PaginationError extends Error {
+    constructor(message, details) {
         super(message);
-        this.code = code;
         this.details = details;
+    }
+
+    toJSON() {
+        return {
+            message: this.message,
+            details: this.details,
+        };
+    }
+}
+
+class ValidationError extends TypeError {
+
+    constructor(message, details) {
+        super(message);
+        this.details = details;
+    }
+
+    toJSON() {
+        return {
+            message: this.message,
+            details: this.details,
+        };
     }
 }
 
 module.exports.ApiError = ApiError;
+module.exports.PaginationError = PaginationError;
 module.exports.ValidationError = ValidationError;

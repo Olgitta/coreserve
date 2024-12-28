@@ -1,7 +1,7 @@
 'use strict';
 
 const {StatusCodes} = require('http-status-codes');
-const {ApiError, ValidationError, ApiErrorCodes} = require('../core/errors');
+const {ApiError, ValidationError, PaginationError} = require('../core/errors');
 
 class ErrorHandler {
     static #instance;
@@ -23,18 +23,22 @@ class ErrorHandler {
      *
      * @param err
      * @param statusCode
-     * @returns {{statusCode: StatusCodes, error: ApiError}}
+     * @returns {{statusCode: StatusCodes.INTERNAL_SERVER_ERROR, error: ApiError}|{statusCode: StatusCodes.INTERNAL_SERVER_ERROR, error}}
      */
     static handle(err, statusCode = StatusCodes.INTERNAL_SERVER_ERROR) {
 
         if (err instanceof ValidationError) {
             statusCode = StatusCodes.BAD_REQUEST;
         }
-//todo: delete ApiErrorCodes and use StatusCodes
+
+        if (err instanceof PaginationError) {
+            statusCode = StatusCodes.INTERNAL_SERVER_ERROR;
+        }
+
         if (process.env.NODE_ENV === 'production') {
             return {
                 statusCode: statusCode,
-                error: new ApiError('Something went wrong, try again later...', ApiErrorCodes.GENERAL_ERROR),
+                error: new ApiError('Something went wrong, try again later...'),
             };
         }
 

@@ -8,7 +8,7 @@ const context = require('#core/execution-context/context.js');
 const getConfiguration = require('#config/configuration.js');
 const Validator = require('#core/utils/Validator.js');
 const {PaginationBuilder, ErrorHandler, SuccessHandler} = require('#apis/index.js');
-const {ResponseMessages} = require("#apis/consts/index.js");
+const {ResponseMessages} = require('#apis/consts/index.js');
 
 class PostsController {
     static #instance;

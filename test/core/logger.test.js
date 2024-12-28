@@ -1,3 +1,5 @@
+'use strict';
+
 const {faker} = require('@faker-js/faker');
 
 const {createCtx, getCtx, getTraceId} = require('../../src/core/execution-context/context');

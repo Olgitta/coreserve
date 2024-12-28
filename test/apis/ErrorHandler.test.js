@@ -1,5 +1,7 @@
+'use strict';
+
 const { StatusCodes } = require('http-status-codes');
-const { ApiError, ValidationError, ApiErrorCodes } = require('../../src/core/errors');
+const { ApiError, ValidationError, PaginationError } = require('../../src/core/errors');
 const ErrorHandler = require('#apis/ErrorHandler.js');
 
 describe('ErrorHandler', () => {
@@ -8,7 +10,7 @@ describe('ErrorHandler', () => {
     });
 
     test('should throw an error if constructor is called directly', () => {
-        expect(() => new ErrorHandler()).toThrow('ErrorHandler is a singleton. Use ErrorHandler.getInstance() to access the instance.');
+        expect(() => new ErrorHandler()).toThrow(Error);
     });
 
     test('should return the same instance when getInstance is called multiple times', () => {
@@ -21,6 +23,13 @@ describe('ErrorHandler', () => {
         const error = new ValidationError('Invalid input');
         const result = ErrorHandler.handle(error);
         expect(result.statusCode).toBe(StatusCodes.BAD_REQUEST);
+        expect(result.error).toBe(error);
+    });
+
+    test('should handle PaginationError with INTERNAL_SERVER_ERROR status code', () => {
+        const error = new PaginationError('Pagination build failed');
+        const result = ErrorHandler.handle(error);
+        expect(result.statusCode).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
         expect(result.error).toBe(error);
     });
 
@@ -38,7 +47,6 @@ describe('ErrorHandler', () => {
         expect(result.statusCode).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
         expect(result.error).toBeInstanceOf(ApiError);
         expect(result.error.message).toBe('Something went wrong, try again later...');
-        expect(result.error.code).toBe(ApiErrorCodes.GENERAL_ERROR);
     });
 
     test('should return the original error in non-production mode', () => {

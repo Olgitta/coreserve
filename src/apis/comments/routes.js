@@ -4,7 +4,7 @@ const express = require('express');
 const router = express.Router();
 const CommentsController = require('./CommentsController');
 const LikeOps = require('./LikeOps');
-const EndpointResultHandler = require('../EndpointResultHandler');
+const EndpointResultHandler = require('../ResultHandler');
 
 router.post('/', async (req, res) => {
     const result = await CommentsController.create(req.body);

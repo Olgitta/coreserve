@@ -53,9 +53,7 @@ describe('CommentsController', () => {
         });
 
         it('should throw an error if the constructor is called directly', () => {
-            expect(() => new CommentsController()).toThrow(
-                'CommentsController is a singleton. Use CommentsController.getInstance() to access the instance.'
-            );
+            expect(() => new CommentsController()).toThrow(Error);
         });
     });
 

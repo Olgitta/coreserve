@@ -2,15 +2,14 @@
 
 const {StatusCodes} = require('http-status-codes');
 const debug = require('debug')('coreserve:TodosController');
-// todo: change to crud = require('./crud'); in all controllers
+
 const crud = require('./crud');
 const logger = require('#core/logger/index.js')('TodosController');
 const Validator = require('#core/utils/Validator.js');
 const context = require('#core/execution-context/context.js');
 const getConfiguration = require('#config/configuration.js');
-const {ApiErrorCodes, ValidationError} = require("#core/errors/index.js");
-const {SuccessHandler, ErrorHandler, PaginationBuilder} = require("#apis/index.js");
-const {getTodos} = require("#apis/todos/crud.js");
+const {SuccessHandler, ErrorHandler, PaginationBuilder} = require('#apis/index.js');
+const {ResponseMessages} = require('#apis/consts/index.js');
 
 class TodosController {
     static #instance;
@@ -31,146 +30,142 @@ class TodosController {
     /**
      *
      * @param request
-     * @returns {Promise<{statusCode: StatusCodes, error: ApiError}|{statusCode: StatusCodes.OK, resources, message}>}
+     * @param request.title
+     * @returns {Promise<{statusCode: StatusCodes.INTERNAL_SERVER_ERROR, error: ApiError}|{statusCode: StatusCodes.INTERNAL_SERVER_ERROR, error}|{statusCode: StatusCodes.OK, resources, message}>}
      */
     static async create(request) {
         try {
             const {title} = request;
             const {userId} = context.getUser();
-            const errors = new Validator()
+
+            new Validator()
                 .isNonEmptyString(title, 'title')
                 .validate();
 
-            if (errors) {
-                throw new ValidationError('Failed to create todo: invalid input for title', ApiErrorCodes.BAD_REQUEST, errors);
-            }
-
             const result = await crud.createTodo({userId, title});
-            return SuccessHandler.handle(StatusCodes.CREATED, result, 'Resource created successfully');
+            return SuccessHandler.handle(StatusCodes.CREATED, result, ResponseMessages.RESOURCE_CREATED);
         } catch (err) {
             logger.error('Error while creating a todo', err);
-            return ErrorHandler.handleError(err);
+            return ErrorHandler.handle(err);
         }
     }
 
     /**
      *
      * @param request
-     * @returns {Promise<{statusCode: StatusCodes, error: ApiError}|*>}
+     * @param request.page
+     * @param request.limit
+     * @returns {Promise<{statusCode: StatusCodes.INTERNAL_SERVER_ERROR, error: ApiError}|{statusCode: StatusCodes.INTERNAL_SERVER_ERROR, error}|*>}
      */
     static async getAll(request) {
         try {
-            const ctx = context.getCtx();
             const {userId} = context.getUser();
             const config = getConfiguration().todos;
             const {page = 1, limit = config.pagination.limit} = request;
-            const paginationBuilder = new PaginationBuilder(page, limit);
+            const pageNumber = Number(page);
+            const limitNumber = Number(limit);
 
-            const {todos, total} = await getTodos({
-                userId,
+            new Validator()
+                .isValidNumber(pageNumber, 'page')
+                .isValidNumber(limitNumber, 'limit')
+                .validate();
+
+            const paginationBuilder = new PaginationBuilder(pageNumber, limitNumber);
+
+            const {todos, total} = await crud.getTodos({
                 skip: paginationBuilder.skip,
                 limit: paginationBuilder.limit,
-            });
+            }, {userId});
 
-            // todo: create context.getRequestUrl
             paginationBuilder
-                .setUrl(ctx?.request?.url)
+                .setUrl(context.getRequestUrl())
                 .setTotal(total);
 
             return SuccessHandler.handleWithPagination(
                 StatusCodes.OK,
                 todos,
-                'Todos fetched successfully',
+                ResponseMessages.RESOURCE_FETCHED,
                 paginationBuilder.build()
             );
         } catch (err) {
-            logger.error('Error while fetching all todos', err);
-            return ErrorHandler.handleError(err);
+            logger.error(err.message || 'Execution error.', err);
+            return ErrorHandler.handle(err);
         }
     }
 
     /**
      *
      * @param request
-     * @returns {Promise<{statusCode: StatusCodes, error: ApiError}|{statusCode: StatusCodes.OK, resources, message}>}
+     * @param request.id
+     * @returns {Promise<{statusCode: StatusCodes.INTERNAL_SERVER_ERROR, error: ApiError}|{statusCode: StatusCodes.INTERNAL_SERVER_ERROR, error}|{statusCode: StatusCodes.OK, resources, message}>}
      */
     static async getById(request) {
         try {
             const {userId} = context.getUser();
             const {id} = request;
 
-            const errors = new Validator()
+            new Validator()
                 .isNonEmptyString(id, 'id')
                 .validate();
 
-            if (errors) {
-                throw new ValidationError('Failed to fetch todo: invalid ID', ApiErrorCodes.BAD_REQUEST, errors);
-            }
+            const result = await crud.getTodoById({id, userId});
 
-            const result = await crud.getTodoById({_id: id, userId});
-
-            return SuccessHandler.handle(StatusCodes.OK, result, 'Todo fetched successfully');
+            return SuccessHandler.handle(StatusCodes.OK, result, ResponseMessages.RESOURCE_FETCHED);
         } catch (err) {
-            logger.error('Error while fetching todo by ID', err);
-            return ErrorHandler.handleError(err);
+            logger.error(err.message || 'Execution error.', err);
+            return ErrorHandler.handle(err);
         }
     }
 
     /**
      *
      * @param request
-     * @returns {Promise<{statusCode: StatusCodes, error: ApiError}|{statusCode: StatusCodes.OK, resources, message}>}
+     * @param request.id
+     * @param request.completed
+     * @returns {Promise<{statusCode: StatusCodes.INTERNAL_SERVER_ERROR, error: ApiError}|{statusCode: StatusCodes.INTERNAL_SERVER_ERROR, error}|{statusCode: StatusCodes.OK, resources, message}>}
      */
     static async update(request) {
         try {
             const {userId} = context.getUser();
             const {id, completed} = request;
-            const completedBool = Boolean(completed);
 
-            const errors = new Validator()
+            new Validator()
                 .isNonEmptyString(id, 'id')
-                .isValidBoolean(completedBool, 'completed')
+                .isValidBoolean(completed, 'completed')
                 .validate();
 
-            if (errors) {
-                throw new ValidationError('Failed to update todo: invalid input', ApiErrorCodes.BAD_REQUEST, errors);
-            }
-
-            const result = await crud.updateTodo({completed: completedBool}, {_id: id, userId});
+            const result = await crud.updateTodo({completed: completed}, {id, userId});
             debug('update todo:result', result);
 
-            return SuccessHandler.handle(StatusCodes.OK, result, 'Todo updated successfully');
+            return SuccessHandler.handle(StatusCodes.OK, result, ResponseMessages.RESOURCE_UPDATED);
         } catch (err) {
-            logger.error('Error while updating todo', err);
-            return ErrorHandler.handleError(err);
+            logger.error(err.message || 'Execution error.', err);
+            return ErrorHandler.handle(err);
         }
     }
 
     /**
      *
      * @param request
-     * @returns {Promise<{statusCode: StatusCodes, error: ApiError}|{statusCode: StatusCodes.OK, resources, message}>}
+     * @param request.id
+     * @returns {Promise<{statusCode: StatusCodes.INTERNAL_SERVER_ERROR, error: ApiError}|{statusCode: StatusCodes.INTERNAL_SERVER_ERROR, error}|{statusCode: StatusCodes.OK, resources, message}>}
      */
     static async remove(request) {
         try {
             const {userId} = context.getUser();
             const {id} = request;
 
-            const errors = new Validator()
+            new Validator()
                 .isNonEmptyString(id, 'id')
                 .validate();
-
-            if (errors) {
-                throw new ValidationError('Failed to delete todo: invalid ID', ApiErrorCodes.BAD_REQUEST, errors);
-            }
 
             const result = await crud.deleteTodo({id, userId});
             debug('remove:result', result);
 
-            return SuccessHandler.handle(StatusCodes.OK, result, 'Todo deleted successfully');
+            return SuccessHandler.handle(StatusCodes.OK, result, ResponseMessages.RESOURCE_DELETED);
         } catch (err) {
-            logger.error('Error while deleting todo', err);
-            return ErrorHandler.handleError(err);
+            logger.error(err.message || 'Execution error.', err);
+            return ErrorHandler.handle(err);
         }
     }
 }

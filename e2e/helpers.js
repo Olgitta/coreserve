@@ -48,7 +48,6 @@ const rs400MetadataSchema = Joi.object({
     traceId: Joi.string().regex(guidRegex).required(),
     error: Joi.object({
         message: Joi.string().required(),
-        code: Joi.string().required(),
         details: Joi.string().required()
     })
 });
