@@ -8,8 +8,7 @@ const swaggerSpec = require('./openapi/api-spec.json');
 
 const logger = require('./core/logger')('APP');
 
-const contextMiddleware = require('./core/execution-context/contextMiddleware');
-const {authMiddleware} = require('./auth');
+const {authMiddleware, contextMiddleware} = require('./middlewares');
 
 const {
     commentsRouter,

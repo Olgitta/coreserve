@@ -1,7 +1,7 @@
 'use strict';
 
-const {updateUser} = require('../core/execution-context/context');
-const logger = require('../core/logger')('AuthMiddleware');
+const {updateUser} = require('#core/execution-context/context.js');
+const logger = require('#core/logger/index.js')('AuthMiddleware');
 const getConfiguration = require('#config/configuration.js');
 const jwt = require('jsonwebtoken');
 const secret = getConfiguration().auth.secret;
@@ -31,8 +31,3 @@ module.exports.authMiddleware = (req, res, next) => {
         return res.status(401).json({ message: 'Unauthorized...' });
     }
 };
-
-// // Mock function to demonstrate updating user information
-// function updateUser(userData) {
-//     console.log('User updated:', userData);
-// }
