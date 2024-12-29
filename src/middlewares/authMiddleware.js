@@ -7,6 +7,13 @@ const jwt = require('jsonwebtoken');
 const secret = getConfiguration().auth.secret;
 
 module.exports.authMiddleware = (req, res, next) => {
+    if(process.env.NODE_ENV !== 'production') {
+        updateUser({
+            userId: 1,
+        });
+        next();
+        return;
+    }
     const authHeader = req.headers['authorization'];
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
         const {body, params, query, headers} = req;

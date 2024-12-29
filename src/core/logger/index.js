@@ -43,6 +43,7 @@ module.exports = function (p = 'ApiLog') {
 
     const prefix = p;
 
+    // todo: log url and method in info and warn
     return {
         info(msg, payload = {}) {
 
