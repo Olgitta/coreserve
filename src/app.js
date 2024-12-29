@@ -1,6 +1,7 @@
 'use strict';
 
 const express = require('express');
+const cors = require('cors');
 const path = require('node:path');
 const cookieParser = require('cookie-parser');
 const swaggerUi = require('swagger-ui-express');
@@ -8,8 +9,7 @@ const swaggerSpec = require('./openapi/api-spec.json');
 
 const logger = require('./core/logger')('APP');
 
-const contextMiddleware = require('./core/execution-context/contextMiddleware');
-const {authMiddleware} = require('./auth');
+const {authMiddleware, contextMiddleware} = require('./middlewares');
 
 const {
     commentsRouter,
@@ -21,6 +21,7 @@ const {
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());

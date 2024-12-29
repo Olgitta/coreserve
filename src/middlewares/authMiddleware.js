@@ -1,11 +1,19 @@
 'use strict';
 
-const {updateUser} = require('../core/execution-context/context');
-const logger = require('../core/logger')('authMiddleware');
+const {updateUser} = require('#core/execution-context/context.js');
+const logger = require('#core/logger/index.js')('AuthMiddleware');
+const getConfiguration = require('#config/configuration.js');
 const jwt = require('jsonwebtoken');
-const secret = 'your_secret_key';
+const secret = getConfiguration().auth.secret;
 
 module.exports.authMiddleware = (req, res, next) => {
+    if(process.env.NODE_ENV !== 'production') {
+        updateUser({
+            userId: 1,
+        });
+        next();
+        return;
+    }
     const authHeader = req.headers['authorization'];
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
         const {body, params, query, headers} = req;
@@ -30,8 +38,3 @@ module.exports.authMiddleware = (req, res, next) => {
         return res.status(401).json({ message: 'Unauthorized...' });
     }
 };
-
-// // Mock function to demonstrate updating user information
-// function updateUser(userData) {
-//     console.log('User updated:', userData);
-// }

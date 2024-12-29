@@ -1,3 +1,5 @@
+'use strict';
+
 const ResponseBuilder = require('#apis/ResponseBuilder.js');
 
 describe('ResponseBuilder', () => {

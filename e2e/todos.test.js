@@ -1,108 +1,172 @@
+"use strict";
+
+const debug = require('debug')('testing:todosapi');
+
 const request = require('supertest');
-const { faker } = require('@faker-js/faker');
+const {faker} = require('@faker-js/faker');
+const helpers = require('./helpers');
 
-const {
-    BASE_URL,
-    testStatusAndTraceId,
-    testTodoStructure
-} = require('./helpers');
+describe('TODOS API Endpoints', () => {
 
-describe.skip('TODOS API Endpoints', () => {
-    // Grouping tests for the "happy path"
+    const requestPath = '/todos';
+    const jwtToken = helpers.createTestToken();
+    const auth = ['Authorization', `Bearer ${jwtToken}`];
+    const toRemove = [];
+
+    const createResource = async () => {
+
+        const rs = await request(helpers.BASE_URL)
+            .post(requestPath)
+            .send({
+                title: faker.lorem.sentence(),
+            })
+            .set(...auth)
+            .set('Content-Type', 'application/json');
+
+        toRemove.push(rs.body.resources.id);
+
+        return rs;
+    }
+
     describe('Happy Path Scenarios', () => {
-        const toRemove = []; // Track created items to clean up after tests
 
         test('POST /todos - successfully creates a new todo item', async () => {
-            // Arrange: Prepare a new todo item
-            const newItem = {title: faker.lorem.sentence()};
-
-            // Act: Send a POST request to create the todo
-            const response = await request(BASE_URL)
-                .post('/todos')
-                .send(newItem)
-                .set('Content-Type', 'application/json');
-
+            // Act
+            const response = await createResource();
             const actual = response.body;
+            debug('Create a new resource', actual);
 
-            // Assert: Check the status, structure, and content of the response
-            testStatusAndTraceId(response.status, actual.metadata.traceId, 201);
-            testTodoStructure(actual.resources);
-            expect(actual.resources.title).toEqual(newItem.title);
-
-            // Cleanup: Add the created item's ID to the removal list
-            toRemove.push(actual.resources.id);
+            // Assert
+            helpers.testStatusCode(response.status, 201);
+            helpers.testTodoStructure(actual.resources);
+            helpers.testOKMetadataStructure(actual.metadata);
         });
 
         test('PUT /todos/:id - successfully updates an existing todo item', async () => {
-            // Arrange: Create a new todo item
-            const newItem = {title: faker.lorem.sentence()};
-            const created = await request(BASE_URL)
-                .post('/todos')
-                .send(newItem)
-                .set('Content-Type', 'application/json');
+
+            const created = await createResource();
             const id = created.body.resources.id;
 
-            // Prepare the update data
-            const updateData = {title: faker.lorem.sentence(), completed: true};
-
-            // Act: Send a PUT request to update the todo
-            const response = await request(BASE_URL)
-                .put(`/todos/${id}`)
-                .send(updateData)
+            // Act: Update the resource
+            const response = await request(helpers.BASE_URL)
+                .put(`${requestPath}/${id}`)
+                .send({
+                    completed: true
+                })
+                .set(...auth)
                 .set('Content-Type', 'application/json');
-
             const actual = response.body;
-
-            // Assert: Validate the response structure and updated content
-            testStatusAndTraceId(response.status, actual.metadata.traceId, 200);
-            testTodoStructure(actual.resources);
-            expect(actual.resources.title).toEqual(updateData.title);
-            expect(actual.resources.completed).toEqual(updateData.completed);
-
-            // Cleanup: Add the updated item's ID to the removal list
-            toRemove.push(id);
+            debug('Update an existing resource', actual);
+            // Assert
+            helpers.testStatusCode(response.status, 200);
+            helpers.testTodoStructure(actual.resources);
+            helpers.testOKMetadataStructure(actual.metadata);
         });
 
         test('GET /todos - retrieves a paginated list of todos', async () => {
-            // Act: Send a GET request with pagination parameters
-            const response = await request(BASE_URL).get('/todos').query({page: 1, limit: 10});
-            const actual = response.body;
+            // Arrange: Populate the resources
+            for (let i = 0; i <= 5; i++) {
+                await createResource();
+            }
 
-            // Assert: Validate the response structure and pagination details
-            testStatusAndTraceId(response.status, actual.metadata.traceId, 200);
+            // Act: Fetch the resources
+            const response = await request(helpers.BASE_URL).get(requestPath).query({
+                page: 2,
+                limit: 2
+            }).set(...auth);
+            const actual = response.body;
+            debug('Fetch paginated resources', actual);
+
+            // Assert
+            helpers.testStatusCode(response.status, 200);
+            helpers.testOKMetadataStructure(actual.metadata);
             expect(actual.resources).toBeInstanceOf(Array);
+            expect(actual.resources.length).toEqual(2);
+            helpers.testTodoStructure(actual.resources[0]);
+
+            helpers.testPaginationStructure(actual.pagination);
+            expect(actual.pagination.total).toBeGreaterThan(0);
             expect(actual.pagination.totalPages).toBeGreaterThan(0);
-            testTodoStructure(actual.resources[0]);
+            expect(actual.pagination.prevPage).not.toBeUndefined();
+            expect(actual.pagination.nextPage).not.toBeUndefined();
+
         });
 
         test('GET /todos/:id - retrieves details of a specific todo item', async () => {
-            // Arrange: Create a new todo item
-            const newItem = {title: faker.lorem.sentence()};
-            const created = await request(BASE_URL)
-                .post('/todos')
-                .send(newItem)
-                .set('Content-Type', 'application/json');
+
+            const created = await createResource();
             const id = created.body.resources.id;
+            const createdResource = created.body.resources;
 
-            // Act: Send a GET request to fetch the todo by ID
-            const response = await request(BASE_URL).get(`/todos/${id}`);
+            // Act: Fetch the resource by ID
+            const response = await request(helpers.BASE_URL).get(`${requestPath}/${id}`).set(...auth);
             const actual = response.body;
+            debug('Fetch resource by ID', actual);
 
-            // Assert: Validate the response structure and content
-            testStatusAndTraceId(response.status, actual.metadata.traceId, 200);
-            testTodoStructure(actual.resources);
-            expect(actual.resources.title).toEqual(newItem.title);
-
-            // Cleanup: Add the fetched item's ID to the removal list
-            toRemove.push(id);
+            // Assert
+            helpers.testStatusCode(response.status, 200);
+            helpers.testTodoStructure(actual.resources);
+            helpers.testOKMetadataStructure(actual.metadata);
         });
 
         test('DELETE /todos/:id - successfully deletes todo items created during tests', async () => {
-            // Cleanup: Iterate over tracked IDs and delete each todo
+
             for (const id of toRemove) {
-                const response = await request(BASE_URL).delete(`/todos/${id}`);
-                testStatusAndTraceId(response.status, response.body.metadata.traceId, 200);
+                const response = await request(helpers.BASE_URL).delete(`${requestPath}/${id}`).set(...auth);
+                debug('Delete resource by ID', response.body);
+                helpers.testStatusCode(response.status, 200);
+                helpers.testOKMetadataStructure(response.body.metadata);
             }
         });
     });
+
+    describe('Negative Path Tests', () => {
+
+        describe('Invalid Input Tests', () => {
+
+            test('POST /todos - Create a new resource should respond with 400', async () => {
+
+                const rs1 = await request(helpers.BASE_URL)
+                    .post(requestPath)
+                    .send({
+                        title: '',
+                    })
+                    .set(...auth)
+                    .set('Content-Type', 'application/json');
+                const actual1 = rs1.body;
+                debug('Invalid title', actual1);
+
+                // Assert
+                helpers.testStatusCode(rs1.status, 400);
+                helpers.test400MetadataStructure(actual1.metadata);
+            });
+
+            test('PUT /todos/:id - Update an existing resource should respond with 400', async () => {
+                const response = await request(helpers.BASE_URL)
+                    .put(`${requestPath}/100500`)
+                    .send({})
+                    .set(...auth)
+                    .set('Content-Type', 'application/json');
+                const actual = response.body;
+                debug('Update an existing resource', actual);
+                // Assert
+                helpers.testStatusCode(response.status, 400);
+                helpers.test400MetadataStructure(actual.metadata);
+            });
+
+            test('GET /todos - Fetch paginated resources should respond with 400', async () => {
+                const response = await request(helpers.BASE_URL).get(requestPath).query({
+                    page: '210invalid',
+                    limit: 2
+                }).set(...auth);
+                const actual = response.body;
+                debug('Fetch paginated resources', actual);
+                helpers.testStatusCode(response.status, 400);
+                helpers.test400MetadataStructure(actual.metadata);
+            });
+
+        });
+
+    });
+
 });

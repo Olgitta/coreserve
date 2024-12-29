@@ -4,6 +4,7 @@ const logger = require('../../core/logger')('HealthCheckController');
 const mongodbPing = require('../../infra/db/mongodb/connection').pingDatabase;
 const mysqlPing = require('../../infra/db/mysql/connection').pingDatabase;
 
+//todo: standartize controller and move its route here
 module.exports = function getHealthCheckController() {
 
     return {

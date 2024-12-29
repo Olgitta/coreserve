@@ -1,7 +1,8 @@
 'use strict';
 
-const {getCtx, getTraceId} = require('../execution-context/context');
+const {getCtx, getTraceId, getRequestUrl, getRequestMethod} = require('../execution-context/context');
 const {createLogger, format, transports} = require('winston');
+const {getUrlPath} = require('#core/utils/urlUtils.js');
 
 const devFormat = format.combine(
     format.timestamp(),
@@ -42,6 +43,7 @@ module.exports = function (p = 'ApiLog') {
 
     const prefix = p;
 
+    // todo: log url and method in info and warn
     return {
         info(msg, payload = {}) {
 
@@ -52,8 +54,15 @@ module.exports = function (p = 'ApiLog') {
             logger.warn(`${prefix}:${msg}`, buildMeta(payload));
         },
         error(msg, error = {}, payload = {}) {
+            const rqPath = getUrlPath(getRequestUrl()) || null;
+            const rqMethod = getRequestMethod() || null;
+            let prfx = prefix;
 
-            logger.error(`${prefix}:${msg}`, buildMeta({
+            if(rqPath) {
+                prfx += `:${rqMethod} ${rqPath}:`;
+            }
+
+            logger.error(`${prfx}:${msg}`, buildMeta({
                 ...payload,
                 error: error
             }));

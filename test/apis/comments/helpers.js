@@ -1,3 +1,5 @@
+'use strict';
+
 const {StatusCodes} = require('http-status-codes');
 const LikeOps = require('../../../src/apis/comments/LikeOps');
 
@@ -103,7 +105,7 @@ module.exports = {
             configMock: {comments: {pagination: {limit: configLimit}}},
             contextMock: {request: {url: REQUEST_URL}},
             crudReturns: {comments: [], total: 10},
-            crudReceives: [POST_ID, PARENT_COMMENT_ID, USER_ID, skip, limit],
+            crudReceives: [{skip, limit}, {postId: POST_ID, parentId: PARENT_COMMENT_ID, userId: USER_ID}],
             expected: {
                 statusCode: StatusCodes.OK,
                 pagination: {
@@ -129,7 +131,7 @@ module.exports = {
             configMock: {comments: {pagination: {limit: configLimit}}},
             contextMock: {request: {url: REQUEST_URL}},
             crudReturns: {comments: [], total: 10},
-            crudReceives: [POST_ID, PARENT_COMMENT_ID, USER_ID, skip, configLimit],
+            crudReceives: [{skip, limit:configLimit}, {postId: POST_ID, parentId: PARENT_COMMENT_ID, userId: USER_ID}],
             expected: {
                 statusCode: StatusCodes.OK,
                 pagination: {
@@ -153,7 +155,7 @@ module.exports = {
             configMock: {comments: {pagination: {limit: configLimit}}},
             contextMock: {request: {url: REQUEST_URL}},
             crudReturns: {comments: [], total: 0},
-            crudReceives: [POST_ID, PARENT_COMMENT_ID, USER_ID, skip, configLimit],
+            crudReceives: [{skip, limit:configLimit}, {postId: POST_ID, parentId: PARENT_COMMENT_ID, userId: USER_ID}],
             expected: {
                 statusCode: StatusCodes.OK,
                 pagination: {
@@ -189,7 +191,7 @@ module.exports = {
         return {
             request: {id: COMMENT_ID},
             crudReturns: {deleted: 1, post: {/*deleted comment*/}},
-            crudReceives: [COMMENT_ID, USER_ID],
+            crudReceives: {id: COMMENT_ID, userId: USER_ID},
             expected: {statusCode: StatusCodes.OK},
         }
     },
@@ -209,7 +211,7 @@ module.exports = {
                 op: LikeOps.LIKE
             },
             crudReceives: [
-                COMMENT_ID, USER_ID, LikeOps.LIKE
+                {like: LikeOps.LIKE}, {id: COMMENT_ID, userId: USER_ID}
             ],
             crudReturns: 1,
             expected: {statusCode: StatusCodes.OK},
@@ -224,7 +226,7 @@ module.exports = {
                 op: LikeOps.UNLIKE
             },
             crudReceives: [
-                COMMENT_ID, USER_ID, LikeOps.UNLIKE
+                {like: LikeOps.UNLIKE}, {id: COMMENT_ID, userId: USER_ID}
             ],
             crudReturns: 1,
             expected: {statusCode: StatusCodes.OK},

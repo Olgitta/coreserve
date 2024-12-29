@@ -1,8 +1,15 @@
 'use strict';
 
+const ErrorHandler = require('./ErrorHandler');
+const PaginationBuilder = require('./PaginationBuilder');
+const ResponseBuilder = require('./ResponseBuilder');
+const SuccessHandler = require('./SuccessHandler')
+const EndpointResultHandler = require('./ResultHandler')
+
 module.exports = {
-    ErrorHandler: require('./ErrorHandler'),
-    PaginationBuilder: require('./PaginationBuilder'),
-    ResponseBuilder: require('./ResponseBuilder'),
-    SuccessHandler: require('./SuccessHandler'),
+    ErrorHandler: ErrorHandler,
+    PaginationBuilder: PaginationBuilder,
+    ResponseBuilder: ResponseBuilder,
+    SuccessHandler: SuccessHandler,
+    EndpointResultHandler: EndpointResultHandler
 }

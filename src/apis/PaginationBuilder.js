@@ -2,8 +2,8 @@
 
 const Joi = require('joi');
 const debug = require('debug')('coreserve:PaginationBuilder');
-const Validator = require('#core/utils/Validator.js');
-const {ValidationError, ApiErrorCodes} = require('#core/errors/index.js');
+const {PaginationError} = require('#core/errors/index.js');
+const {updateQueryParams} = require('#core/utils/urlUtils.js');
 
 const builderSchema = Joi.object({
     url: Joi.string().required(),
@@ -28,18 +28,8 @@ class PaginationBuilder {
      */
     constructor(page, limit) {
         this.#dataset = {};
-        this.#page = Number(page);
-        this.#limit = Number(limit);
-
-        const errors = new Validator()
-            .isValidNumber(this.#page, 'page')
-            .isValidNumber(this.#limit, 'limit')
-            .validate();
-
-        if (errors !== null) {
-            throw new ValidationError('Invalid input on PaginationBuilder initializing', ApiErrorCodes.BAD_REQUEST, errors);
-        }
-
+        this.#page = page;
+        this.#limit = limit;
         this.#skip = (this.#page - 1) * this.#limit;
     }
 
@@ -76,7 +66,14 @@ class PaginationBuilder {
 
         const {error} = builderSchema.validate(this.#dataset);
         if (error) {
-            throw new ValidationError('Failed on PaginationBuilder build', ApiErrorCodes.BAD_REQUEST, error);
+            throw new PaginationError('PaginationBuilder: build failed.', {
+                error, dataset: {
+                    url: this.#url,
+                    total: this.#total,
+                    limit: this.#limit,
+                    page: this.#page,
+                }
+            });
         }
 
         debug('going to build pagination from:', this.#dataset);
@@ -90,12 +87,18 @@ class PaginationBuilder {
             totalPages,
         };
 
-        if(hasNextPage) {
-            result.nextPage = `${url}?page=${page + 1}&limit=${limit}`;
+        if (hasNextPage) {
+            result.nextPage = updateQueryParams(url, {
+                page: page + 1,
+                limit
+            });
         }
 
         if (hasPrevPage) {
-            result.prevPage = `${url}?page=${page - 1}&limit=${limit}`;
+            result.prevPage = updateQueryParams(url, {
+                page: page - 1,
+                limit
+            });
         }
 
         debug('built successfully:', result);

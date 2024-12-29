@@ -13,8 +13,8 @@
     "lint:fix": "eslint src/ --fix",
     "test:coverage": "jest ./test --coverage",
     "test": "jest ./test",
-    "e2e3000": "cross-env E2EPORT=3000 jest ./e2e",
-    "e2e5000": "cross-env E2EPORT=5000 DEBUG=testing jest ./e2e"
+    "e2e3000": "cross-env PORT=3000 jest ./e2e",
+    "e2e5000": "cross-env PORT=5000 jest ./e2e"
   },
   "imports": {
     "#core/*.js": "./src/core/*.js",
@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
+    "cors": "^2.8.5",
     "debug": "~2.6.9",
     "dotenv": "^16.4.7",
     "express": "5.0.0",

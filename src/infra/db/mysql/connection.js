@@ -5,7 +5,7 @@ const {Sequelize} = require('sequelize');
 
 let sequelize;
 
-module.exports = {connectToDatabase, closeDatabaseConnection, pingDatabase, createModel};
+module.exports = {connectToDatabase, closeDatabaseConnection, mysqlPing, createModel};
 
 /**
  *
@@ -47,7 +47,7 @@ async function closeDatabaseConnection() {
  *
  * @returns {Promise<boolean>}
  */
-async function pingDatabase() {
+async function mysqlPing() {
     await sequelize.authenticate();
     return true;
 }

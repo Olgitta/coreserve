@@ -38,6 +38,9 @@ const commentsSchema = Joi.object({
 });
 
 const configSchema = Joi.object({
+    auth: Joi.object({
+        secret: Joi.string().min(1).required(),
+    }),
     mongodb: mongodbSchema.required(),
     mysql: mysqlSchema.required(),
     todos: todosSchema.required(),
@@ -67,6 +70,10 @@ function loadConfig() {
             debug(`Not found ${file}`);
         }
     });
+
+    config.auth = {
+        secret: process.env.AUTH_SECRET,
+    }
 
     config.mongodb = {
         url: process.env.MONGODB_URL,

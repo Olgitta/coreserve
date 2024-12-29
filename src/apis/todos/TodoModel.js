@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const idTransformPlugin = require('../../infra/db/mongodb/idTransformPlugin');
 
 const todoSchema = new mongoose.Schema({
+    userId: { type: Number, required: true },
     title: { type: String, required: true },
     completed: { type: Boolean, default: false }
 }, {
@@ -12,6 +13,6 @@ const todoSchema = new mongoose.Schema({
 
 todoSchema.plugin(idTransformPlugin);
 
-const Todo = mongoose.model('Todo', todoSchema);
+const TodoModel = mongoose.model('Todo', todoSchema);
 
-module.exports = Todo;
+module.exports = TodoModel;

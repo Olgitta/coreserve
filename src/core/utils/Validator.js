@@ -1,5 +1,7 @@
 'use strict';
 
+const {ValidationError} = require('#core/errors/index.js');
+
 class Validator {
     #errorsSet;
 
@@ -69,6 +71,23 @@ class Validator {
      * @param k
      * @returns {Validator}
      */
+    isValidBoolean(v, k) {
+        const sym = Symbol(`${k} value is invalid boolean`);
+
+        if (typeof v !== 'boolean') {
+            this.#errorsSet.add(sym);
+            return this;
+        }
+
+        return this;
+    }
+
+    /**
+     *
+     * @param v
+     * @param k
+     * @returns {Validator}
+     */
     isValidNumberOrNull(v, k) {
         const sym = Symbol(`${k} value is invalid number`);
 
@@ -86,11 +105,22 @@ class Validator {
         return this;
     }
 
-    /**
-     *
-     * @returns {null|string}
-     */
     validate() {
+
+        let result = null;
+        if (this.#errorsSet.size > 0) {
+            result = Array.from(this.#errorsSet, sym => sym.description).join('|');
+        }
+        this.#errorsSet.clear();
+
+        if (result) {
+            throw new ValidationError('Validation error', result);
+        }
+
+        return;
+    }
+
+    validateAndReturnResult() {
 
         let result = null;
         if (this.#errorsSet.size > 0) {

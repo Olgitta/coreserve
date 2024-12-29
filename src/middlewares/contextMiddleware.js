@@ -1,10 +1,8 @@
 'use strict';
 
-const {createCtx} = require('./context');
+const {createCtx} = require('#core/execution-context/context.js');
 
-const contextMiddleware = (req, res, next) => {
+module.exports.contextMiddleware = (req, res, next) => {
     const {url, method, params, query, body} = req;
     createCtx({request: {url, method, params, query, body}}, next);
 };
-
-module.exports = contextMiddleware;

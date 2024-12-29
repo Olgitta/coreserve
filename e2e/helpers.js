@@ -1,7 +1,7 @@
 const Joi = require('joi');
 const jwt = require('jsonwebtoken');
 
-const BASE_URL = `http://localhost:${process.env.E2EPORT}/api`;
+const BASE_URL = `http://localhost:${process.env.PORT}/api`;
 const guidRegex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
 
 module.exports.BASE_URL = BASE_URL;
@@ -16,6 +16,7 @@ const todoSchema = Joi.object({
     createdAt: Joi.date().iso().required(),
     updatedAt: Joi.date().iso().required(),
     id: Joi.string().length(24).required(),
+    userId: Joi.number().required(),
 });
 
 const postSchema = Joi.object({
@@ -31,7 +32,7 @@ const postSchema = Joi.object({
 const commentSchema = Joi.object({
     id: Joi.number().required(),
     postId: Joi.number().required(),
-    parentId: Joi.number().required().default(null),
+    parentId: Joi.number().required().allow(null),
     userId: Joi.number().required(),
     content: Joi.string().required(),
     likes: Joi.number().required(),
@@ -48,7 +49,6 @@ const rs400MetadataSchema = Joi.object({
     traceId: Joi.string().regex(guidRegex).required(),
     error: Joi.object({
         message: Joi.string().required(),
-        code: Joi.string().required(),
         details: Joi.string().required()
     })
 });
@@ -71,6 +71,11 @@ module.exports.testTodoStructure = function (source) {
 
 module.exports.testPostStructure = function (source) {
     const {error, value} = postSchema.validate(source);
+    expect(error).toBeUndefined();
+}
+
+module.exports.testCommentStructure = function (source) {
+    const {error, value} = commentSchema.validate(source);
     expect(error).toBeUndefined();
 }
 

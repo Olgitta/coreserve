@@ -1,0 +1,515 @@
+openapi: 3.0.0
+info:
+    title: CORESERVE
+    version: 1.0.0
+servers:
+    - url: http://localhost:3000
+    - url: http://localhost:5000
+security:
+    - bearerAuth: []
+tags:
+    - name: posts-api
+    - name: comments-api
+    - name: todos-api
+paths:
+    /api/posts:
+        post:
+            tags:
+                - posts-api
+            summary: Create
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/postRQ'
+            responses:
+                '200':
+                    description: Successful response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/postRS'
+
+        get:
+            tags:
+                - posts-api
+            summary: Get All
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                      type: number
+                - name: limit
+                  in: query
+                  schema:
+                      type: number
+            responses:
+                '200':
+                    description: Successful response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/postGetAllRS'
+    /api/posts/{id}:
+        get:
+            tags:
+                - posts-api
+            summary: Get
+            parameters:
+                - name: id
+                  in: path
+                  schema:
+                      type: number
+                  required: true
+            responses:
+                '200':
+                    description: Successful response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/postRS'
+
+        put:
+            tags:
+                - posts-api
+            summary: Update
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/postRQ'
+            parameters:
+                - name: id
+                  in: path
+                  schema:
+                      type: number
+                  required: true
+            responses:
+                '200':
+                    description: Successful response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/postRS'
+
+        delete:
+            tags:
+                - posts-api
+            summary: Delete
+            parameters:
+                - name: id
+                  in: path
+                  schema:
+                      type: number
+                  required: true
+            responses:
+                '200':
+                    description: Successful response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/metadata'
+    /api/posts/like/{id}:
+        post:
+            tags:
+                - posts-api
+            summary: Like
+            requestBody:
+                content: {}
+            parameters:
+                - name: id
+                  in: path
+                  schema:
+                      type: number
+                  required: true
+            responses:
+                '200':
+                    description: Successful response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/metadata'
+    /api/posts/unlike/{id}:
+        post:
+            tags:
+                - posts-api
+            summary: Unlike
+            requestBody:
+                content: {}
+            parameters:
+                - name: id
+                  in: path
+                  schema:
+                      type: number
+                  required: true
+            responses:
+                '200':
+                    description: Successful response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/metadata'
+    /api/comments:
+        post:
+            tags:
+                - comments-api
+            summary: Create
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/commentRQ'
+            responses:
+                '200':
+                    description: Successful response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/commentRS'
+
+        get:
+            tags:
+                - comments-api
+            summary: Get All
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                      type: number
+                - name: limit
+                  in: query
+                  schema:
+                      type: number
+                - name: postId
+                  in: query
+                  schema:
+                      type: number
+                  required: true
+            responses:
+                '200':
+                    description: Successful response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/commentGetAllRS'
+    /api/comments/like/{id}:
+        post:
+            tags:
+                - comments-api
+            summary: Like
+            requestBody:
+                content: {}
+            parameters:
+                - name: id
+                  in: path
+                  schema:
+                      type: number
+                  required: true
+            responses:
+                '200':
+                    description: Successful response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/metadata'
+    /api/comments/unlike/{id}:
+        post:
+            tags:
+                - comments-api
+            summary: Unlike
+            requestBody:
+                content: {}
+            parameters:
+                - name: id
+                  in: path
+                  schema:
+                      type: number
+                  required: true
+            responses:
+                '200':
+                    description: Successful response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/metadata'
+    /api/comments/{id}:
+        delete:
+            tags:
+                - comments-api
+            summary: Delete
+            parameters:
+                - name: id
+                  in: path
+                  schema:
+                      type: number
+                  required: true
+            responses:
+                '200':
+                    description: Successful response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/metadata'
+    /api/todos:
+        post:
+            tags:
+                - todos-api
+            summary: Create
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/todoCreateRQ'
+            responses:
+                '200':
+                    description: Successful response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/todoRS'
+        get:
+            tags:
+                - todos-api
+            summary: Get All
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                      type: number
+                - name: limit
+                  in: query
+                  schema:
+                      type: number
+            responses:
+                '200':
+                    description: Successful response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/todoGetAllRS'
+    /api/todos/{id}:
+        get:
+            tags:
+                - todos-api
+            summary: Get
+            parameters:
+                - name: id
+                  in: path
+                  schema:
+                      type: string
+                  required: true
+            responses:
+                '200':
+                    description: Successful response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/todoRS'
+        put:
+            tags:
+                - todos-api
+            summary: Update
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/todoUpdateRQ'
+            parameters:
+                - name: id
+                  in: path
+                  schema:
+                      type: string
+                  required: true
+            responses:
+                '200':
+                    description: Successful response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/todoRS'
+        delete:
+            tags:
+                - todos-api
+            summary: Delete
+            parameters:
+                - name: id
+                  in: path
+                  schema:
+                      type: string
+                  required: true
+            responses:
+                '200':
+                    description: Successful response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/metadata'
+
+components:
+    securitySchemes:
+        bearerAuth:
+            type: http
+            scheme: bearer
+            bearerFormat: JWT
+    schemas:
+        postRS:
+            type: object
+            properties:
+                metadata:
+                    $ref: '#/components/schemas/metadata'
+                resources:
+                    $ref: '#/components/schemas/postResource'
+        postGetAllRS:
+            type: object
+            properties:
+                metadata:
+                    $ref: '#/components/schemas/metadata'
+                resources:
+                    type: object
+                    items:
+                        $ref: '#/components/schemas/postResource'
+                pagination:
+                    $ref: '#/components/schemas/pagination'
+        postRQ:
+            type: object
+            properties:
+                title:
+                    type: string
+                content:
+                    type: string
+        postResource:
+            type: object
+            properties:
+                id:
+                    type: number
+                userId:
+                    type: number
+                title:
+                    type: string
+                content:
+                    type: string
+                likes:
+                    type: number
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
+
+        commentRS:
+            type: object
+            properties:
+                metadata:
+                    $ref: '#/components/schemas/metadata'
+                resources:
+                    $ref: '#/components/schemas/commentResource'
+        commentRQ:
+            type: object
+            properties:
+                content:
+                    type: string
+                postId:
+                    type: number
+        commentResource:
+            type: object
+            properties:
+                likes:
+                    type: number
+                id:
+                    type: number
+                postId:
+                    type: number
+                parentId:
+                    type: number
+                    format: nullable
+                userId:
+                    type: number
+                content:
+                    type: string
+                updatedAt:
+                    type: string
+                    format: date-time
+                createdAt:
+                    type: string
+                    format: date-time
+        commentGetAllRS:
+            type: object
+            properties:
+                metadata:
+                    $ref: '#/components/schemas/metadata'
+                resources:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/commentResource'
+                pagination:
+                    $ref: '#/components/schemas/pagination'
+
+
+
+        todoResource:
+            type: object
+            properties:
+                userId:
+                    type: number
+                title:
+                    type: string
+                completed:
+                    type: boolean
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
+                id:
+                    type: string
+
+        todoCreateRQ:
+            type: object
+            properties:
+                title:
+                    type: string
+        todoUpdateRQ:
+            type: object
+            properties:
+                completed:
+                    type: boolean
+        todoRS:
+            type: object
+            properties:
+                metadata:
+                    $ref: '#/components/schemas/metadata'
+                resources:
+                    $ref: '#/components/schemas/todoResource'
+        todoGetAllRS:
+            type: object
+            properties:
+                metadata:
+                    $ref: '#/components/schemas/metadata'
+                resources:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/todoResource'
+                pagination:
+                    $ref: '#/components/schemas/pagination'
+
+
+        metadata:
+            type: object
+            properties:
+                traceId:
+                    type: string
+                message:
+                    type: string
+        pagination:
+            type: object
+            properties:
+                total:
+                    type: number
+                totalPages:
+                    type: number
+                nextPage:
+                    type: string
+                prevPage:
+                    type: string

@@ -39,10 +39,10 @@ async function closeDatabaseConnection() {
  *
  * @returns {Promise<boolean>}
  */
-async function pingDatabase() {
+async function mongodbPing() {
     const admin = mongoose.connection.db.admin();
     await admin.ping();
     return true;
 }
 
-module.exports = {connectToDatabase, closeDatabaseConnection, pingDatabase};
+module.exports = {connectToDatabase, closeDatabaseConnection, mongodbPing};

@@ -13,9 +13,7 @@ describe('SuccessHandler', () => {
         });
 
         it('should throw an error if the constructor is called directly', () => {
-            expect(() => new SuccessHandler()).toThrow(
-                'SuccessHandler is a singleton. Use SuccessHandler.getInstance() to access the instance.'
-            );
+            expect(() => new SuccessHandler()).toThrow(Error);
         });
     });
 

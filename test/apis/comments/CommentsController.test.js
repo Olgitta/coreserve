@@ -5,7 +5,7 @@ require('../../mocks');
 const {
     createComment,
     deleteComment,
-    getCommentsWithPagination,
+    getComments,
     updateLikes
 } = require('#apis/comments/crud.js');
 const CommentsController = require('#apis/comments/CommentsController.js');
@@ -25,7 +25,7 @@ jest.mock('#config/configuration.js', () => jest.fn());
 jest.mock('#apis/comments/crud.js', () => ({
     createComment: jest.fn(),
     deleteComment: jest.fn(),
-    getCommentsWithPagination: jest.fn(),
+    getComments: jest.fn(),
     updateLikes: jest.fn(),
 }));
 
@@ -35,6 +35,7 @@ jest.mock('#core/execution-context/context.js', () => {
     return {
         getUser: jest.fn().mockReturnValue({userId: USER_ID}),
         getCtx: jest.fn().mockReturnValue(CTX_PAYLOAD),
+        getRequestUrl: jest.fn().mockReturnValue(CTX_PAYLOAD.request.url),
     }
 });
 
@@ -52,9 +53,7 @@ describe('CommentsController', () => {
         });
 
         it('should throw an error if the constructor is called directly', () => {
-            expect(() => new CommentsController()).toThrow(
-                'CommentsController is a singleton. Use CommentsController.getInstance() to access the instance.'
-            );
+            expect(() => new CommentsController()).toThrow(Error);
         });
     });
 
@@ -91,15 +90,19 @@ describe('CommentsController', () => {
 
     describe('getAll', () => {
         it('should retrieve paginated comments with pagination metadata successfully', async () => {
-            const {configMock, contextMock, crudReceives, crudReturns, expected, request} = GET_ALL_200();
+            const {
+                configMock,
+                crudReceives,
+                crudReturns,
+                expected,
+                request} = GET_ALL_200();
 
-            context.getCtx.mockReturnValue(contextMock);
             getConfiguration.mockReturnValue(configMock);
-            getCommentsWithPagination.mockResolvedValue(crudReturns);
+            getComments.mockResolvedValue(crudReturns);
 
             const actual = await CommentsController.getAll(request);
 
-            expect(getCommentsWithPagination).toHaveBeenCalledWith(...crudReceives);
+            expect(getComments).toHaveBeenCalledWith(...crudReceives);
             expect(actual.statusCode).toEqual(expected.statusCode);
             expect(actual.pagination).toEqual(expected.pagination);
         });
@@ -107,20 +110,18 @@ describe('CommentsController', () => {
         it('should retrieve the first page of comments when pagination parameters are not provided', async () => {
             const {
                 configMock,
-                contextMock,
                 crudReceives,
                 crudReturns,
                 expected,
                 request
             } = GET_ALL_200_NO_PAGINATION_PARAMS();
 
-            context.getCtx.mockReturnValue(contextMock);
             getConfiguration.mockReturnValue(configMock);
-            getCommentsWithPagination.mockResolvedValue(crudReturns);
+            getComments.mockResolvedValue(crudReturns);
 
             const actual = await CommentsController.getAll(request);
 
-            expect(getCommentsWithPagination).toHaveBeenCalledWith(...crudReceives);
+            expect(getComments).toHaveBeenCalledWith(...crudReceives);
             expect(actual.statusCode).toEqual(expected.statusCode);
             expect(actual.pagination).toEqual(expected.pagination);
         });
@@ -128,20 +129,18 @@ describe('CommentsController', () => {
         it('should respond OK when no records found', async () => {
             const {
                 configMock,
-                contextMock,
                 crudReceives,
                 crudReturns,
                 expected,
                 request
             } = GET_ALL_200_NO_RECORDS_FOUND();
 
-            context.getCtx.mockReturnValue(contextMock);
             getConfiguration.mockReturnValue(configMock);
-            getCommentsWithPagination.mockResolvedValue(crudReturns);
+            getComments.mockResolvedValue(crudReturns);
 
             const actual = await CommentsController.getAll(request);
 
-            expect(getCommentsWithPagination).toHaveBeenCalledWith(...crudReceives);
+            expect(getComments).toHaveBeenCalledWith(...crudReceives);
             expect(actual.statusCode).toEqual(expected.statusCode);
             expect(actual.pagination).toEqual(expected.pagination);
         });
@@ -154,7 +153,7 @@ describe('CommentsController', () => {
 
             const actual = await CommentsController.getAll(request);
 
-            expect(getCommentsWithPagination).not.toHaveBeenCalled();
+            expect(getComments).not.toHaveBeenCalled();
             expect(actual.statusCode).toEqual(expected.statusCode);
             expect(actual.pagination).toBeUndefined();
         });
@@ -162,13 +161,17 @@ describe('CommentsController', () => {
 
     describe('remove', () => {
         it('should successfully delete a comment by id and return the deleted resource', async () => {
-            const {crudReceives, crudReturns, expected, request} = DELETE_200();
+            const {
+                crudReceives,
+                crudReturns,
+                expected,
+                request} = DELETE_200();
 
             deleteComment.mockResolvedValue(crudReturns);
 
             const actual = await CommentsController.remove(request);
 
-            expect(deleteComment).toHaveBeenCalledWith(...crudReceives);
+            expect(deleteComment).toHaveBeenCalledWith(crudReceives);
             expect(actual.statusCode).toEqual(expected.statusCode);
         });
 

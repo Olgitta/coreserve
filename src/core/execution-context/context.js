@@ -32,6 +32,14 @@ module.exports.getUser = () => {
     return getContext().user;
 }
 
+module.exports.getRequestUrl = () => {
+    return getContext().request?.url;
+}
+
+module.exports.getRequestMethod = () => {
+    return getContext().request?.method;
+}
+
 function getContext() {
     const context = asyncLocalStorage.getStore();
     if (!context) {
